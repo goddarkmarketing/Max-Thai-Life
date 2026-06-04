@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 384" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1a1035"/>
+      <stop offset="50%" stop-color="#4a2c7a"/>
+      <stop offset="100%" stop-color="#003da5"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="384" fill="url(#bg)"/>
+  <path d="M320 90 L340 150 L400 155 L355 195 L370 255 L320 220 L270 255 L285 195 L240 155 L300 150 Z" fill="#e8d48a"/>
+  <text x="320" y="310" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="32" font-weight="700" letter-spacing="4">INFINITE</text>
+</svg>

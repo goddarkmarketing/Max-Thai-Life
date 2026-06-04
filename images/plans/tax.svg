@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 384" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#002b75"/>
+      <stop offset="100%" stop-color="#3d7dd4"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="384" fill="url(#bg)"/>
+  <rect x="180" y="80" width="280" height="200" rx="12" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.35)" stroke-width="2"/>
+  <text x="320" y="175" text-anchor="middle" fill="#e8d48a" font-family="system-ui,sans-serif" font-size="64" font-weight="700">%</text>
+  <text x="320" y="240" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="22" font-weight="600">%+"H- 2)5</text>
+</svg>

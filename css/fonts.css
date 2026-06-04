@@ -1,0 +1,16 @@
+/* SF Pro TH — ทั้งเว็บ */
+@font-face {
+  font-family: "SF Pro TH";
+  src: url("../fonts/SFProTH_regular.woff/SFProTH_regular.woff.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro TH";
+  src: url("../fonts/SFProTH_regular.woff/SFProTH_regular.woff.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

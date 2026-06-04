@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="แผนประกันชีวิตและสุขภาพ ไทยประกันชีวิต — ออม เกษียณ ลดหย่อนภาษี สุขภาพ คุ้มครองชีวิต">
+  <title>แผนประกัน | Max Thai Life</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand">
+        <img src="images/logo/LOGO-THAILIFE.jpg" alt="ไทยประกันชีวิต" class="brand-logo" width="46" height="46">
+        <span class="brand-text">
+          <span class="brand-name">Max Thai Life</span>
+          <span class="brand-sub">Digital Agent Office</span>
+        </span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="เปิดเมนู" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <nav class="main-nav" aria-label="เมนูหลัก">
+        <a href="index.html">หน้าหลัก</a>
+        <a href="about.html">เกี่ยวกับเรา</a>
+        <a href="plans.html" class="active">แผนประกัน</a>
+        <a href="products.html">บทความ</a>
+        <a href="career.html">แนะนำอาชีพ</a>
+        <a href="news.html">ข่าว/กิจกรรม</a>
+        <a href="contact.html" class="nav-cta">ติดต่อ</a>
+      </nav>
+    </div>
+  </header>
+
+  <header class="page-hero">
+    <div class="page-hero-inner">
+      <p class="breadcrumb"><a href="index.html">หน้าหลัก</a> / แผนประกัน</p>
+      <h1>แผนประกันชีวิตและสุขภาพ</h1>
+      <p>เลือกแผนที่ตรงเป้าหมาย — ออม เกษียณ ลดหย่อนภาษี ดูแลสุขภาพ และวางแผนมรดก จากไทยประกันชีวิต</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="section-inner reveal">
+      <header class="section-header" data-icon="target">
+        <h2>เลือกตามเป้าหมาย</h2>
+        <p>แต่ละแผนออกแบบสำหรับช่วงชีวิตและความต้องการที่แตกต่างกัน</p>
+      </header>
+      <div class="plan-categories" role="tablist" aria-label="หมวดแผนประกัน">
+        <button type="button" class="plan-cat-btn active" data-filter="all">ทั้งหมด</button>
+        <button type="button" class="plan-cat-btn" data-filter="save">ออมและเกษียณ</button>
+        <button type="button" class="plan-cat-btn" data-filter="tax">ลดหย่อนภาษี</button>
+        <button type="button" class="plan-cat-btn" data-filter="health">สุขภาพ</button>
+        <button type="button" class="plan-cat-btn" data-filter="protect">คุ้มครองชีวิต</button>
+        <button type="button" class="plan-cat-btn" data-filter="invest">ลงทุน/ยูนิเวอร์แซล</button>
+      </div>
+      <div class="plan-grid" id="plan-grid" data-plan-grid></div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="section-inner reveal">
+      <header class="section-header" data-icon="table">
+        <h2>เปรียบเทียบแผนยอดนิยม</h2>
+        <p>ภาพรวมเพื่อช่วยเลือกแผนเบื้องต้น — รายละเอียดสมบูรณ์ตามเงื่อนไขกรมธรรม์</p>
+      </header>
+      <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>หัวข้อ</th>
+              <th>เลกาซี ฟิต รีไทร์ 99/10</th>
+              <th>ลดหย่อนภาษี แบบสั้น</th>
+              <th>ประกันสุขภาพ วัยทำงาน</th>
+              <th>Money Fit 12/6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>เป้าหมายหลัก</td>
+              <td>เกษียณ + มรดก</td>
+              <td>ออม + ลดภาษี</td>
+              <td>ค่ารักษา</td>
+              <td>ออม + เงินคืน</td>
+            </tr>
+            <tr>
+              <td>ช่วงชำระเบี้ย</td>
+              <td>10 ปี</td>
+              <td>ตามแบบ</td>
+              <td>รายปี</td>
+              <td>12 ปี</td>
+            </tr>
+            <tr>
+              <td>ลดหย่อนภาษี</td>
+              <td>ได้ (ตามกฎ)</td>
+              <td>ได้ (ตามกฎ)</td>
+              <td>ตามประเภท</td>
+              <td>ได้ (ตามกฎ)</td>
+            </tr>
+            <tr>
+              <td>เหมาะกับ</td>
+              <td>วางแผนเกษียณ</td>
+              <td>ผู้มีรายได้เสียภาษี</td>
+              <td>วัยทำงาน</td>
+              <td>ออมระยะกลาง</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner reveal">
+      <header class="section-header" data-icon="help">
+        <h2>วิธีเลือกแผนประกัน</h2>
+      </header>
+      <div class="two-col-blocks">
+        <div class="info-block">
+          <h4>1. กำหนดเป้าหมาย</h4>
+          <p>ต้องการออม ลดภาษี คุ้มครองชีวิต ดูแลสุขภาพ หรือวางแผนเกษียณ — เป้าหมายชัดช่วยเลือกแผนได้ตรงจุด</p>
+        </div>
+        <div class="info-block">
+          <h4>2. ประเมินงบประมาณ</h4>
+          <p>เบี้ยประกันควรสมดุลกับรายได้ ไม่กระทบค่าใช้จ่ายจำเป็น — ปรึกษาเพื่อจำลองเบี้ยหลายแบบ</p>
+        </div>
+        <div class="info-block">
+          <h4>3. ตรวจสุขภาพและอายุ</h4>
+          <p>บางแผนไม่ตรวจสุขภาพตามเงื่อนไข อายุและประวัติสุขภาพมีผลต่อเบี้ยและการรับประกัน</p>
+        </div>
+        <div class="info-block">
+          <h4>4. อ่านเงื่อนไขกรมธรม์</h4>
+          <p>ข้อยกเว้น ระยะรอคอย ผลประโยชน์ — ควรเข้าใจก่อนตัดสินใจ ตัวแทนจะอธิบายให้ครบถ้วน</p>
+        </div>
+      </div>
+      <p class="plan-disclaimer">
+        ข้อมูลบนหน้านี้เป็นภาพรวมเพื่อการให้คำแนะนำเบื้องต้น ไม่ถือเป็นส่วนหนึ่งของกรมธรรม์ประกันภัย ผลประโยชน์ เบี้ยประกันภัย และเงื่อนไขการรับประกันขึ้นอยู่กับบริษัท ไทยประกันชีวิต จำกัด (มหาชน) ตามที่ระบุในกรมธรรม์และสัญญาแนบท้าย
+      </p>
+    </div>
+  </section>
+
+  <section class="cta-band reveal">
+    <h2>ให้เราช่วยเลือกแผนที่เหมาะกับคุณ</h2>
+    <p>ปรึกษาฟรี วางแผนเบี้ยและความคุ้มครองตามงบประมาณจริง</p>
+    <div class="cta-actions">
+      <a href="contact.html" class="btn btn-primary">ขอใบเสนอเบี้ย</a>
+      <a href="tel:0852925320" class="btn btn-outline">โทร 085-292-5320</a>
+    </div>
+  </section>
+
+  
+  <footer id="site-footer"></footer>
+  <script src="js/section-headers.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/footer.js"></script>
+  <script src="js/plans-data.js"></script>
+  <script src="js/plan-cards.js"></script>
+  <script src="js/plans.js"></script>
+</body>
+</html>
