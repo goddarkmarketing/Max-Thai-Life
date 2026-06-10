@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   const header = document.querySelector(".site-header");
   const toggle = document.querySelector(".nav-toggle");
   const nav = document.querySelector(".main-nav");

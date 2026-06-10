@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   var MOBILE_MQ = window.matchMedia("(max-width: 768px)");
   var instances = [];
 
@@ -138,8 +138,12 @@
     this.updateDots();
   };
 
+  ContentSlider.prototype.isAlwaysOn = function () {
+    return this.root.hasAttribute("data-slider-always");
+  };
+
   ContentSlider.prototype.handleScroll = function () {
-    if (!this.viewport || !MOBILE_MQ.matches) return;
+    if (!this.viewport || (!MOBILE_MQ.matches && !this.isAlwaysOn())) return;
     var w = this.viewport.clientWidth;
     if (!w) return;
     var closest = Math.round(this.viewport.scrollLeft / w);
@@ -155,7 +159,7 @@
     var self = this;
     this.stopAuto();
     var items = this.getItems();
-    if (!MOBILE_MQ.matches || items.length <= 1) return;
+    if ((!MOBILE_MQ.matches && !this.isAlwaysOn()) || items.length <= 1) return;
     this.timer = window.setInterval(function () {
       self.goTo(self.index + 1);
     }, 5500);
@@ -208,12 +212,16 @@
   };
 
   ContentSlider.prototype.update = function () {
-    if (MOBILE_MQ.matches) this.enable();
+    if (MOBILE_MQ.matches || this.isAlwaysOn()) this.enable();
     else this.disable();
   };
 
   ContentSlider.prototype.refresh = function () {
-    if (!MOBILE_MQ.matches || !this.root.classList.contains("is-active")) return;
+    if (
+      (!MOBILE_MQ.matches && !this.isAlwaysOn()) ||
+      !this.root.classList.contains("is-active")
+    )
+      return;
     this.syncSlideWidth();
     this.goTo(this.index);
   };

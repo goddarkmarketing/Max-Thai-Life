@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   var script = document.currentScript;
   var base = (script && script.getAttribute("data-base")) || "";
   var limit = parseInt((script && script.getAttribute("data-limit")) || "0", 10) || 0;
@@ -10,7 +10,16 @@
   if (limit > 0) plans = plans.slice(0, limit);
 
   function u(path) {
-    return (base + path).replace(/ /g, "%20");
+    return (base + path)
+      .split("/")
+      .map(function (seg) {
+        if (!seg) return seg;
+        try {
+          seg = decodeURIComponent(seg);
+        } catch (e) {}
+        return encodeURIComponent(seg);
+      })
+      .join("/");
   }
 
   function cardHtml(plan) {

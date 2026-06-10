@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   var script = document.currentScript;
   var base = (script && script.getAttribute("data-base")) || "";
   var mount = document.getElementById("site-footer");
@@ -17,7 +17,7 @@
     '      <img src="' + u("images/profile/agent-profile.png") + '" alt="วรชาติ โตเต็ม" class="footer-top-avatar" width="95" height="95" loading="lazy" decoding="async">' +
     '      <div class="footer-top-brand-text">' +
     '        <p class="footer-logo-title">Max Thai Life</p>' +
-    '        <p class="footer-logo-sub">สำนักงานตัวแทนดิจิทัล · ไทยประกันชีวิต</p>' +
+    '        <p class="footer-logo-sub">สำนักงานตัวแทนแม็ก · ไทยประกันชีวิต</p>' +
     '        <p class="footer-tagline">ที่ปรึกษาทางการเงินและประกันชีวิต · สาขานครปฐม</p>' +
     '      </div>' +
     '    </div>' +
@@ -38,6 +38,7 @@
     '        <li><a href="' + u("products.html") + '">บทความ / ผลิตภัณฑ์</a></li>' +
     '        <li><a href="' + u("career.html") + '">แนะนำอาชีพ</a></li>' +
     '        <li><a href="' + u("news.html") + '">ข่าวและกิจกรรม</a></li>' +
+    '        <li><a href="' + u("claim-reviews.html") + '">รีวิวเคลม</a></li>' +
     '        <li><a href="' + u("contact.html") + '">ติดต่อสอบถาม</a></li>' +
     "      </ul>" +
     "    </div>" +

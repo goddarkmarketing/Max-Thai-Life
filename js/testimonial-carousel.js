@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   var root = document.querySelector("[data-testimonial-slider]");
   if (!root) return;
 

@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   const buttons = document.querySelectorAll(".plan-cat-btn");
   const cards = document.querySelectorAll(".plan-card[data-category]");
 
