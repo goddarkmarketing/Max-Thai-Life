@@ -110,7 +110,6 @@
       .join("");
     return (
       '<section id="brochure" class="plan-brochure">' +
-      "<h2>รายละเอียดจากโบรชัวร์</h2>" +
       '<div class="plan-brochure-gallery">' +
       items +
       "</div></section>"
@@ -138,16 +137,17 @@
       '<div class="plan-detail-layout">' +
       '<aside class="plan-sidebar">' +
       '<nav aria-label="สารบัญ">' +
+      brochureNavLink +
       '<a href="#overview" class="active">ภาพรวม</a>' +
       '<a href="#benefits">จุดเด่น</a>' +
       '<a href="#specs">ข้อมูลแผน</a>' +
       '<a href="#who">เหมาะกับใคร</a>' +
-      brochureNavLink +
       '<a href="#faq">คำถามที่พบบ่อย</a>' +
       "</nav>" +
       '<p style="margin-top:1.5rem;font-size:0.875rem"><a href="../plans.html">← กลับรายการแผน</a></p>' +
       "</aside>" +
       '<div class="plan-content">' +
+      brochureHtml() +
       '<section id="overview">' +
       coverHtml +
       "<h2>ภาพรวมแผน</h2>" +
@@ -176,7 +176,6 @@
       "<h2>เหมาะกับใคร</h2>" +
       whoHtml +
       "</section>" +
-      brochureHtml() +
       '<section id="faq" class="plan-faq">' +
       "<h2>คำถามที่พบบ่อย</h2>" +
       faqHtml +
