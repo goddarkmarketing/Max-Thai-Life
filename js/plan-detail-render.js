@@ -3,6 +3,13 @@
   var plan = window.PLANS_DETAIL && window.PLANS_DETAIL[id];
   if (!plan) return;
 
+  (window.PLANS_DATA || []).forEach(function (card) {
+    var slug = (card.href || "").replace(/^plans\//, "").replace(/\.html$/, "");
+    if (slug === id && card.image) {
+      plan.image = card.image;
+    }
+  });
+
   function encodePlanPath(path) {
     return path
       .split("/")
@@ -16,9 +23,15 @@
       .join("/");
   }
 
-  document.title = plan.title + " | แผนประกัน";
+  function plainText(html) {
+    var d = document.createElement("div");
+    d.innerHTML = html || "";
+    return (d.textContent || "").trim();
+  }
+
+  document.title = plainText(plan.title) + " | แผนประกัน";
   var meta = document.querySelector('meta[name="description"]');
-  if (meta) meta.setAttribute("content", plan.description);
+  if (meta) meta.setAttribute("content", plainText(plan.description || plan.heroLead));
 
   var hero = document.querySelector("header.page-hero");
   if (hero) hero.classList.add("page-hero--plan");
@@ -35,13 +48,13 @@
       "</p>";
   }
 
-  var benefitsHtml = plan.benefits
+  var benefitsListHtml = plan.benefits
     .map(function (b) {
       return "<li>" + b + "</li>";
     })
     .join("");
 
-  var specsHtml = plan.specs
+  var specsListHtml = plan.specs
     .map(function (row) {
       return "<tr><th>" + row[0] + "</th><td>" + row[1] + "</td></tr>";
     })
@@ -53,19 +66,19 @@
     '<path d="M6 9l6 6 6-6"/>' +
     "</svg></span>";
 
-  var faqHtml = plan.faq
+  var faqListHtml = plan.faq
     .map(function (item) {
       return (
         '<details class="faq-item">' +
         '<summary class="faq-item__summary">' +
-        '<span class="faq-item__question">' +
+        '<div class="faq-item__question">' +
         item.q +
-        "</span>" +
+        "</div>" +
         faqChevron +
         "</summary>" +
-        '<div class="faq-item__answer"><p>' +
+        '<div class="faq-item__answer"><div class="faq-item__body">' +
         item.a +
-        "</p></div></details>"
+        "</div></div></details>"
       );
     })
     .join("");
@@ -79,9 +92,9 @@
           return (
             '<div class="info-block"><h4>' +
             block.title +
-            "</h4><p>" +
+            "</h4><div class=\"info-block__text\">" +
             block.text +
-            "</p></div>"
+            "</div></div>"
           );
         })
         .join("") +
@@ -90,99 +103,204 @@
     whoHtml = "<p>" + plan.whoText + "</p>";
   }
 
-  function brochureHtml() {
+  function buildGalleryHtml() {
     if (!plan.brochureImages || !plan.brochureImages.length) return "";
     var title = plan.title.replace(/"/g, "&quot;");
     var items = plan.brochureImages
       .map(function (src, index) {
         return (
-          '<figure class="plan-brochure-item">' +
+          '<figure class="plan-gallery-item">' +
           '<img src="../' +
           encodePlanPath(src) +
           '" alt="' +
           title +
-          " หน้า " +
+          " รูป " +
           (index + 1) +
           '" loading="lazy" decoding="async">' +
           "</figure>"
         );
       })
       .join("");
-    return (
-      '<section id="brochure" class="plan-brochure">' +
-      '<div class="plan-brochure-gallery">' +
-      items +
-      "</div></section>"
-    );
+    return '<div class="plan-image-gallery">' + items + "</div>";
   }
 
-  var brochureNavLink =
-    plan.brochureImages && plan.brochureImages.length
-      ? '<a href="#brochure">รายละเอียดโบรชัวร์</a>'
-      : "";
+  function buildOverviewMediaHtml() {
+    var blocks = plan.overviewBlocks;
+    if (blocks && blocks.length) {
+      var title = plan.title.replace(/"/g, "&quot;");
+      return blocks
+        .map(function (block) {
+          if (block.type === "text" && block.html) {
+            return '<div class="plan-overview-inline-text">' + block.html + "</div>";
+          }
+          if (block.type === "image" && block.src) {
+            if (block.cover) {
+              return (
+                '<figure class="plan-section-cover">' +
+                '<img src="../' +
+                encodePlanPath(block.src) +
+                '" alt="' +
+                title +
+                '" width="960" height="540" loading="lazy" decoding="async">' +
+                "</figure>"
+              );
+            }
+            return (
+              '<figure class="plan-gallery-item">' +
+              '<img src="../' +
+              encodePlanPath(block.src) +
+              '" alt="' +
+              title +
+              " รูป" +
+              '" loading="lazy" decoding="async">' +
+              "</figure>"
+            );
+          }
+          return "";
+        })
+        .join("");
+    }
+    return buildGalleryHtml();
+  }
 
-  var root = document.getElementById("plan-detail-root");
-  if (root) {
-    var coverHtml = plan.image
-      ? '<figure class="plan-section-cover">' +
+  function buildOverviewSection() {
+    var mediaHtml = buildOverviewMediaHtml();
+    var hasOrderedMedia = plan.overviewBlocks && plan.overviewBlocks.length;
+    var isHomeCardImage = plan.image && plan.image.indexOf("images/plan-cards/") === 0;
+    var coverHtml = "";
+    if (!hasOrderedMedia && plan.image) {
+      coverHtml =
+        '<figure class="plan-section-cover">' +
         '<img src="../' +
         encodePlanPath(plan.image) +
         '" alt="' +
         plan.title.replace(/"/g, "&quot;") +
         '" width="960" height="540" loading="lazy" decoding="async">' +
-        "</figure>"
-      : "";
+        "</figure>";
+    }
+    var galleryWrap = "";
+    if (!hasOrderedMedia && mediaHtml && !isHomeCardImage) {
+      galleryWrap = '<div class="plan-image-gallery">' + mediaHtml + "</div>";
+    } else if (hasOrderedMedia) {
+      galleryWrap = mediaHtml ? '<div class="plan-image-gallery">' + mediaHtml + "</div>" : "";
+    }
 
-    root.innerHTML =
-      '<div class="plan-detail-layout">' +
-      '<aside class="plan-sidebar">' +
-      '<nav aria-label="สารบัญ">' +
-      brochureNavLink +
-      '<a href="#overview" class="active">ภาพรวม</a>' +
-      '<a href="#benefits">จุดเด่น</a>' +
-      '<a href="#specs">ข้อมูลแผน</a>' +
-      '<a href="#who">เหมาะกับใคร</a>' +
-      '<a href="#faq">คำถามที่พบบ่อย</a>' +
-      "</nav>" +
-      '<p style="margin-top:1.5rem;font-size:0.875rem"><a href="../plans.html">← กลับรายการแผน</a></p>' +
-      "</aside>" +
-      '<div class="plan-content">' +
-      brochureHtml() +
-      '<section id="overview">' +
-      coverHtml +
+    var bodyHtml =
       "<h2>ภาพรวมแผน</h2>" +
-      "<p>" +
+      '<div class="plan-overview-body">' +
       plan.overview +
-      "</p>" +
+      "</div>" +
       (plan.highlight
         ? '<div class="plan-highlight-box"><strong>จุดขายหลัก:</strong> ' +
           plan.highlight +
           "</div>"
-        : "") +
-      "</section>" +
+        : "");
+
+    var mediaBlock = coverHtml + galleryWrap;
+    var singleItem =
+      (hasOrderedMedia && plan.overviewBlocks.length === 1) || (!hasOrderedMedia && !!plan.image);
+    var mediaAfter = !!plan.overviewMediaAfterContent && singleItem;
+
+    return (
+      '<section id="overview">' +
+      (mediaAfter ? bodyHtml + mediaBlock : mediaBlock + bodyHtml) +
+      "</section>"
+    );
+  }
+
+  function buildBenefitsSection() {
+    return (
       '<section id="benefits">' +
       "<h2>จุดเด่นและผลประโยชน์</h2>" +
       "<ul>" +
-      benefitsHtml +
-      "</ul>" +
-      "</section>" +
+      benefitsListHtml +
+      "</ul></section>"
+    );
+  }
+
+  function buildSpecsSection() {
+    return (
       '<section id="specs">' +
       "<h2>ข้อมูลแผน (ภาพรวม)</h2>" +
       '<table class="plan-spec-table">' +
-      specsHtml +
-      "</table>" +
-      "</section>" +
-      '<section id="who">' +
-      "<h2>เหมาะกับใคร</h2>" +
-      whoHtml +
-      "</section>" +
+      specsListHtml +
+      "</table></section>"
+    );
+  }
+
+  function buildWhoSection() {
+    return '<section id="who"><h2>เหมาะกับใคร</h2>' + whoHtml + "</section>";
+  }
+
+  function buildFaqSection() {
+    return (
       '<section id="faq" class="plan-faq">' +
       "<h2>คำถามที่พบบ่อย</h2>" +
-      faqHtml +
-      "</section>" +
-      '<p class="plan-disclaimer">' +
+      faqListHtml +
+      "</section>"
+    );
+  }
+
+  var DEFAULT_SECTION_ORDER = ["overview", "benefits", "specs", "who", "faq"];
+  var NAV_LABELS = {
+    overview: "ภาพรวม",
+    benefits: "จุดเด่น",
+    specs: "ข้อมูลแผน",
+    who: "เหมาะกับใคร",
+    faq: "คำถามที่พบบ่อย",
+  };
+
+  var sectionBuilders = {
+    overview: buildOverviewSection,
+    benefits: buildBenefitsSection,
+    specs: buildSpecsSection,
+    who: buildWhoSection,
+    faq: buildFaqSection,
+  };
+
+  var sectionOrder = (plan.sectionOrder || DEFAULT_SECTION_ORDER.slice()).filter(function (id) {
+    return id !== "brochure";
+  });
+  var contentHtml = sectionOrder
+    .map(function (id) {
+      var build = sectionBuilders[id];
+      return build ? build() : "";
+    })
+    .filter(function (html) {
+      return html !== "";
+    })
+    .join("");
+
+  var navSections = sectionOrder;
+  var navLinks = navSections
+    .map(function (id, index) {
+      return (
+        '<a href="#' +
+        id +
+        '"' +
+        (index === 0 ? ' class="active"' : "") +
+        ">" +
+        NAV_LABELS[id] +
+        "</a>"
+      );
+    })
+    .join("");
+
+  var root = document.getElementById("plan-detail-root");
+  if (root) {
+    root.innerHTML =
+      '<div class="plan-detail-layout">' +
+      '<aside class="plan-sidebar">' +
+      '<nav aria-label="สารบัญ">' +
+      navLinks +
+      "</nav>" +
+      '<p style="margin-top:1.5rem;font-size:0.875rem"><a href="../plans.html">← กลับรายการแผน</a></p>' +
+      "</aside>" +
+      '<div class="plan-content">' +
+      contentHtml +
+      '<div class="plan-disclaimer">' +
       plan.disclaimer +
-      "</p>" +
+      "</div>" +
       "</div></div>";
 
     initPlanSidebarNav(root);

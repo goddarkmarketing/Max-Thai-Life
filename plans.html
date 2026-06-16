@@ -45,13 +45,14 @@
     <div class="section-inner reveal">
       <div class="plan-categories" role="tablist" aria-label="หมวดแผนประกัน">
         <button type="button" class="plan-cat-btn active" data-filter="all">ทั้งหมด</button>
-        <button type="button" class="plan-cat-btn" data-filter="save">ออมและเกษียณ</button>
-        <button type="button" class="plan-cat-btn" data-filter="tax">ลดหย่อนภาษี</button>
-        <button type="button" class="plan-cat-btn" data-filter="health">สุขภาพ</button>
+        <button type="button" class="plan-cat-btn" data-filter="savings">ออมทรัพย์</button>
         <button type="button" class="plan-cat-btn" data-filter="protect">คุ้มครองชีวิต</button>
-        <button type="button" class="plan-cat-btn" data-filter="invest">ลงทุน/ยูนิเวอร์แซล</button>
+        <button type="button" class="plan-cat-btn" data-filter="health">ประกันสุขภาพ</button>
+        <button type="button" class="plan-cat-btn" data-filter="rider">สัญญาเพิ่มเติม</button>
+        <button type="button" class="plan-cat-btn" data-filter="pension">บำนาญ/เกษียณ</button>
+        <button type="button" class="plan-cat-btn" data-filter="invest">ลงทุน/Life Verse</button>
       </div>
-      <div class="plan-grid" id="plan-grid" data-plan-grid></div>
+      <div class="plan-grid plan-grid-3" id="plan-grid" data-plan-grid></div>
     </div>
   </section>
 
@@ -66,26 +67,26 @@
           <thead>
             <tr>
               <th>หัวข้อ</th>
-              <th>เลกาซี ฟิต รีไทร์ 99/10</th>
               <th>ลดหย่อนภาษี แบบสั้น</th>
+              <th>ไลฟ์เวิร์ส 99/99</th>
               <th>ประกันสุขภาพ วัยทำงาน</th>
-              <th>Money Fit 12/6</th>
+              <th>เลกาซี ฟิต รีไทร์</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>เป้าหมายหลัก</td>
-              <td>เกษียณ + มรดก</td>
               <td>ออม + ลดภาษี</td>
+              <td>คุ้มครองครอบครัว</td>
               <td>ค่ารักษา</td>
-              <td>ออม + เงินคืน</td>
+              <td>เกษียณ + มรดก</td>
             </tr>
             <tr>
               <td>ช่วงชำระเบี้ย</td>
-              <td>10 ปี</td>
               <td>ตามแบบ</td>
+              <td>ยืดหยุ่น</td>
               <td>รายปี</td>
-              <td>12 ปี</td>
+              <td>10 ปี</td>
             </tr>
             <tr>
               <td>ลดหย่อนภาษี</td>
@@ -96,10 +97,10 @@
             </tr>
             <tr>
               <td>เหมาะกับ</td>
-              <td>วางแผนเกษียณ</td>
               <td>ผู้มีรายได้เสียภาษี</td>
+              <td>วางแผนครอบครัว</td>
               <td>วัยทำงาน</td>
-              <td>ออมระยะกลาง</td>
+              <td>วางแผนเกษียณ</td>
             </tr>
           </tbody>
         </table>
@@ -150,6 +151,8 @@
   <script src="js/section-headers.js"></script>
   <script src="js/main.js"></script>
   <script src="js/footer.js"></script>
+  <script src="js/pages-data.js"></script>
+  <script src="js/plans-page-render.js"></script>
   <script src="js/plans-data.js"></script>
   <script src="js/plan-cards.js"></script>
   <script src="js/plans.js"></script>

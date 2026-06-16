@@ -23,7 +23,7 @@
   --surface: #eef4fc;
   --white: #ffffff;
   --border: rgba(var(--tl-blue-rgb), 0.16);
-  --font-family: "SF Pro TH", system-ui, -apple-system, sans-serif;
+  --font-family: "BetterTogether", system-ui, -apple-system, sans-serif;
   --header-h: 76px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -609,7 +609,7 @@ a:hover {
   font-size: 3.5rem;
   line-height: 1;
   color: rgba(var(--tl-blue-rgb), 0.12);
-  font-family: Georgia, serif;
+  font-family: var(--font-family);
 }
 
 .testimonial-stars {
@@ -1162,7 +1162,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 1.1rem 1.15rem 1.2rem;
+  padding: 1.2rem 1.35rem 1.35rem;
   min-width: 0;
 }
 
@@ -2715,6 +2715,10 @@ a:hover {
   grid-template-columns: repeat(4, 1fr);
 }
 
+.plan-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .plan-card {
   border-radius: 16px;
   background: var(--white);
@@ -2747,7 +2751,7 @@ a:hover {
   height: 100%;
   max-width: none;
   object-fit: cover;
-  object-position: center;
+  object-position: left center;
   display: block;
   transition: transform 0.5s var(--ease);
 }
@@ -2759,7 +2763,8 @@ a:hover {
 .plan-card-tag {
   position: absolute;
   top: 0.85rem;
-  left: 0.85rem;
+  right: 0.85rem;
+  left: auto;
   z-index: 2;
   font-size: 0.6875rem;
   font-weight: 700;
@@ -3320,6 +3325,75 @@ a:hover {
   margin-bottom: 0.75rem;
 }
 
+.plan-overview-body {
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+  line-height: 1.65;
+  white-space: normal;
+}
+
+.plan-highlight-box .pe-editable,
+.plan-highlight-box p {
+  white-space: normal;
+}
+
+.plan-overview-body p,
+.plan-overview-body li,
+.plan-overview-body h3 {
+  color: var(--muted);
+}
+
+.plan-overview-body h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.75rem;
+  color: var(--tl-blue);
+}
+
+.plan-overview-body ul,
+.plan-overview-body ol {
+  margin: 0 0 1rem 1.25rem;
+}
+
+.plan-overview-body mark,
+.plan-content mark,
+.plan-highlight-box mark {
+  background: #fef08a;
+  color: inherit;
+  padding: 0.1em 0.2em;
+  border-radius: 3px;
+}
+
+.plan-inline-figure {
+  margin: 1.25rem 0;
+  text-align: center;
+}
+
+.plan-inline-figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.plan-video-embed {
+  position: relative;
+  margin: 1.25rem 0;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
+}
+
+.plan-video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 .plan-content ul {
   margin: 0 0 1rem 1.25rem;
 }
@@ -3332,13 +3406,7 @@ a:hover {
   margin: 1.5rem 0;
   font-size: 0.9375rem;
   line-height: 1.5;
-  white-space: nowrap;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.plan-highlight-box::-webkit-scrollbar {
-  display: none;
+  white-space: normal;
 }
 
 .plan-highlight-box strong {
@@ -3366,6 +3434,7 @@ a:hover {
   width: 35%;
 }
 
+.plan-image-gallery,
 .plan-brochure-gallery {
   display: flex;
   flex-direction: column;
@@ -3373,6 +3442,7 @@ a:hover {
   margin-top: 0.5rem;
 }
 
+.plan-gallery-item,
 .plan-brochure-item {
   margin: 0;
   border-radius: 14px;
@@ -3382,10 +3452,25 @@ a:hover {
   box-shadow: 0 6px 24px rgba(var(--tl-blue-dark-rgb), 0.06);
 }
 
+.plan-gallery-item img,
 .plan-brochure-item img {
   width: 100%;
   height: auto;
   display: block;
+}
+
+.plan-overview-inline-text {
+  margin: 0.75rem 0;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.plan-overview-inline-text p {
+  margin: 0 0 0.65rem;
+}
+
+.plan-overview-inline-text p:last-child {
+  margin-bottom: 0;
 }
 
 .plan-faq {
@@ -3604,7 +3689,8 @@ a:hover {
 
 /* Responsive — tablet & mobile */
 @media (max-width: 1200px) {
-  .plan-grid-4 {
+  .plan-grid-4,
+  .plan-grid-3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -3659,7 +3745,8 @@ a:hover {
   }
 
   .plan-grid,
-  .plan-grid-4 {
+  .plan-grid-4,
+  .plan-grid-3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -3668,21 +3755,9 @@ a:hover {
   }
 }
 
-@media (max-width: 768px) {
-  :root {
-    --header-h: 64px;
-  }
-
+@media (max-width: 1024px) {
   body.nav-open {
     overflow: hidden;
-  }
-
-  body {
-    font-size: 1rem;
-  }
-
-  .header-inner {
-    padding: 0 1rem;
   }
 
   .nav-toggle {
@@ -3726,6 +3801,20 @@ a:hover {
     margin-top: 0.35rem;
     text-align: center;
     justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --header-h: 64px;
+  }
+
+  body {
+    font-size: 1rem;
+  }
+
+  .header-inner {
+    padding: 0 1rem;
   }
 
   .brand-sub {
@@ -3910,7 +3999,8 @@ a:hover {
   }
 
   .plan-grid,
-  .plan-grid-4 {
+  .plan-grid-4,
+  .plan-grid-3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.85rem;
   }
@@ -3948,7 +4038,7 @@ a:hover {
     display: flex;
     flex-direction: row;
     grid-template-columns: unset;
-    gap: 0;
+    gap: 0.75rem;
   }
 
   .content-slider.is-active .news-card-grid.content-slider-track {
@@ -3964,7 +4054,7 @@ a:hover {
   }
 
   .content-slider.is-active .content-slider-track > li {
-    padding: 0 0.1rem;
+    padding: 0;
   }
 
   .content-slider.is-active .article-item {
@@ -3985,13 +4075,21 @@ a:hover {
   .article-item {
     grid-template-columns: 1fr;
     align-items: stretch;
-    padding: 0.9rem;
-    gap: 0.5rem;
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
   }
 
   .article-thumb {
     width: 100%;
     aspect-ratio: 16 / 10;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .article-body {
+    padding: 1.15rem 1.25rem 0.65rem;
   }
 
   .article-item h3 {
@@ -4017,7 +4115,7 @@ a:hover {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.2rem;
-    padding-top: 0;
+    padding: 0 1.25rem 1.15rem;
     font-size: 0.75rem;
   }
 

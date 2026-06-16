@@ -1,0 +1,1065 @@
+/* Visual plan editor — overlays on frontend layout */
+:root {
+  --pe-bar-h: 56px;
+}
+
+body.plan-visual-mode {
+  overflow-x: hidden;
+}
+
+body.admin-body.plan-visual-mode {
+  padding-top: 0;
+}
+
+.admin-main--visual {
+  min-height: 100vh;
+  padding-top: var(--pe-bar-h);
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-alert--visual {
+  margin: 0;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+body.plan-visual-mode .site-header {
+  position: sticky;
+  top: 0;
+}
+
+/* Header เป็น sticky ใน flow แล้ว — ไม่ต้อง margin-top ซ้ำกับหน้าเว็บจริง */
+body.plan-visual-mode .pe-canvas-wrap .page-hero {
+  margin-top: 0;
+}
+
+body.admin-body.plan-visual-mode .pe-admin-bar {
+  left: var(--admin-sidebar-w, 260px);
+}
+
+.pe-workspace {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - var(--pe-bar-h));
+}
+
+.pe-canvas-wrap {
+  flex: 1;
+  margin-left: 0;
+  min-width: 0;
+  background: #e8eaed;
+}
+
+.pe-canvas-wrap .section {
+  background: #fff;
+}
+
+.pe-canvas-wrap .section-inner {
+  max-width: 1200px;
+}
+
+.is-layer-selected {
+  outline: 3px solid #0054a6 !important;
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+.pe-editable {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.pe-item-row {
+  user-select: text;
+}
+
+.pe-section {
+  user-select: text;
+}
+
+.pe-admin-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  height: var(--pe-bar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 1rem;
+  background: #1a2332;
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pe-admin-bar-brand {
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pe-admin-bar-brand span {
+  opacity: 0.65;
+  font-weight: 400;
+}
+
+.pe-admin-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.pe-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 0.85rem;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  color: inherit;
+}
+
+.pe-btn--primary {
+  background: #0054a6;
+  color: #fff;
+  border-color: #0054a6;
+}
+
+.pe-btn--primary:hover {
+  background: #003d7a;
+}
+
+.pe-btn--ghost {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.pe-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.pe-status {
+  font-size: 0.8125rem;
+  opacity: 0.85;
+  min-width: 5rem;
+  text-align: right;
+}
+
+.pe-status.is-ok {
+  color: #6ee7b7;
+}
+
+.pe-status.is-error {
+  color: #fca5a5;
+}
+
+/* Editable blocks — hover toolbar */
+.pe-block-wrap {
+  position: relative;
+  border-radius: 8px;
+  transition: box-shadow 0.15s, outline 0.15s;
+}
+
+.pe-block-wrap:hover,
+.pe-block-wrap.is-editing {
+  box-shadow: 0 0 0 2px rgba(0, 84, 166, 0.18);
+}
+
+.pe-block-wrap.is-editing {
+  box-shadow: 0 0 0 2px #0054a6;
+  background: rgba(0, 84, 166, 0.03);
+}
+
+.pe-block-wrap--inline {
+  display: inline;
+  vertical-align: baseline;
+}
+
+.pe-block-actions {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 12;
+  display: none;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.pe-block-wrap:hover > .pe-block-actions,
+.pe-block-wrap.is-editing > .pe-block-actions {
+  display: flex;
+}
+
+.pe-block-wrap > .pe-block-actions {
+  display: none;
+}
+
+.pe-block-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 0.65rem;
+  border: none;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.pe-block-btn--edit {
+  background: #0054a6;
+  color: #fff;
+}
+
+.pe-block-btn--edit:hover {
+  background: #003d7a;
+}
+
+.pe-block-btn--delete {
+  background: #fff;
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.35);
+}
+
+.pe-block-btn--delete:hover {
+  background: #fef2f2;
+}
+
+.pe-block-btn--add {
+  background: #fff;
+  color: #059669;
+  border: 1px solid rgba(5, 150, 105, 0.35);
+}
+
+.pe-block-btn--add:hover {
+  background: #ecfdf5;
+}
+
+.pe-block-btn--move {
+  min-width: 28px;
+  padding: 0 0.35rem;
+  background: #fff;
+  color: #0054a6;
+  border: 1px solid rgba(0, 84, 166, 0.32);
+}
+
+.pe-block-btn--move:hover {
+  background: rgba(0, 84, 166, 0.08);
+  border-color: rgba(0, 84, 166, 0.5);
+}
+
+.pe-block-btn--move.is-disabled,
+.pe-block-btn--move:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.pe-block-btn--move svg {
+  display: block;
+}
+
+.pe-field {
+  position: relative;
+  width: 100%;
+}
+
+.pe-field--inline {
+  display: inline;
+  width: auto;
+}
+
+.pe-editable {
+  position: relative;
+  border-radius: 6px;
+  transition: box-shadow 0.15s, outline 0.15s;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-break: auto;
+}
+
+.pe-editable.pe-rich,
+.pe-field .pe-editable {
+  display: block;
+  width: 100%;
+  min-height: 1.5em;
+}
+
+.pe-editable--inline {
+  display: inline;
+  width: auto;
+  min-height: 0;
+}
+
+.pe-editable[contenteditable="false"] {
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.pe-editable[contenteditable="true"] {
+  cursor: text;
+  user-select: text;
+  -webkit-user-select: text;
+  outline: 2px solid #0054a6;
+  outline-offset: 3px;
+  background: rgba(0, 84, 166, 0.04);
+}
+
+.pe-editable:focus {
+  outline: 2px solid #0054a6;
+  outline-offset: 3px;
+  background: rgba(0, 84, 166, 0.04);
+}
+
+.pe-editable.pe-editable--empty:empty::before {
+  content: attr(data-placeholder);
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+tr.pe-block-wrap {
+  position: relative;
+}
+
+.plan-visual-mode .pe-spec-list {
+  width: 100%;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.plan-visual-mode .pe-spec-row {
+  display: grid;
+  grid-template-columns: 35% 1fr;
+  position: relative;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  min-height: 3rem;
+}
+
+.plan-visual-mode .pe-spec-row:last-child {
+  border-bottom: none;
+}
+
+.plan-visual-mode .pe-spec-label {
+  padding: 0.75rem 1rem;
+  background: var(--surface, #f6f8fc);
+  color: var(--tl-blue, #003da5);
+  font-weight: 600;
+  border-right: 1px solid var(--border, #e2e8f0);
+}
+
+.plan-visual-mode .pe-spec-value {
+  padding: 0.75rem 1rem;
+  padding-right: 9rem;
+}
+
+.plan-visual-mode .pe-spec-row .pe-block-actions {
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.plan-visual-mode [data-pe-list="benefits"] .pe-item-row .pe-field,
+.plan-visual-mode .info-block.pe-item-row {
+  padding-right: 13rem;
+}
+
+.plan-visual-mode .pe-spec-row .pe-spec-label,
+.plan-visual-mode .pe-spec-row .pe-spec-value {
+  padding-right: 0;
+}
+
+.plan-visual-mode .pe-spec-row {
+  padding-right: 13rem;
+}
+
+.plan-visual-mode [data-pe-list="faq"] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.plan-visual-mode .pe-faq-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.plan-visual-mode .pe-faq-wrap .faq-item {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.plan-visual-mode .pe-faq-wrap > .pe-block-actions {
+  top: 0.5rem;
+  right: 0.35rem;
+}
+
+.plan-visual-mode .pe-faq-wrap .faq-item__summary {
+  padding-right: 13rem;
+}
+
+.plan-visual-mode .faq-item--edit-open {
+  border-color: rgba(var(--tl-blue-rgb), 0.35);
+  box-shadow: 0 8px 28px rgba(var(--tl-blue-rgb), 0.1);
+}
+
+.plan-visual-mode .faq-item--edit-open .faq-item__summary {
+  color: var(--tl-blue);
+  cursor: default;
+  pointer-events: none;
+}
+
+.plan-visual-mode .faq-item--edit-open .faq-item__summary .pe-field,
+.plan-visual-mode .faq-item--edit-open .faq-item__summary .pe-editable {
+  pointer-events: auto;
+  cursor: text;
+}
+
+.plan-visual-mode .faq-item--edit-open .faq-item__answer {
+  display: block;
+}
+
+.plan-visual-mode .pe-list-empty {
+  position: relative;
+  padding: 2rem 1rem;
+  text-align: center;
+  border: 2px dashed rgba(0, 84, 166, 0.2);
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.plan-visual-mode .pe-list-empty-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.pe-media.pe-block-wrap,
+.plan-gallery-item.pe-block-wrap,
+.plan-brochure-item.pe-block-wrap {
+  overflow: hidden;
+}
+
+.pe-media-placeholder,
+.pe-gallery-empty,
+.pe-brochure-empty {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  background: #f4f7fb;
+  color: var(--muted);
+  border-radius: 8px;
+}
+
+.pe-media-placeholder-text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.pe-gallery-empty,
+.pe-brochure-empty {
+  position: relative;
+  border: 2px dashed rgba(0, 84, 166, 0.2);
+  margin: 0.5rem 0;
+}
+
+.pe-gallery-slot {
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.pe-gallery-slot.is-dragover {
+  border-color: #0054a6;
+  background: rgba(0, 84, 166, 0.06);
+}
+
+.pe-gallery-slot-inner {
+  pointer-events: none;
+}
+
+.pe-gallery-slot .pe-gallery-pick-btn {
+  pointer-events: auto;
+  border: none;
+  background: none;
+  color: var(--tl-blue, #0054a6);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.pe-gallery-slot .pe-gallery-pick-btn:hover {
+  color: var(--tl-blue-dark, #003d7a);
+}
+
+.pe-gallery-slot small {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.pe-content-add-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin: 0.3rem 0 0.4rem;
+}
+
+.pe-content-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0.45rem 0.75rem;
+  border: 1px dashed rgba(0, 84, 166, 0.35);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(0, 84, 166, 0.05) 0%, rgba(255, 255, 255, 0.9) 100%);
+  color: var(--tl-blue, #0054a6);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.pe-content-add-btn:hover {
+  background: rgba(0, 84, 166, 0.09);
+  border-color: rgba(0, 84, 166, 0.55);
+}
+
+.plan-visual-mode .plan-section-cover {
+  margin-bottom: 0;
+}
+
+.plan-visual-mode .plan-overview-media {
+  margin-top: 0;
+}
+
+.plan-visual-mode .plan-overview-media .plan-gallery-item {
+  margin-top: 0.35rem;
+}
+
+.plan-visual-mode .plan-overview-media .pe-gallery-slot {
+  margin-top: 0.35rem;
+}
+
+.plan-visual-mode .plan-overview-inline-text {
+  position: relative;
+  margin: 0.35rem 0 0;
+  padding: 0.75rem 13rem 0.75rem 1rem;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 12px;
+  background: #fff;
+  line-height: 1.65;
+  overflow: visible;
+}
+
+.plan-visual-mode .plan-overview-inline-text.pe-block-wrap--media-actions > .pe-block-actions {
+  top: 0.65rem;
+  right: 0.65rem;
+}
+
+.plan-visual-mode .plan-overview-inline-text .pe-field {
+  min-height: 2.5rem;
+}
+
+.pe-media.pe-block-wrap .pe-block-actions,
+.plan-gallery-item.pe-block-wrap .pe-block-actions,
+.plan-brochure-item.pe-block-wrap .pe-block-actions {
+  top: 0.65rem;
+  right: 0.65rem;
+}
+
+.pe-block-wrap--media-actions > .pe-block-actions {
+  display: flex;
+}
+
+.pe-gallery-slot.pe-block-wrap {
+  position: relative;
+  overflow: visible;
+}
+
+.pe-gallery-slot.pe-block-wrap > .pe-block-actions {
+  top: 0.55rem;
+  right: 0.55rem;
+}
+
+
+/* Sections drag */
+.pe-section {
+  position: relative;
+  margin-bottom: 0.25rem;
+  border-radius: 12px;
+  transition: box-shadow 0.2s, opacity 0.2s;
+}
+
+.pe-section:hover {
+  box-shadow: 0 0 0 2px rgba(0, 84, 166, 0.12);
+}
+
+.pe-section.is-dragging {
+  opacity: 0.45;
+}
+
+.pe-section.is-drag-over {
+  box-shadow: 0 0 0 3px #0054a6;
+}
+
+.pe-section-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  background: rgba(0, 84, 166, 0.06);
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--tl-blue);
+}
+
+.pe-drag-handle {
+  cursor: grab;
+  user-select: none;
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  background: rgba(0, 84, 166, 0.1);
+  line-height: 1;
+}
+
+.pe-drag-handle:active {
+  cursor: grabbing;
+}
+
+.pe-item-row {
+  position: relative;
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin-bottom: 0.35rem;
+  padding: 0.35rem 0.25rem 0.35rem 0;
+  border-radius: 8px;
+}
+
+.pe-item-row:hover {
+  background: rgba(0, 84, 166, 0.03);
+}
+
+.pe-item-row .pe-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.pe-item-row .pe-editable {
+  flex: 1;
+  min-width: 0;
+}
+
+.pe-item-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.pe-item-row:hover .pe-item-actions,
+.pe-block:hover .pe-item-actions {
+  opacity: 1;
+}
+
+.pe-icon-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.875rem;
+  line-height: 1;
+}
+
+.pe-icon-btn:hover {
+  border-color: #0054a6;
+  color: #0054a6;
+}
+
+.pe-icon-btn--danger:hover {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.pe-block {
+  position: relative;
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px dashed transparent;
+  border-radius: 10px;
+}
+
+.pe-block:hover {
+  border-color: rgba(0, 84, 166, 0.2);
+}
+
+.plan-visual-mode .faq-item {
+  position: relative;
+}
+
+.plan-visual-mode .pe-faq-del {
+  display: none;
+}
+
+.pe-add-row {
+  margin-top: 0.5rem;
+}
+
+.pe-add-row .pe-btn {
+  min-height: 32px;
+  font-size: 0.8125rem;
+  background: #fff;
+  color: #0054a6;
+  border: 1px dashed rgba(0, 84, 166, 0.35);
+}
+
+.pe-add-row .pe-btn:hover {
+  background: rgba(0, 84, 166, 0.06);
+}
+
+/* Media */
+.pe-media {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.pe-media:hover {
+  outline: 2px dashed rgba(0, 84, 166, 0.45);
+  outline-offset: 3px;
+  cursor: pointer;
+}
+
+.pe-media-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(26, 35, 50, 0.55);
+  opacity: 0;
+  transition: opacity 0.2s;
+  border-radius: inherit;
+}
+
+.pe-media:hover .pe-media-overlay {
+  opacity: 1;
+}
+
+.pe-media-overlay .pe-btn {
+  min-height: 34px;
+}
+
+.pe-image-gallery .plan-gallery-item,
+.pe-brochure-gallery .plan-brochure-item {
+  position: relative;
+}
+
+.pe-brochure-gallery .pe-brochure-actions {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.35rem;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.pe-brochure-gallery .plan-brochure-item:hover .pe-brochure-actions {
+  opacity: 1;
+}
+
+.pe-brochure-gallery .pe-brochure-item.is-dragging {
+  opacity: 0.4;
+}
+
+.plan-visual-mode .plan-sidebar nav a.pe-nav-item {
+  pointer-events: auto;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  user-select: none;
+  padding-left: 0.5rem;
+}
+
+.plan-visual-mode .plan-sidebar nav a.pe-nav-item:active {
+  cursor: grabbing;
+}
+
+.plan-visual-mode .plan-sidebar nav a.pe-nav-item.is-dragging {
+  opacity: 0.45;
+}
+
+.plan-visual-mode .plan-sidebar nav a.pe-nav-item.is-drag-over {
+  background: rgba(0, 84, 166, 0.1);
+  box-shadow: inset 0 0 0 2px rgba(0, 84, 166, 0.35);
+}
+
+.pe-nav-grip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 2rem;
+  color: #94a3b8;
+  opacity: 1;
+}
+
+.pe-nav-grip svg {
+  width: 14px;
+  height: 22px;
+}
+
+.plan-visual-mode .plan-sidebar nav a.pe-nav-item:hover .pe-nav-grip,
+.plan-visual-mode .plan-sidebar nav a.pe-nav-item.is-dragging .pe-nav-grip {
+  color: #0054a6;
+}
+
+.pe-nav-hint {
+  margin: 1rem 0 0;
+  padding: 0 0.25rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.plan-visual-mode .plan-sidebar nav a:not(.pe-nav-item) {
+  pointer-events: none;
+}
+
+.plan-visual-mode .cta-actions a {
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .pe-admin-bar-brand span {
+    display: none;
+  }
+}
+
+/* Rich text toolbar (WordPress-style) */
+.pe-rich-toolbar {
+  position: absolute;
+  z-index: 1100;
+  display: none;
+  max-width: calc(100vw - 24px);
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.14);
+}
+
+.pe-rich-toolbar.is-visible {
+  display: block;
+}
+
+.pe-rich-toolbar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.35rem 0.45rem;
+}
+
+.pe-rich-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0 0.45rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: #1d2327;
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.pe-rich-btn:hover {
+  background: #f0f0f1;
+  border-color: #c3c4c7;
+}
+
+.pe-rich-btn strong,
+.pe-rich-btn em,
+.pe-rich-btn u {
+  font: inherit;
+}
+
+.pe-rich-sep {
+  width: 1px;
+  height: 22px;
+  margin: 0 0.15rem;
+  background: #dcdcde;
+}
+
+.pe-rich:focus {
+  outline: 2px solid #0054a6;
+  outline-offset: 3px;
+}
+
+.plan-visual-mode .plan-overview-body {
+  min-height: 3rem;
+  line-height: 1.65;
+}
+
+.plan-visual-mode .plan-highlight-box .pe-field {
+  display: block;
+  margin-top: 0.35rem;
+}
+
+.plan-visual-mode .plan-highlight-box .pe-editable {
+  display: block;
+}
+
+.plan-visual-mode .faq-item__summary .pe-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.plan-visual-mode .faq-item__summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.plan-visual-mode .plan-disclaimer.pe-editable,
+.plan-visual-mode .plan-disclaimer {
+  margin-top: 1.5rem;
+}
+
+.plan-visual-mode .plan-overview-body h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  color: var(--tl-blue);
+}
+
+.plan-visual-mode mark,
+.plan-visual-mode .pe-mark {
+  background: #fef08a;
+  padding: 0.1em 0.2em;
+  border-radius: 3px;
+}
+
+.plan-visual-mode .plan-inline-figure {
+  margin: 1rem 0;
+}
+
+.plan-visual-mode .plan-inline-figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.plan-visual-mode .plan-video-embed {
+  position: relative;
+  margin: 1rem 0;
+  padding-bottom: 56.25%;
+  height: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+}
+
+.plan-visual-mode .plan-video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.plan-visual-mode .plan-highlight-box .pe-rich {
+  display: block;
+}
+
+/* Content visual editor — article sections */
+.plan-visual-mode .article-prose-section.pe-block-wrap {
+  display: block;
+  margin-bottom: 1.5rem;
+  padding: 2.75rem 1rem 1rem;
+}
+
+.plan-visual-mode .article-prose-section .pe-section-inner {
+  display: block;
+  width: 100%;
+}
+
+.plan-visual-mode .article-prose-section .pe-section-heading-wrap {
+  margin-bottom: 0.85rem;
+}
+
+.plan-visual-mode .article-prose-section .article-section-heading {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--tl-blue, #0054a6);
+  line-height: 1.35;
+}
+
+.plan-visual-mode .article-prose-section .pe-section-paragraphs {
+  display: block;
+}
+
+.plan-visual-mode .article-prose-section .pe-section-list {
+  margin: 0 0 1rem;
+  padding-left: 1.35rem;
+}
+
+.plan-visual-mode .article-prose-section .pe-item-row {
+  margin-bottom: 0.65rem;
+  padding-right: 0.5rem;
+}
+
+.plan-visual-mode .article-prose-section .pe-item-row .pe-editable {
+  display: block;
+  width: 100%;
+  line-height: 1.75;
+}
+
+@media (max-width: 768px) {
+  body.admin-body.plan-visual-mode .pe-admin-bar {
+    left: 0;
+  }
+}

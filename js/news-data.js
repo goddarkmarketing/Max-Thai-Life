@@ -4,12 +4,11 @@ window.NEWS_DETAIL = {
   "insurance-approval-steps": {
     slug: "insurance-approval-steps",
     title: "ขั้นตอนการพิจารณารับประกันชีวิต",
-    description:
-      "สรุปขั้นตอนและเอกสารที่ใช้ในการพิจารณารับประกันชีวิตกับไทยประกันชีวิต เพื่อให้ลูกค้าเตรียมตัวได้ครบถ้วนก่อนสมัคร",
+    description: "สรุปขั้นตอนและเอกสารที่ใช้ในการพิจารณารับประกันชีวิตกับไทยประกันชีวิต เพื่อให้ลูกค้าเตรียมตัวได้ครบถ้วนก่อนสมัคร",
     category: "บริการ",
     datePublished: "2026-01-15",
     dateModified: "2026-05-01",
-    image: NEWS_COVER + "istockphoto-1147501337-612x612.jpg",
+    image: "images/cover%20cart/istockphoto-1147501337-612x612.jpg",
     views: 886,
     shares: 89,
     sections: [
@@ -41,12 +40,11 @@ window.NEWS_DETAIL = {
   "mdrt-award-6-years": {
     slug: "mdrt-award-6-years",
     title: "นักขายประกันชีวิตระดับ MDRT 6 ปีต่อเนื่อง",
-    description:
-      "ความสำเร็จของตัวแทนไทยประกันชีวิตที่ได้รับรางวัล MDRT ติดต่อกัน 6 ปี — มาตรฐานสากลของอาชีพตัวแทนประกันชีวิตระดับมืออาชีพ",
+    description: "ความสำเร็จของตัวแทนไทยประกันชีวิตที่ได้รับรางวัล MDRT ติดต่อกัน 6 ปี — มาตรฐานสากลของอาชีพตัวแทนประกันชีวิตระดับมืออาชีพ",
     category: "รางวัล",
     datePublished: "2025-11-20",
     dateModified: "2026-04-10",
-    image: NEWS_COVER + "istockphoto-2182097041-612x612.jpg",
+    image: "images/cover%20cart/istockphoto-2182097041-612x612.jpg",
     views: 164,
     shares: 2,
     sections: [
@@ -78,12 +76,11 @@ window.NEWS_DETAIL = {
   "infinite-launch": {
     slug: "infinite-launch",
     title: "ไทยประกันชีวิต INFINITE พร้อมมอบการดูแลที่มากกว่า",
-    description:
-      "อัปเดตผลิตภัณฑ์และบริการ INFINITE จากไทยประกันชีวิต มอบการดูแลลูกค้าและสิทธิประโยชน์ที่ครอบคลุมมากขึ้น",
+    description: "อัปเดตผลิตภัณฑ์และบริการ INFINITE จากไทยประกันชีวิต มอบการดูแลลูกค้าและสิทธิประโยชน์ที่ครอบคลุมมากขึ้น",
     category: "ผลิตภัณฑ์",
     datePublished: "2025-10-05",
     dateModified: "2026-03-15",
-    image: NEWS_COVER + "istockphoto-1349214017-612x612.jpg",
+    image: "images/cover%20cart/istockphoto-1349214017-612x612.jpg",
     views: 69,
     shares: 2,
     relatedPlan: "plans/infinite.html",
@@ -116,12 +113,11 @@ window.NEWS_DETAIL = {
   "copayment-criteria": {
     slug: "copayment-criteria",
     title: "เกณฑ์การเข้าเงื่อนไข COPAYMENT",
-    description:
-      "อธิบายเกณฑ์ Copayment ในประกันสุขภาพ ผลกระทบต่อการเคลมค่ารักษา และแนวทางที่ลูกค้าควรทราบก่อนตัดสินใจ",
+    description: "อธิบายเกณฑ์ Copayment ในประกันสุขภาพ ผลกระทบต่อการเคลมค่ารักษา และแนวทางที่ลูกค้าควรทราบก่อนตัดสินใจ",
     category: "นโยบาย",
     datePublished: "2025-09-12",
     dateModified: "2026-02-20",
-    image: NEWS_COVER + "istockphoto-1410651861-612x612.jpg",
+    image: "images/cover%20cart/istockphoto-1410651861-612x612.jpg",
     views: 2216,
     shares: 44,
     sections: [
@@ -152,12 +148,11 @@ window.NEWS_DETAIL = {
   "knowledge-training": {
     slug: "knowledge-training",
     title: "กิจกรรมเติมความรู้ เพื่อสร้างความสำเร็จ",
-    description:
-      "กิจกรรมอบรมและแลกเปลี่ยนประสบการณ์สำหรับตัวแทนไทยประกันชีวิต ศูนย์นครปฐม — พัฒนาทักษะการขายและการบริการลูกค้า",
+    description: "กิจกรรมอบรมและแลกเปลี่ยนประสบการณ์สำหรับตัวแทนไทยประกันชีวิต ศูนย์นครปฐม — พัฒนาทักษะการขายและการบริการลูกค้า",
     category: "กิจกรรม",
     datePublished: "2026-02-28",
     dateModified: "2026-05-10",
-    image: NEWS_COVER + "istockphoto-1174073600-612x612.jpg",
+    image: "images/cover%20cart/istockphoto-1174073600-612x612.jpg",
     views: 77,
     shares: 2,
     sections: [
@@ -188,12 +183,11 @@ window.NEWS_DETAIL = {
   "career-planning-meeting": {
     slug: "career-planning-meeting",
     title: "ประชุมวางแผนสร้างอาชีพ",
-    description:
-      "สรุปกิจกรรมประชุมวางแผนเป้าหมายรายปีของตัวแทนศูนย์นครปฐม — กำหนดเป้าหมาย กลยุทธ์ และการพัฒนาทีม",
+    description: "สรุปกิจกรรมประชุมวางแผนเป้าหมายรายปีของตัวแทนศูนย์นครปฐม — กำหนดเป้าหมาย กลยุทธ์ และการพัฒนาทีม",
     category: "กิจกรรม",
     datePublished: "2026-01-08",
     dateModified: "2026-04-01",
-    image: NEWS_COVER + "istockphoto-1293744859-612x612.jpg",
+    image: "images/cover%20cart/istockphoto-1293744859-612x612.jpg",
     views: 59,
     shares: 2,
     sections: [
@@ -224,12 +218,11 @@ window.NEWS_DETAIL = {
   "better-life-event": {
     slug: "better-life-event",
     title: "งานเพื่อชีวิตที่ดีขึ้น",
-    description:
-      "กิจกรรมเพื่อลูกค้าและชุมชนในพื้นที่นครปฐม — ส่งเสริมสุขภาพ การวางแผนการเงิน และความรู้ด้านประกันชีวิต",
+    description: "กิจกรรมเพื่อลูกค้าและชุมชนในพื้นที่นครปฐม — ส่งเสริมสุขภาพ การวางแผนการเงิน และความรู้ด้านประกันชีวิต",
     category: "กิจกรรม",
     datePublished: "2025-12-18",
     dateModified: "2026-03-28",
-    image: NEWS_COVER + "istockphoto-1289036691-612x612.jpg",
+    image: "images/cover%20cart/istockphoto-1289036691-612x612.jpg",
     views: 89,
     shares: 2,
     sections: [

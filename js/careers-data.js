@@ -1,15 +1,12 @@
-var CAREER_COVER = "images/แนะนำอาชีพ/";
-
 window.CAREERS_DETAIL = {
   "agent-application": {
     slug: "agent-application",
     title: "ขั้นตอนการสมัครตัวแทนประกันชีวิตกับไทยประกันชีวิต",
-    description:
-      "คู่มือสมัครตัวแทนประกันชีวิตไทยประกันชีวิตแบบครบขั้นตอน ตั้งแต่คุณสมบัติ เอกสาร สอบใบอนุญาต จนถึงการเริ่มงานจริง",
+    description: "คู่มือสมัครตัวแทนประกันชีวิตไทยประกันชีวิตแบบครบขั้นตอน ตั้งแต่คุณสมบัติ เอกสาร สอบใบอนุญาต จนถึงการเริ่มงานจริง",
     category: "ขั้นตอนสมัคร",
     datePublished: "2025-06-01",
     dateModified: "2026-06-01",
-    image: CAREER_COVER + "4388220e-d7f7-43b4-ace6-7721cd371d48.png",
+    image: "images/แนะนำอาชีพ/4388220e-d7f7-43b4-ace6-7721cd371d48.png",
     views: 3488,
     shares: 16,
     sections: [
@@ -46,12 +43,11 @@ window.CAREERS_DETAIL = {
   "sales-tips-3": {
     slug: "sales-tips-3",
     title: "3 เคล็ดลับขายประกันชีวิตให้ประสบความสำเร็จ",
-    description:
-      "เทคนิคที่ตัวแทนมืออาชีพใช้จริง — ฟังลูกค้า วางแผนให้ตรงเป้า และดูแลหลังการขาย เพื่อสร้างรายได้ที่ยั่งยืน",
+    description: "เทคนิคที่ตัวแทนมืออาชีพใช้จริง — ฟังลูกค้า วางแผนให้ตรงเป้า และดูแลหลังการขาย เพื่อสร้างรายได้ที่ยั่งยืน",
     category: "เคล็ดลับ",
     datePublished: "2025-05-18",
     dateModified: "2026-05-01",
-    image: CAREER_COVER + "de0a6c2c-f462-47c4-b696-a4336519e589.png",
+    image: "images/แนะนำอาชีพ/de0a6c2c-f462-47c4-b696-a4336519e589.png",
     views: 219,
     sections: [
       {
@@ -81,12 +77,11 @@ window.CAREERS_DETAIL = {
   "agent-income-truth": {
     slug: "agent-income-truth",
     title: "เป็นตัวแทนประกันรวยได้จริงไหม?",
-    description:
-      "ตอบคำถามที่หลายคนสงสัย รายได้ตัวแทนประกันชีวิตมาจากไหน ต้องใช้เวลานานแค่ไหน และอะไรคือปัจจัยที่ทำให้ประสบความสำเร็จ",
+    description: "ตอบคำถามที่หลายคนสงสัย รายได้ตัวแทนประกันชีวิตมาจากไหน ต้องใช้เวลานานแค่ไหน และอะไรคือปัจจัยที่ทำให้ประสบความสำเร็จ",
     category: "รายได้",
     datePublished: "2025-04-22",
     dateModified: "2026-04-15",
-    image: CAREER_COVER + "8a8eff79-5415-4669-8945-1a4aebbd165b.png",
+    image: "images/แนะนำอาชีพ/8a8eff79-5415-4669-8945-1a4aebbd165b.png",
     views: 280,
     shares: 4,
     sections: [
@@ -117,12 +112,11 @@ window.CAREERS_DETAIL = {
   "agent-career-worth": {
     slug: "agent-career-worth",
     title: "เป็นตัวแทนขายประกัน ดีไหม?",
-    description:
-      "ข้อดี ข้อควรพิจารณา และภาพลักษณ์อาชีพตัวแทนประกันชีวิตในปี 2026 — ช่วยตัดสินใจว่าเหมาะกับคุณหรือไม่",
+    description: "ข้อดี ข้อควรพิจารณา และภาพลักษณ์อาชีพตัวแทนประกันชีวิตในปี 2026 — ช่วยตัดสินใจว่าเหมาะกับคุณหรือไม่",
     category: "อาชีพ",
     datePublished: "2025-03-10",
     dateModified: "2026-03-20",
-    image: CAREER_COVER + "376120ad-280b-41e9-bf29-f1f6f784662b.png",
+    image: "images/แนะนำอาชีพ/376120ad-280b-41e9-bf29-f1f6f784662b.png",
     views: 5548,
     shares: 21,
     sections: [
@@ -157,12 +151,11 @@ window.CAREERS_DETAIL = {
   "side-income-8-reasons": {
     slug: "side-income-8-reasons",
     title: "8 เหตุผลที่ควรมีรายได้เสริมจากการเป็นตัวแทนประกัน",
-    description:
-      "ทำไมหลายคนเลือกเริ่มอาชีพที่ 2 กับไทยประกันชีวิต — ความมั่นคง ความยืดหยุ่น และโอกาสเติบโตในระยะยาว",
+    description: "ทำไมหลายคนเลือกเริ่มอาชีพที่ 2 กับไทยประกันชีวิต — ความมั่นคง ความยืดหยุ่น และโอกาสเติบโตในระยะยาว",
     category: "รายได้เสริม",
     datePublished: "2025-04-10",
     dateModified: "2026-02-28",
-    image: CAREER_COVER + "b90b658a-5b9c-4821-bb41-220bd0028b34.png",
+    image: "images/แนะนำอาชีพ/b90b658a-5b9c-4821-bb41-220bd0028b34.png",
     views: 492,
     shares: 5,
     sections: [
@@ -190,12 +183,11 @@ window.CAREERS_DETAIL = {
   "agent-multi-channel": {
     slug: "agent-multi-channel",
     title: "สมัครตัวแทนประกัน สร้างรายได้หลายช่องทาง",
-    description:
-      "รู้จักช่องทางสร้างรายได้ของตัวแทนไทยประกันชีวิต — ขายใหม่ บำรุงรักษากรมธรรม์ บริหารทีม และบริการลูกค้าผ่านดิจิทัล",
+    description: "รู้จักช่องทางสร้างรายได้ของตัวแทนไทยประกันชีวิต — ขายใหม่ บำรุงรักษากรมธรรม์ บริหารทีม และบริการลูกค้าผ่านดิจิทัล",
     category: "สมัคร",
     datePublished: "2025-07-01",
     dateModified: "2026-05-20",
-    image: CAREER_COVER + "2d446b62-8648-4c98-b990-0025e10f05b0.png",
+    image: "images/แนะนำอาชีพ/2d446b62-8648-4c98-b990-0025e10f05b0.png",
     views: 110,
     sections: [
       {
@@ -226,12 +218,11 @@ window.CAREERS_DETAIL = {
   "digital-agent-system": {
     slug: "digital-agent-system",
     title: "สำนักงานตัวแทนแม็ก — ระบบดิจิทัลของไทยประกันชีวิต",
-    description:
-      "ทำความรู้จักระบบสำนักงานตัวแทนดิจิทัล (Digital Agent) ของไทยประกันชีวิต ที่ช่วยให้ทำงาน บริหารลูกค้า และเติบโตในอาชีพได้อย่างมีประสิทธิภาพ",
+    description: "ทำความรู้จักระบบสำนักงานตัวแทนดิจิทัล (Digital Agent) ของไทยประกันชีวิต ที่ช่วยให้ทำงาน บริหารลูกค้า และเติบโตในอาชีพได้อย่างมีประสิทธิภาพ",
     category: "Digital Agent",
     datePublished: "2025-08-15",
     dateModified: "2026-06-01",
-    image: CAREER_COVER + "2d446b62-8648-4c98-b990-0025e10f05b0.png",
+    image: "images/แนะนำอาชีพ/2d446b62-8648-4c98-b990-0025e10f05b0.png",
     views: 890,
     shares: 12,
     featured: true,

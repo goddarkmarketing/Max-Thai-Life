@@ -1,0 +1,52 @@
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/helpers.php';
+
+admin_require_login();
+
+$id = $_GET['id'] ?? '';
+$file = $_GET['file'] ?? '';
+
+try {
+    if ($file === 'all.zip') {
+        $backupId = basename($id);
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$/', $backupId)) {
+            throw new InvalidArgumentException('รหัสสำรองไม่ถูกต้อง');
+        }
+        $dir = BACKUP_PATH . '/' . $backupId;
+        if (!is_dir($dir)) {
+            throw new RuntimeException('ไม่พบไฟล์สำรอง');
+        }
+        if (!class_exists('ZipArchive')) {
+            throw new RuntimeException('เซิร์ฟเวอร์ไม่รองรับ Zip — ดาวน์โหลดทีละไฟล์แทน');
+        }
+        $zip = new ZipArchive();
+        $tmp = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'backup-' . $backupId . '-' . bin2hex(random_bytes(4)) . '.zip';
+        if ($zip->open($tmp, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            throw new RuntimeException('สร้างไฟล์ zip ไม่สำเร็จ');
+        }
+        foreach (glob($dir . '/*.json') ?: [] as $jsonFile) {
+            $zip->addFile($jsonFile, basename($jsonFile));
+        }
+        $zip->close();
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="backup-' . $backupId . '.zip"');
+        header('Content-Length: ' . (string) filesize($tmp));
+        readfile($tmp);
+        unlink($tmp);
+        exit;
+    }
+
+    $path = admin_backup_file_path($id, $file);
+    header('Content-Type: application/json; charset=utf-8');
+    header('Content-Disposition: attachment; filename="' . basename($path) . '"');
+    header('Content-Length: ' . (string) filesize($path));
+    readfile($path);
+    exit;
+} catch (Throwable $e) {
+    admin_flash('error', $e->getMessage());
+    header('Location: backups.php');
+    exit;
+}

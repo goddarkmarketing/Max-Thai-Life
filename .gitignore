@@ -3,3 +3,5 @@ Thumbs.db
 desktop.ini
 *.log
 .cursor/
+data/backups/
+admin/includes/config.local.php
