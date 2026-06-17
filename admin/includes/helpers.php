@@ -417,12 +417,30 @@ function admin_delete_content_shell(string $type, string $slug): void
     }
 }
 
+function admin_default_plan_nav_children(): array
+{
+    return [
+        ['label' => 'แผนประกันทั้งหมด', 'href' => 'plans.html'],
+        ['label' => 'ออมทรัพย์', 'href' => 'plans.html?category=savings#savings', 'category' => 'savings'],
+        ['label' => 'คุ้มครองชีวิต', 'href' => 'plans.html?category=protect#protect', 'category' => 'protect'],
+        ['label' => 'ประกันสุขภาพ', 'href' => 'plans.html?category=health#health', 'category' => 'health'],
+        ['label' => 'สัญญาเพิ่มเติม', 'href' => 'plans.html?category=rider#rider', 'category' => 'rider'],
+        ['label' => 'บำนาญ/เกษียณ', 'href' => 'plans.html?category=pension#pension', 'category' => 'pension'],
+        ['label' => 'ลงทุน/Life Verse', 'href' => 'plans.html?category=invest#invest', 'category' => 'invest'],
+    ];
+}
+
 function admin_default_navigation(): array
 {
     return [
         ['label' => 'หน้าหลัก', 'href' => 'index.html', 'visible' => true],
         ['label' => 'เกี่ยวกับเรา', 'href' => 'about.html', 'visible' => true],
-        ['label' => 'แผนประกัน', 'href' => 'plans.html', 'visible' => true],
+        [
+            'label' => 'แผนประกัน',
+            'href' => 'plans.html',
+            'visible' => true,
+            'children' => admin_default_plan_nav_children(),
+        ],
         ['label' => 'บทความ', 'href' => 'products.html', 'visible' => true],
         ['label' => 'แนะนำอาชีพ', 'href' => 'career.html', 'visible' => true],
         ['label' => 'ข่าว/กิจกรรม', 'href' => 'news.html', 'visible' => true],
@@ -462,6 +480,7 @@ function admin_apply_site_navigation_post(array $data): array
     $hrefs = admin_post_array('nav_href');
     $visibles = admin_post_array('nav_visible');
     $ctas = admin_post_array('nav_cta');
+    $existing = $data['navigation'] ?? [];
     $nav = [];
     foreach ($labels as $i => $label) {
         $label = trim($label);
@@ -472,6 +491,17 @@ function admin_apply_site_navigation_post(array $data): array
         $item = ['label' => $label, 'href' => $href, 'visible' => isset($visibles[$i])];
         if (isset($ctas[$i])) {
             $item['cta'] = true;
+        }
+        if (str_starts_with($href, 'plans.html')) {
+            foreach ($existing as $old) {
+                if (str_starts_with((string) ($old['href'] ?? ''), 'plans.html') && !empty($old['children'])) {
+                    $item['children'] = $old['children'];
+                    break;
+                }
+            }
+            if (empty($item['children'])) {
+                $item['children'] = admin_default_plan_nav_children();
+            }
         }
         $nav[] = $item;
     }

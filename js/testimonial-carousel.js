@@ -4,8 +4,6 @@
 
   var viewport = root.querySelector(".testimonial-viewport");
   var track = root.querySelector(".testimonial-track");
-  var prevBtn = root.querySelector("[data-testimonial-prev]");
-  var nextBtn = root.querySelector("[data-testimonial-next]");
   var dotsWrap = root.querySelector("[data-testimonial-dots]");
   var MOBILE_MQ = window.matchMedia("(max-width: 768px)");
   var index = 0;
@@ -172,22 +170,6 @@
       }
     }, 150);
   });
-
-  if (prevBtn) {
-    prevBtn.addEventListener("click", function () {
-      stopAuto();
-      goTo(index - 1);
-      startAuto();
-    });
-  }
-
-  if (nextBtn) {
-    nextBtn.addEventListener("click", function () {
-      stopAuto();
-      goTo(index + 1);
-      startAuto();
-    });
-  }
 
   root.addEventListener("mouseenter", stopAuto);
   root.addEventListener("mouseleave", startAuto);

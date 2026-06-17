@@ -41,15 +41,35 @@
   </header>
 
   <section class="home-hero" aria-label="Max Thai Life — สำนักงานตัวแทนแม็ก">
-    <img
-      src="images/hero-banner.png"
-      alt="Max Thai Life — ที่ปรึกษาทางการเงินและประกันชีวิต สาขานครปฐม ไทยประกันชีวิต"
-      class="home-hero-img"
-      width="1024"
-      height="426"
-      fetchpriority="high"
-      decoding="async"
-    >
+    <div class="hero-slider" data-hero-slider data-slider-name="แบนเนอร์หน้าแรก">
+      <div class="hero-slider-viewport" aria-live="polite">
+        <div class="hero-slider-track" data-hero-track>
+          <div class="hero-slider-slide">
+            <img
+              src="images/hero-banner.png"
+              alt="Max Thai Life — ที่ปรึกษาทางการเงินและประกันชีวิต สาขานครปฐม ไทยประกันชีวิต"
+              class="home-hero-img"
+              width="1024"
+              height="426"
+              fetchpriority="high"
+              decoding="async"
+            >
+          </div>
+          <div class="hero-slider-slide">
+            <img
+              src="images/hero-banner-planning.png"
+              alt="เริ่มวางแผนอนาคตของคุณวันนี้ — รับคำปรึกษาเบื้องต้นฟรี ออกแบบแผนที่เหมาะกับเป้าหมายของคุณ"
+              class="home-hero-img"
+              width="1024"
+              height="426"
+              loading="lazy"
+              decoding="async"
+            >
+          </div>
+        </div>
+      </div>
+      <div class="hero-slider-controls slider-controls" data-hero-slider-controls hidden></div>
+    </div>
     <div class="hero-cta-bar">
       <div class="hero-cta-inner">
         <div class="hero-cta-intro">
@@ -111,16 +131,7 @@
         <h2>แผนประกันแนะนำ</h2>
         <p>เลือกแผนตามหมวด — ครบ 6 แผนหลักจากไทยประกันชีวิต</p>
       </header>
-      <nav class="goal-chips" aria-label="เลือกตามหมวด">
-        <a href="plans.html" class="goal-chip goal-chip-all">ดูทั้ง 6 แผน</a>
-        <a href="plans/tax-saving.html" class="goal-chip">ออมทรัพย์</a>
-        <a href="plans/life-wealth-fit-99-99.html" class="goal-chip">คุ้มครองชีวิต</a>
-        <a href="plans/health-working.html" class="goal-chip">ประกันสุขภาพ</a>
-        <a href="plans/infinite.html" class="goal-chip">สัญญาเพิ่มเติม</a>
-        <a href="plans/legacy-fit-retire.html" class="goal-chip">บำนาญ/เกษียณ</a>
-        <a href="plans/universal-life.html" class="goal-chip">ลงทุน/Life Verse</a>
-      </nav>
-      <div class="plan-grid plan-grid-3" data-plan-grid></div>
+      <nav class="goal-chips" aria-label="เลือกตามหมวด"></nav>
       <div class="plan-section-more">
         <a href="plans.html" class="btn btn-white">ดูเพิ่มเติม</a>
       </div>
@@ -289,13 +300,7 @@
           </div>
         </div>
         <div class="testimonial-controls">
-          <button type="button" class="testimonial-arrow" data-testimonial-prev aria-label="รีวิวก่อนหน้า">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-          </button>
           <div class="testimonial-dots" data-testimonial-dots role="tablist" aria-label="เลือกชุดรีวิว"></div>
-          <button type="button" class="testimonial-arrow" data-testimonial-next aria-label="รีวิวถัดไป">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
         </div>
       </div>
     </div>
@@ -401,11 +406,12 @@
   <script src="js/site-data.js"></script>
   <script src="js/home-data.js"></script>
   <script src="js/home-render.js"></script>
+  <script src="js/hero-slider.js"></script>
   <script src="js/section-headers.js"></script>
   <script src="js/main.js"></script>
   <script src="js/footer.js"></script>
   <script src="js/plans-data.js"></script>
-  <script src="js/plan-cards.js" data-limit="6"></script>
+  <script src="js/goal-chips.js"></script>
   <script src="js/news-data.js"></script>
   <script src="js/news-list.js"></script>
   <script src="js/content-slider.js"></script>

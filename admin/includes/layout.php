@@ -527,7 +527,7 @@ function admin_render_goal_chip_repeater(array $chips): void
     ?>
     <div class="admin-repeater" data-repeater="goalChips" data-repeater-min="0">
       <div class="admin-repeater-head">
-        <h3 class="admin-repeater-title">ปุ่มเลือกเป้าหมาย (Goal Chips)</h3>
+        <h3 class="admin-repeater-title">การ์ดเลือกหมวดแผน (ภาพ)</h3>
         <button type="button" class="admin-btn admin-btn--secondary admin-btn--sm" data-repeater-add>+ เพิ่ม</button>
       </div>
       <div class="admin-repeater-list" data-repeater-list>
@@ -541,6 +541,7 @@ function admin_render_goal_chip_repeater(array $chips): void
               <?php admin_field('ชื่อ', "chip_label[{$i}]", $chip['label'] ?? ''); ?>
               <?php admin_field('ลิงก์', "chip_href[{$i}]", $chip['href'] ?? ''); ?>
             </div>
+            <?php admin_field('รูป (ว่าง = ใช้รูปการ์ดแผน)', "chip_image[{$i}]", $chip['image'] ?? '', ['hint' => 'เช่น images/plan-cards/card-savings.png — ลิงก์ plans.html จะไม่แสดงบนหน้าแรก']); ?>
           </article>
         <?php endforeach; ?>
       </div>
@@ -559,6 +560,10 @@ function admin_render_goal_chip_repeater(array $chips): void
               <label class="admin-label">ลิงก์</label>
               <input class="admin-input" type="text" name="chip_href[__INDEX__]" value="">
             </div>
+          </div>
+          <div class="admin-field">
+            <label class="admin-label">รูป (ว่าง = ใช้รูปการ์ดแผน)</label>
+            <input class="admin-input" type="text" name="chip_image[__INDEX__]" value="">
           </div>
         </article>
       </template>

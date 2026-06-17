@@ -54,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_verify_csrf($_POST['csrf'] ??
     if ($tab === 'sections') {
         $chipLabels = admin_post_array('chip_label');
         $chipHrefs = admin_post_array('chip_href');
+        $chipImages = admin_post_array('chip_image');
         $goalChips = [];
         foreach ($chipLabels as $i => $label) {
             $label = trim($label);
@@ -61,7 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_verify_csrf($_POST['csrf'] ??
             if ($label === '' || $href === '') {
                 continue;
             }
-            $goalChips[] = ['label' => $label, 'href' => $href];
+            $item = ['label' => $label, 'href' => $href];
+            $image = trim($chipImages[$i] ?? '');
+            if ($image !== '') {
+                $item['image'] = $image;
+            }
+            if ($href === 'plans.html') {
+                $item['all'] = true;
+            }
+            $goalChips[] = $item;
         }
 
         $data['plansSection'] = [

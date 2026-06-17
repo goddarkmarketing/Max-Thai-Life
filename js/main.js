@@ -18,14 +18,177 @@
     return path.split("?")[0];
   }
 
-  function isNavActive(href) {
-    var target = href.split("?")[0].split("#")[0];
+  function currentPlanCategory() {
+    var q = new URLSearchParams(location.search).get("category");
+    if (q) return q;
+    var hash = (location.hash || "").replace(/^#/, "");
+    if (hash && hash !== "all") return hash;
+    return null;
+  }
+
+  function isNavActive(href, opts) {
+    opts = opts || {};
+    var target = (href || "").split("?")[0].split("#")[0];
     var current = currentPageName();
+    var category = currentPlanCategory();
+
+    if ("childCategory" in opts) {
+      if (!opts.childCategory) {
+        return current === "plans.html" && !category;
+      }
+      return category === opts.childCategory;
+    }
+
+    if (target === "plans.html" && current === "plans.html") {
+      if (opts.parentPlans) {
+        return true;
+      }
+      return !category;
+    }
+
     if (target === current) return true;
     if (current === "index.html" && target === "index.html") return true;
     var subMatch = location.pathname.match(/\/(articles|plans|news|careers)\//);
     if (subMatch && target === subMatch[1] + ".html") return false;
     return false;
+  }
+
+  function planCategoryFromHref(href) {
+    var match = (href || "").match(/[?&]category=([^&#]+)/);
+    return match ? decodeURIComponent(match[1]) : "";
+  }
+
+  var navChevron =
+    '<span class="nav-chevron" aria-hidden="true">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M6 9l6 6 6-6"/>' +
+    "</svg></span>";
+
+  function renderNavItem(item, base) {
+    var href = base + (item.href || "#");
+    var children = (item.children || []).filter(function (child) {
+      return child.visible !== false;
+    });
+
+    if (!children.length) {
+      var cls = item.cta ? "nav-cta" : "";
+      if (isNavActive(item.href || "")) {
+        cls = (cls ? cls + " " : "") + "active";
+      }
+      return (
+        '<a href="' +
+        href +
+        '"' +
+        (cls ? ' class="' + cls + '"' : "") +
+        ">" +
+        (item.label || "") +
+        "</a>"
+      );
+    }
+
+    var parentCls = "nav-parent";
+    if (isNavActive(item.href || "", { parentPlans: true })) {
+      parentCls += " active";
+    }
+
+    var submenu = children
+      .map(function (child) {
+        var childHref = base + (child.href || "#");
+        var childCat = child.category || planCategoryFromHref(child.href);
+        var childCls = "";
+        if (isNavActive(child.href || "", { childCategory: childCat })) {
+          childCls = " active";
+        }
+        return (
+          '<a href="' +
+          childHref +
+          '" class="nav-submenu-link' +
+          childCls +
+          '"' +
+          (childCat ? ' data-plan-category="' + childCat + '"' : "") +
+          ">" +
+          (child.label || "") +
+          "</a>"
+        );
+      })
+      .join("");
+
+    return (
+      '<div class="nav-item nav-item--has-submenu">' +
+      '<div class="nav-item-row">' +
+      '<a href="' +
+      href +
+      '" class="' +
+      parentCls +
+      '">' +
+      (item.label || "") +
+      navChevron +
+      "</a>" +
+      '<button type="button" class="nav-submenu-toggle" aria-label="เปิดเมนูย่อย ' +
+      (item.label || "") +
+      '" aria-expanded="false">' +
+      navChevron +
+      "</button>" +
+      "</div>" +
+      '<div class="nav-submenu" role="menu">' +
+      submenu +
+      "</div>" +
+      "</div>"
+    );
+  }
+
+  function bindNavSubmenus() {
+    if (!nav) return;
+
+    var hoverFine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    nav.querySelectorAll(".nav-item--has-submenu").forEach(function (item) {
+      var closeTimer;
+
+      if (hoverFine) {
+        item.addEventListener("mouseenter", function () {
+          window.clearTimeout(closeTimer);
+          item.classList.add("is-open");
+        });
+        item.addEventListener("mouseleave", function () {
+          closeTimer = window.setTimeout(function () {
+            item.classList.remove("is-open");
+          }, 150);
+        });
+      }
+
+      var toggle = item.querySelector(".nav-submenu-toggle");
+      if (toggle) {
+        toggle.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var open = item.classList.toggle("is-open");
+          toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+      }
+    });
+
+    nav.querySelectorAll(".nav-submenu-link").forEach(function (link) {
+      link.addEventListener("click", function () {
+        var href = link.getAttribute("href") || "";
+        var cat = link.getAttribute("data-plan-category") || planCategoryFromHref(href);
+        try {
+          if (cat) {
+            sessionStorage.setItem("planCategory", cat);
+          } else if (/plans\.html/.test(href) && !/[?&]category=/.test(href)) {
+            sessionStorage.removeItem("planCategory");
+          }
+        } catch (err) {}
+      });
+    });
+
+    nav.querySelectorAll('a.nav-parent[href*="plans.html"]').forEach(function (link) {
+      link.addEventListener("click", function () {
+        try {
+          sessionStorage.removeItem("planCategory");
+        } catch (err) {}
+      });
+    });
   }
 
   let navToggleBound = false;
@@ -62,25 +225,13 @@
         return item.visible !== false;
       })
       .map(function (item) {
-        var href = base + (item.href || "#");
-        var cls = item.cta ? "nav-cta" : "";
-        if (isNavActive(item.href || "")) {
-          cls = (cls ? cls + " " : "") + "active";
-        }
-        return (
-          '<a href="' +
-          href +
-          '"' +
-          (cls ? ' class="' + cls + '"' : "") +
-          ">" +
-          (item.label || "") +
-          "</a>"
-        );
+        return renderNavItem(item, base);
       })
       .join("");
 
     nav.innerHTML = html;
     bindNavToggle();
+    bindNavSubmenus();
   }
 
   function injectSeo() {

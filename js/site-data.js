@@ -67,7 +67,43 @@ window.SITE_DATA = {
     {
       label: "แผนประกัน",
       href: "plans.html",
-      visible: true
+      visible: true,
+      children: [
+        {
+          label: "แผนประกันทั้งหมด",
+          href: "plans.html"
+        },
+        {
+          label: "ออมทรัพย์",
+          href: "plans.html?category=savings#savings",
+          category: "savings"
+        },
+        {
+          label: "คุ้มครองชีวิต",
+          href: "plans.html?category=protect#protect",
+          category: "protect"
+        },
+        {
+          label: "ประกันสุขภาพ",
+          href: "plans.html?category=health#health",
+          category: "health"
+        },
+        {
+          label: "สัญญาเพิ่มเติม",
+          href: "plans.html?category=rider#rider",
+          category: "rider"
+        },
+        {
+          label: "บำนาญ/เกษียณ",
+          href: "plans.html?category=pension#pension",
+          category: "pension"
+        },
+        {
+          label: "ลงทุน/Life Verse",
+          href: "plans.html?category=invest#invest",
+          category: "invest"
+        }
+      ]
     },
     {
       label: "บทความ",

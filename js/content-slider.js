@@ -2,15 +2,6 @@
   var MOBILE_MQ = window.matchMedia("(max-width: 768px)");
   var instances = [];
 
-  function arrowSvg(dir) {
-    var path = dir === "prev" ? "M15 18l-6-6 6-6" : "M9 18l6-6-6-6";
-    return (
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="' +
-      path +
-      '"/></svg>'
-    );
-  }
-
   function ContentSlider(root) {
     this.root = root;
     this.viewport = root.querySelector(".content-slider-viewport");
@@ -20,8 +11,6 @@
     this.index = 0;
     this.timer = null;
     this.controlsBuilt = false;
-    this.prevBtn = null;
-    this.nextBtn = null;
     this.dotsWrap = null;
     this.onScroll = this.handleScroll.bind(this);
   }
@@ -47,39 +36,13 @@
     this.controlsHost.innerHTML = "";
     this.controlsHost.className = "slider-controls";
 
-    this.prevBtn = document.createElement("button");
-    this.prevBtn.type = "button";
-    this.prevBtn.className = "slider-arrow";
-    this.prevBtn.setAttribute("aria-label", this.label + " ก่อนหน้า");
-    this.prevBtn.innerHTML = arrowSvg("prev");
-
     this.dotsWrap = document.createElement("div");
     this.dotsWrap.className = "slider-dots";
     this.dotsWrap.setAttribute("role", "tablist");
     this.dotsWrap.setAttribute("aria-label", "เลือก" + this.label);
-
-    this.nextBtn = document.createElement("button");
-    this.nextBtn.type = "button";
-    this.nextBtn.className = "slider-arrow";
-    this.nextBtn.setAttribute("aria-label", this.label + " ถัดไป");
-    this.nextBtn.innerHTML = arrowSvg("next");
-
-    this.controlsHost.appendChild(this.prevBtn);
     this.controlsHost.appendChild(this.dotsWrap);
-    this.controlsHost.appendChild(this.nextBtn);
 
     var self = this;
-    this.prevBtn.addEventListener("click", function () {
-      self.stopAuto();
-      self.goTo(self.index - 1);
-      self.startAuto();
-    });
-    this.nextBtn.addEventListener("click", function () {
-      self.stopAuto();
-      self.goTo(self.index + 1);
-      self.startAuto();
-    });
-
     this.root.addEventListener("mouseenter", function () {
       self.stopAuto();
     });

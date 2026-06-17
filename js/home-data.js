@@ -2,6 +2,16 @@ window.HOME_DATA = {
   hero: {
     image: "images/hero-banner.png",
     alt: "Max Thai Life — ที่ปรึกษาทางการเงินและประกันชีวิต สาขานครปฐม ไทยประกันชีวิต",
+    slides: [
+      {
+        image: "images/hero-banner.png",
+        alt: "Max Thai Life — ที่ปรึกษาทางการเงินและประกันชีวิต สาขานครปฐม ไทยประกันชีวิต"
+      },
+      {
+        image: "images/hero-banner-planning.png",
+        alt: "เริ่มวางแผนอนาคตของคุณวันนี้ — รับคำปรึกษาเบื้องต้นฟรี ออกแบบแผนที่เหมาะกับเป้าหมายของคุณ"
+      }
+    ],
     avatar: "images/profile/agent-profile.png",
     lead: "ที่ปรึกษาประกันชีวิตและการเงิน · สาขานครปฐม · ใบอนุญาต 5701116295",
     ctaPrimary: {
@@ -55,27 +65,33 @@ window.HOME_DATA = {
       },
       {
         label: "ออมทรัพย์",
-        href: "plans/tax-saving.html"
+        href: "plans.html?category=savings#savings",
+        category: "savings"
       },
       {
         label: "คุ้มครองชีวิต",
-        href: "plans/life-wealth-fit-99-99.html"
+        href: "plans.html?category=protect#protect",
+        category: "protect"
       },
       {
         label: "ประกันสุขภาพ",
-        href: "plans/health-working.html"
+        href: "plans.html?category=health#health",
+        category: "health"
       },
       {
         label: "สัญญาเพิ่มเติม",
-        href: "plans/infinite.html"
+        href: "plans.html?category=rider#rider",
+        category: "rider"
       },
       {
         label: "บำนาญ/เกษียณ",
-        href: "plans/legacy-fit-retire.html"
+        href: "plans.html?category=pension#pension",
+        category: "pension"
       },
       {
         label: "ลงทุน/Life Verse",
-        href: "plans/universal-life.html"
+        href: "plans.html?category=invest#invest",
+        category: "invest"
       }
     ],
     planLimit: 6
