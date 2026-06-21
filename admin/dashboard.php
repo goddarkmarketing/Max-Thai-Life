@@ -52,7 +52,7 @@ admin_layout_start('ภาพรวม', 'dashboard.php');
   admin_render_quick_link('inquiries.php', 'mail', 'ข้อความติดต่อ', 'ฟอร์มจากหน้าแรกและหน้าติดต่อ');
   admin_render_quick_link('site-nav.php', 'menu', 'เมนูเว็บไซต์', 'จัดลำดับและซ่อน/แสดงเมนู');
   admin_render_quick_link('media.php', 'image', 'คลังรูป', 'อัปโหลด ดู และลบรูป');
-  admin_render_quick_link('backups.php', 'backup', 'สำรอง/กู้คืน', 'ย้อนข้อมูล JSON');
+  admin_render_quick_link('backups.php', 'backup', 'สำรอง/กู้คืน', 'Snapshot เต็ม JSON + JS + รูป');
   admin_render_quick_link('account.php', 'user', 'บัญชีผู้ใช้', 'เปลี่ยนรหัสผ่าน');
   ?>
 </div>

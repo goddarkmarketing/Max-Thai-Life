@@ -13,6 +13,7 @@ define('ADMIN_USER', 'admin');
 define('ADMIN_PASS_HASH', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'); // password: password
 
 define('SESSION_NAME', 'maxthailife_admin');
+define('ADMIN_BACKUP_MAX', 15);
 
 date_default_timezone_set('Asia/Bangkok');
 

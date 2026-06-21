@@ -4,6 +4,9 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/helpers.php';
 require_once __DIR__ . '/../includes/generate-js.php';
+require_once __DIR__ . '/../includes/landing-blocks.php';
+require_once __DIR__ . '/../includes/landing-pages.php';
+require_once __DIR__ . '/../includes/plan-blocks.php';
 
 require_once __DIR__ . '/lib/TestRunner.php';
 require_once __DIR__ . '/lib/DataSnapshot.php';
@@ -54,6 +57,29 @@ function test_site_form_fields(array $site, array $overrides = []): array
 }
 
 /** @return array<string, string> */
+function test_create_png(string $path): void
+{
+    $png = base64_decode(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+        true
+    );
+    if ($png === false) {
+        throw new RuntimeException('สร้าง PNG ทดสอบไม่สำเร็จ');
+    }
+    file_put_contents($path, $png);
+}
+
+function test_first_plan_slug(): string
+{
+    $plans = json_read('plans.json');
+    $href = $plans['items'][0]['href'] ?? '';
+    $slug = preg_replace('#^plans/|\.html$#', '', $href);
+    if ($slug === '') {
+        throw new RuntimeException('ไม่พบ slug แผนประกัน');
+    }
+    return $slug;
+}
+
 function test_home_hero_form_fields(array $home, array $overrides = []): array
 {
     $hero = $home['hero'] ?? [];

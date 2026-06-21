@@ -16,7 +16,7 @@ $cfg = $types[$type];
 $store = json_read($cfg['file']);
 $items = $store[$cfg['itemsKey']] ?? [];
 $previewType = $type === 'claims' ? 'claims' : $type;
-$hasVisual = in_array($type, ['articles', 'news'], true);
+$hasVisual = in_array($type, ['articles', 'news', 'careers', 'claims'], true);
 
 admin_layout_start($cfg['label'], 'content-list.php?type=' . $type);
 ?>

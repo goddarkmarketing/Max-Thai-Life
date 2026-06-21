@@ -11,6 +11,7 @@ if (admin_is_logged_in()) {
 }
 
 $error = '';
+$brand = admin_brand_meta();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = admin_post('username');
@@ -31,16 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>เข้าสู่ระบบ | Max Thai Life Admin</title>
+  <title>เข้าสู่ระบบ | <?= admin_h($brand['name']) ?> Admin</title>
   <link rel="stylesheet" href="css/admin.css">
 </head>
-<body>
+<body class="admin-login-page">
   <div class="admin-login-wrap">
     <div class="admin-login-card">
       <div class="admin-login-brand">
-        <span class="admin-brand-mark">MTL</span>
-        <h1>Max Thai Life Admin</h1>
-        <p>ระบบจัดการเนื้อหาเว็บไซต์</p>
+        <img src="<?= admin_h(admin_brand_logo_url()) ?>" alt="<?= admin_h($brand['name']) ?>" class="admin-brand-logo" width="46" height="46">
+        <h1><?= admin_h($brand['name']) ?></h1>
+        <p>ระบบจัดการเว็บไซต์</p>
       </div>
       <?php if ($error !== ''): ?>
         <div class="admin-login-error"><?= admin_h($error) ?></div>
@@ -56,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <button type="submit" class="admin-btn admin-btn--primary admin-btn--block">เข้าสู่ระบบ</button>
       </form>
-      <p class="admin-hint admin-login-hint">เริ่มต้น: admin / password</p>
     </div>
   </div>
 </body>

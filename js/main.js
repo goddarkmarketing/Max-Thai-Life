@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   const header = document.querySelector(".site-header");
   const toggle = document.querySelector(".nav-toggle");
   let nav = document.querySelector(".main-nav");
@@ -60,9 +60,10 @@
 
   var navChevron =
     '<span class="nav-chevron" aria-hidden="true">' +
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">' +
-    '<path d="M6 9l6 6 6-6"/>' +
-    "</svg></span>";
+    (window.LucideIcons
+      ? LucideIcons.icon("chevron-down", { size: 16, strokeWidth: 2.25 })
+      : '<i data-lucide="chevron-down" aria-hidden="true"></i>') +
+    "</span>";
 
   function renderNavItem(item, base) {
     var href = base + (item.href || "#");
@@ -234,19 +235,83 @@
     bindNavSubmenus();
   }
 
+  function upsertMeta(attr, key, value) {
+    if (!value) return;
+    var sel = "meta[" + attr + '="' + key + '"]';
+    var el = document.querySelector(sel);
+    if (!el) {
+      el = document.createElement("meta");
+      el.setAttribute(attr, key);
+      document.head.appendChild(el);
+    }
+    el.setAttribute("content", value);
+  }
+
+  function upsertLink(rel, href) {
+    if (!href) return;
+    var sel = 'link[rel="' + rel + '"]';
+    var el = document.querySelector(sel);
+    if (!el) {
+      el = document.createElement("link");
+      el.setAttribute("rel", rel);
+      document.head.appendChild(el);
+    }
+    el.setAttribute("href", href);
+  }
+
+  function absoluteUrl(path) {
+    var base = (window.SITE_DATA && window.SITE_DATA.meta && window.SITE_DATA.meta.siteUrl) || "";
+    base = base.replace(/\/$/, "");
+    if (!base) return "";
+    path = (path || "").replace(/^\//, "");
+    if (path === "" || path === "index.html") return base + "/";
+    return base + "/" + path;
+  }
+
   function injectSeo() {
     var site = window.SITE_DATA || {};
     var meta = site.meta || {};
     var brand = site.brand || {};
+    var agent = site.agent || {};
+    var pageKey = currentPageName();
+    var pageSeo = (meta.pages && meta.pages[pageKey]) || null;
+    var isStaticPage = !!(pageSeo && meta.pages && Object.prototype.hasOwnProperty.call(meta.pages, pageKey));
 
-    if (meta.description) {
-      var desc = document.querySelector('meta[name="description"]');
-      if (desc) desc.setAttribute("content", meta.description);
+    var description = (isStaticPage && pageSeo.description) || meta.description || "";
+    var title = (isStaticPage && pageSeo.title) || document.title;
+    var ogTitle = meta.ogTitle || title;
+    var ogDescription = meta.ogDescription || description;
+    var ogImage = meta.ogImage ? siteBase() + meta.ogImage : "";
+
+    if (isStaticPage && pageSeo.title) {
+      document.title = pageSeo.title;
+      title = pageSeo.title;
+      ogTitle = pageSeo.title;
     }
 
-    if (meta.ogImage) {
-      var og = document.querySelector('meta[property="og:image"]');
-      if (og) og.setAttribute("content", siteBase() + meta.ogImage);
+    if (description) upsertMeta("name", "description", description);
+    if (isStaticPage && pageSeo.indexable === false) {
+      upsertMeta("name", "robots", "noindex, nofollow");
+    }
+
+    upsertMeta("property", "og:type", "website");
+    upsertMeta("property", "og:title", ogTitle);
+    upsertMeta("property", "og:description", ogDescription);
+    if (ogImage) upsertMeta("property", "og:image", ogImage);
+
+    upsertMeta("name", "twitter:card", ogImage ? "summary_large_image" : "summary");
+    upsertMeta("name", "twitter:title", ogTitle);
+    upsertMeta("name", "twitter:description", ogDescription);
+
+    if (meta.googleSiteVerification) {
+      upsertMeta("name", "google-site-verification", meta.googleSiteVerification);
+    }
+
+    var canonicalPath = pageKey === "index.html" ? "" : pageKey;
+    var canonical = absoluteUrl(canonicalPath);
+    if (canonical && isStaticPage) {
+      upsertLink("canonical", canonical);
+      upsertMeta("property", "og:url", canonical);
     }
 
     if (meta.analyticsId && !document.getElementById("ga-script")) {
@@ -264,8 +329,39 @@
     }
 
     if (brand.logo) {
-      var logo = document.querySelector(".brand-logo");
-      if (logo) logo.setAttribute("src", siteBase() + brand.logo);
+      document.querySelectorAll(".brand-logo").forEach(function (logo) {
+        logo.setAttribute("src", siteBase() + brand.logo);
+      });
+    }
+
+    if (pageKey === "index.html" && meta.localBusiness && meta.localBusiness.enabled !== false) {
+      var local = meta.localBusiness || {};
+      var schema = {
+        "@context": "https://schema.org",
+        "@type": "InsuranceAgency",
+        name: brand.name || "Max Thai Life",
+        description: description,
+        url: absoluteUrl(""),
+        telephone: agent.phoneDisplay || agent.phone || "",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: local.address || agent.branch || "",
+          addressRegion: local.areaServed || "",
+          addressCountry: "TH",
+        },
+        areaServed: local.areaServed || agent.branch || "",
+      };
+      if (local.googleBusinessUrl) {
+        schema.sameAs = [local.googleBusinessUrl];
+      }
+      var schemaEl = document.getElementById("local-business-schema");
+      if (!schemaEl) {
+        schemaEl = document.createElement("script");
+        schemaEl.id = "local-business-schema";
+        schemaEl.type = "application/ld+json";
+        document.head.appendChild(schemaEl);
+      }
+      schemaEl.textContent = JSON.stringify(schema);
     }
   }
 
@@ -372,28 +468,63 @@
     bindNavToggle();
   }
 
-  const reveals = document.querySelectorAll(".reveal");
-  if (reveals.length && "IntersectionObserver" in window) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("visible");
-            io.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-    );
-    reveals.forEach((el) => io.observe(el));
-  } else {
-    reveals.forEach((el) => el.classList.add("visible"));
+  function initReveals() {
+    const reveals = document.querySelectorAll(".reveal:not(.visible)");
+    if (!reveals.length) return;
+
+    function show(el) {
+      el.classList.add("visible");
+    }
+
+    function showInViewport() {
+      reveals.forEach(function (el) {
+        if (el.classList.contains("visible")) return;
+        var rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          show(el);
+        }
+      });
+    }
+
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              show(e.target);
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.08, rootMargin: "0px 0px -20px 0px" }
+      );
+      reveals.forEach((el) => io.observe(el));
+      showInViewport();
+      requestAnimationFrame(showInViewport);
+    } else {
+      reveals.forEach(show);
+    }
   }
+
+  initReveals();
+  document.addEventListener("landing:rendered", initReveals);
+
+  window.addEventListener("load", function () {
+    document.querySelectorAll(".reveal:not(.visible)").forEach(function (el) {
+      el.classList.add("visible");
+    });
+  });
 
   if (!document.querySelector(".contact-dock")) {
     var quoteHref = document.getElementById("inquiry")
       ? "#inquiry"
       : siteBase() + "contact.html?topic=insurance";
+
+    function dockIcon(name, cls) {
+      return window.LucideIcons
+        ? LucideIcons.defer(name, { size: 24, strokeWidth: 2, className: cls || "contact-dock-icon" })
+        : '<i data-lucide="' + name + '" class="' + (cls || "contact-dock-icon") + '" aria-hidden="true"></i>';
+    }
 
     var dock = document.createElement("nav");
     dock.className = "contact-dock";
@@ -401,22 +532,24 @@
     dock.innerHTML =
       '<div class="contact-dock-menu" id="contact-dock-menu" role="menu" aria-hidden="true">' +
       '<a href="tel:0852925320" class="contact-dock-action contact-dock-action--phone" role="menuitem">' +
-      '<svg class="contact-dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>' +
+      dockIcon("phone") +
       '<span class="contact-dock-label">โทร</span></a>' +
       '<a href="' + siteBase() + 'contact.html" class="contact-dock-action contact-dock-action--line" role="menuitem">' +
-      '<svg class="contact-dock-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>' +
+      dockIcon("line") +
       '<span class="contact-dock-label">แอดไลน์</span></a>' +
       '<a href="' +
       quoteHref +
       '" class="contact-dock-action contact-dock-action--quote" role="menuitem">' +
-      '<svg class="contact-dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>' +
+      dockIcon("file-text") +
       '<span class="contact-dock-label">ใบเสนอเบี้ย</span></a>' +
       "</div>" +
       '<button type="button" class="contact-dock-toggle" aria-expanded="false" aria-controls="contact-dock-menu" aria-label="เปิดเมนูติดต่อ">' +
       '<span class="contact-dock-toggle-icon contact-dock-toggle-icon--chat" aria-hidden="true">' +
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>' +
+      dockIcon("chat", "") +
+      "</span>" +
       '<span class="contact-dock-toggle-icon contact-dock-toggle-icon--close" aria-hidden="true">' +
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25"><path d="M18 6L6 18M6 6l12 12"/></svg></span>' +
+      dockIcon("close", "") +
+      "</span>" +
       "</button>";
 
     document.body.appendChild(dock);
@@ -459,5 +592,9 @@
         setDockOpen(false);
       }
     });
+
+    if (window.LucideIcons) LucideIcons.refresh(dock);
   }
+
+  if (window.LucideIcons) LucideIcons.refresh();
 })();

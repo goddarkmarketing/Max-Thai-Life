@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/helpers.php';
+require_once __DIR__ . '/generate-seo.php';
+require_once __DIR__ . '/plan-blocks.php';
 
 function js_encode($data, int $indent = 0): string
 {
@@ -49,6 +51,55 @@ function js_write_file(string $path, string $content): void
     file_put_contents($path, $content, LOCK_EX);
 }
 
+function generate_plans_detail_js(): void
+{
+    $plans = json_read('plans.json');
+    $planItems = admin_filter_visible_list($plans['items'] ?? []);
+
+    $plansDetail = json_read('plans-detail.json');
+    $detailItems = $plansDetail['items'] ?? [];
+
+    $imageMap = [];
+    foreach ($planItems as $plan) {
+        $href = $plan['href'] ?? '';
+        $slug = preg_replace('#^plans/|\.html$#', '', $href);
+        if ($slug && !empty($plan['image'])) {
+            $imageMap[$slug] = $plan['image'];
+        }
+    }
+    foreach ($detailItems as $slug => &$detail) {
+        $cardImg = $imageMap[$slug] ?? '';
+        if ($cardImg !== '') {
+            if (!empty($detail['sections']) && is_array($detail['sections'])) {
+                $detail = admin_plan_sync_card_image_to_sections($detail, $cardImg);
+            } else {
+                $detail['image'] = $cardImg;
+            }
+        }
+        if (!empty($detail['sections']) && is_array($detail['sections'])) {
+            $detail['sections'] = admin_plan_upgrade_sections($detail['sections']);
+        }
+    }
+    unset($detail);
+
+    $attachLines = [];
+    foreach ($imageMap as $slug => $img) {
+        $key = preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $slug) ? $slug : json_encode($slug);
+        $attachLines[] = '    ' . $key . ': ' . json_encode($img, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    $detailJs = "window.PLANS_DETAIL = " . js_encode($detailItems) . ";\n\n";
+    $detailJs .= "(function attachPlanImages() {\n";
+    $detailJs .= "  var images = {\n" . implode(",\n", $attachLines) . "\n  };\n";
+    $detailJs .= "  Object.keys(images).forEach(function (key) {\n";
+    $detailJs .= "    var plan = window.PLANS_DETAIL[key];\n";
+    $detailJs .= "    if (!plan || (plan.sections && plan.sections.length)) return;\n";
+    $detailJs .= "    plan.image = images[key];\n";
+    $detailJs .= "  });\n})();\n";
+
+    js_write_file(JS_PATH . '/plans-detail-content.js', $detailJs);
+}
+
 function generate_all_js(): void
 {
     $articles = json_read('articles.json');
@@ -65,39 +116,7 @@ function generate_all_js(): void
         "var PLAN_COVER = \"images/cover แผนประกัน/\";\n\nwindow.PLANS_DATA = " . js_encode($planItems) . ";\n"
     );
 
-    $plansDetail = json_read('plans-detail.json');
-    $detailItems = $plansDetail['items'] ?? [];
-
-    $imageMap = [];
-    foreach ($planItems as $plan) {
-        $href = $plan['href'] ?? '';
-        $slug = preg_replace('#^plans/|\.html$#', '', $href);
-        if ($slug && !empty($plan['image'])) {
-            $imageMap[$slug] = $plan['image'];
-        }
-    }
-    foreach ($detailItems as $slug => &$detail) {
-        if (!empty($imageMap[$slug])) {
-            $detail['image'] = $imageMap[$slug];
-        }
-    }
-    unset($detail);
-
-    $attachLines = [];
-    foreach ($imageMap as $slug => $img) {
-        $key = preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $slug) ? $slug : json_encode($slug);
-        $attachLines[] = '    ' . $key . ': ' . json_encode($img, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    }
-
-    $detailJs = "window.PLANS_DETAIL = " . js_encode($detailItems) . ";\n\n";
-    $detailJs .= "(function attachPlanImages() {\n";
-    $detailJs .= "  var images = {\n" . implode(",\n", $attachLines) . "\n  };\n";
-    $detailJs .= "  Object.keys(images).forEach(function (key) {\n";
-    $detailJs .= "    if (window.PLANS_DETAIL[key]) {\n";
-    $detailJs .= "      window.PLANS_DETAIL[key].image = images[key];\n";
-    $detailJs .= "    }\n  });\n})();\n";
-
-    js_write_file(JS_PATH . '/plans-detail-content.js', $detailJs);
+    generate_plans_detail_js();
 
     $news = json_read('news.json');
     $newsItems = admin_filter_visible_map($news['items'] ?? []);
@@ -141,6 +160,8 @@ function generate_all_js(): void
 
     $pages = json_read('pages.json');
     js_write_file(JS_PATH . '/pages-data.js', 'window.PAGES_DATA = ' . js_encode($pages) . ";\n");
+
+    generate_seo_files();
 }
 
 function admin_run_import(): bool

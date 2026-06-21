@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
@@ -15,7 +15,9 @@
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header class="site-header">
+  <script src="js/vendor/lucide.min.js"></script>
+  <script src="js/lucide-helper.js"></script>
+<header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="brand">
         <img src="images/logo/LOGO-THAILIFE.png" alt="ไทยประกันชีวิต" class="brand-logo" width="46" height="46">
@@ -25,7 +27,7 @@
         </span>
       </a>
       <button class="nav-toggle" type="button" aria-label="เปิดเมนู" aria-expanded="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <i data-lucide="menu" aria-hidden="true"></i>
       </button>
       <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html" class="active">หน้าหลัก</a>
@@ -92,39 +94,6 @@
     </div>
   </section>
 
-  <section class="section">
-    <div class="section-inner reveal">
-      <article class="profile-panel">
-        <header class="profile-panel-head">
-          <h2>ข้อมูลตัวแทน</h2>
-          <p>วรชาติ โตเต็ม · สำนักงานตัวแทนแม็ก ไทยประกันชีวิต</p>
-        </header>
-        <dl class="profile-strip">
-          <div class="profile-item">
-            <dt>ตำแหน่ง</dt>
-            <dd>ผู้บริหารศูนย์</dd>
-          </div>
-          <div class="profile-item">
-            <dt>สาขา</dt>
-            <dd>นครปฐม</dd>
-          </div>
-          <div class="profile-item">
-            <dt>เบอร์ติดต่อ</dt>
-            <dd><a href="tel:0852925320">085-292-5320</a></dd>
-          </div>
-          <div class="profile-item">
-            <dt>ใบอนุญาตตัวแทน</dt>
-            <dd>5701116295</dd>
-          </div>
-          <div class="profile-item">
-            <dt>สิทธิ์ขายยูนิเวอร์แซลไลฟ์</dt>
-            <dd>มีสิทธิ์</dd>
-          </div>
-        </dl>
-      </article>
-    </div>
-  </section>
-
   <section class="section section-alt">
     <div class="section-inner reveal">
       <header class="section-header" data-icon="shield">
@@ -159,11 +128,11 @@
           </div>
           <div class="article-stats">
             <span class="article-stat">
-              <svg class="article-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <i data-lucide="eye" class="article-stat-icon" aria-hidden="true"></i>
               776 views
             </span>
             <span class="article-stat">
-              <svg class="article-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+              <i data-lucide="share-2" class="article-stat-icon" aria-hidden="true"></i>
               16 shares
             </span>
           </div>
@@ -180,11 +149,11 @@
           </div>
           <div class="article-stats">
             <span class="article-stat">
-              <svg class="article-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <i data-lucide="eye" class="article-stat-icon" aria-hidden="true"></i>
               14,473 views
             </span>
             <span class="article-stat">
-              <svg class="article-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+              <i data-lucide="share-2" class="article-stat-icon" aria-hidden="true"></i>
               47 shares
             </span>
           </div>
@@ -201,11 +170,11 @@
           </div>
           <div class="article-stats">
             <span class="article-stat">
-              <svg class="article-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <i data-lucide="eye" class="article-stat-icon" aria-hidden="true"></i>
               492 views
             </span>
             <span class="article-stat">
-              <svg class="article-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+              <i data-lucide="share-2" class="article-stat-icon" aria-hidden="true"></i>
               5 shares
             </span>
           </div>
@@ -336,19 +305,19 @@
           <ul class="home-inquiry-points">
             <li>
               <span class="home-inquiry-point-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                <i data-lucide="circle-check" aria-hidden="true"></i>
               </span>
               ปรึกษาและออกใบเสนอเบี้ยฟรี ไม่มีค่าใช้จ่าย
             </li>
             <li>
               <span class="home-inquiry-point-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <i data-lucide="clock" aria-hidden="true"></i>
               </span>
               ติดต่อกลับภายใน 1 วันทำการ
             </li>
             <li>
               <span class="home-inquiry-point-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                <i data-lucide="phone" aria-hidden="true"></i>
               </span>
               หรือโทรเลย <a href="tel:0852925320">085-292-5320</a>
             </li>
@@ -408,7 +377,7 @@
   <script src="js/home-render.js"></script>
   <script src="js/hero-slider.js"></script>
   <script src="js/section-headers.js"></script>
-  <script src="js/main.js"></script>
+<script src="js/main.js"></script>
   <script src="js/footer.js"></script>
   <script src="js/plans-data.js"></script>
   <script src="js/goal-chips.js"></script>

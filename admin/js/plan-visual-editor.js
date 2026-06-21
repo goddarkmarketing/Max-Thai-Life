@@ -12,6 +12,15 @@
     insertAt: -1,
   };
 
+  function moveIcon(dir, size) {
+    size = size || 14;
+    return window.LucideIcons ? LucideIcons.editor("chevron-" + dir, size) : "";
+  }
+
+  function gripIcon() {
+    return window.LucideIcons ? LucideIcons.editor("drag", 14) : "";
+  }
+
   function ensureOverviewBlocks() {
     if (!state.detail.overviewBlocks) {
       if (state.detail.brochureImages && state.detail.brochureImages.length) {
@@ -131,22 +140,25 @@
         '" title="เลื่อนขึ้น" aria-label="เลื่อนขึ้น"' +
         (upOff ? " disabled" : "") +
         '>' +
-        '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14l6-6 6 6"/></svg></button>';
+        moveIcon("up") +
+        "</button>";
       moveHtml +=
         '<button type="button" class="pe-block-btn pe-block-btn--move pe-block-btn--down' +
         (downOff ? " is-disabled" : "") +
         '" title="เลื่อนลง" aria-label="เลื่อนลง"' +
         (downOff ? " disabled" : "") +
         '>' +
-        '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10l6 6 6-6"/></svg></button>';
+        moveIcon("down") +
+        "</button>";
     }
+    var actionsTag = opts.inline ? "span" : "div";
     return (
-      '<div class="pe-block-actions">' +
+      "<" + actionsTag + ' class="pe-block-actions">' +
       moveHtml +
       (showEdit ? '<button type="button" class="pe-block-btn pe-block-btn--edit">แก้ไข</button>' : "") +
       (showAdd ? '<button type="button" class="pe-block-btn pe-block-btn--add">เพิ่ม</button>' : "") +
       (showDelete ? '<button type="button" class="pe-block-btn pe-block-btn--delete">ลบ</button>' : "") +
-      "</div>"
+      "</" + actionsTag + ">"
     );
   }
 
@@ -248,7 +260,7 @@
   function inlineField(html, placeholder) {
     return (
       '<span class="pe-block-wrap pe-block-wrap--inline" data-pe-block="field">' +
-      blockActions({ deletable: false, addable: false }) +
+      blockActions({ deletable: false, addable: false, inline: true }) +
       '<span class="pe-field pe-field--inline">' +
       editableInner(html, placeholder, "pe-editable--inline", "", "span") +
       "</span></span>"
@@ -258,9 +270,9 @@
   function renderHero() {
     var p = state.detail;
     document.getElementById("plan-hero-inner").innerHTML =
-      '<p class="breadcrumb"><a href="../plans.html">แผนประกัน</a> / ' +
+      '<div class="breadcrumb"><a href="../plans.html">แผนประกัน</a> / ' +
       inlineField(p.breadcrumb || "", "Breadcrumb") +
-      '</p><span class="page-hero-eyebrow">แผนประกันไทยประกันชีวิต</span>' +
+      '</div><span class="page-hero-eyebrow">แผนประกันไทยประกันชีวิต</span>' +
       fieldWrap(
         editableInner(p.title || "", "หัวข้อแผน", "pe-rich", 'data-pe="title" data-layer-id="hero-title"', "h1")
       ) +
@@ -574,11 +586,8 @@
           id +
           '">' +
           '<span class="pe-nav-grip" aria-hidden="true">' +
-          '<svg viewBox="0 0 12 20" width="14" height="22" fill="currentColor">' +
-          '<circle cx="4" cy="4" r="1.5"/><circle cx="8" cy="4" r="1.5"/>' +
-          '<circle cx="4" cy="10" r="1.5"/><circle cx="8" cy="10" r="1.5"/>' +
-          '<circle cx="4" cy="16" r="1.5"/><circle cx="8" cy="16" r="1.5"/>' +
-          "</svg></span>" +
+          gripIcon() +
+          "</span>" +
           "<span>" +
           NAV_LABELS[id] +
           "</span></a>"
@@ -840,6 +849,7 @@
     renderDetail();
     renderCta();
     bindEvents();
+    if (window.LucideIcons) LucideIcons.refresh(document.querySelector(".plan-visual-canvas"));
   }
 
   function cleanHtml(el) {

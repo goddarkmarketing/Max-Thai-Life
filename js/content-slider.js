@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   var MOBILE_MQ = window.matchMedia("(max-width: 768px)");
   var instances = [];
 
@@ -220,6 +220,8 @@
 
   boot();
   window.addEventListener("load", boot);
+  document.addEventListener("landing:rendered", boot);
+  document.addEventListener("claim-reviews:updated", boot);
 
   document.querySelectorAll(".section-inner.reveal").forEach(function (el) {
     if (!("IntersectionObserver" in window)) return;

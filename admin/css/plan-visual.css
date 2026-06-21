@@ -13,9 +13,12 @@ body.admin-body.plan-visual-mode {
 
 .admin-main--visual {
   min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
   padding-top: var(--pe-bar-h);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .admin-alert--visual {
@@ -51,12 +54,146 @@ body.admin-body.plan-visual-mode .pe-admin-bar {
   background: #e8eaed;
 }
 
+/* Visual editor ทุก canvas — ตัดบรรทัดยาว/ตัวเลข/URL */
+.pe-canvas-wrap .pe-editable,
+.pe-canvas-wrap .pe-editable * {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-wrap: break-word;
+  word-break: break-word;
+  line-break: anywhere;
+  max-width: 100%;
+}
+
+.pe-canvas-wrap .pe-item-row .pe-editable {
+  flex: none;
+  min-width: 0;
+}
+
 .pe-canvas-wrap .section {
   background: #fff;
 }
 
 .pe-canvas-wrap .section-inner {
   max-width: 1200px;
+}
+
+/* ปิด scroll-reveal ใน editor — ไม่งั้นเนื้อหา opacity:0 มองไม่เห็น */
+.plan-visual-mode .reveal,
+.pe-canvas-wrap .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.pe-canvas-wrap .pe-section-block {
+  position: relative;
+  display: block;
+  margin-bottom: 0;
+  padding-top: 2.75rem;
+}
+
+.pe-canvas-wrap .pe-section-block:not([data-list]) {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.pe-canvas-wrap .pe-section-block[data-list="sections"] {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.pe-canvas-wrap .pe-section-block[data-list="sections"] > .section-inner {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.pe-canvas-wrap .pe-hero-block {
+  position: relative;
+  padding: 2.75rem 1.25rem 1.25rem;
+}
+
+.pe-canvas-wrap .pe-toolbar {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 20;
+  display: none;
+  align-items: center;
+  gap: 0.35rem;
+  pointer-events: auto;
+}
+
+.pe-canvas-wrap .pe-section-block:hover > .pe-toolbar,
+.pe-canvas-wrap .pe-section-block.is-editing > .pe-toolbar,
+.pe-canvas-wrap .pe-item-row:hover > .pe-toolbar,
+.pe-canvas-wrap .pe-item-row.is-editing > .pe-toolbar,
+.pe-canvas-wrap .pe-toolbar:hover {
+  display: flex;
+}
+
+.pe-canvas-wrap .pe-section-block:hover,
+.pe-canvas-wrap .pe-section-block.is-editing,
+.pe-canvas-wrap .pe-item-row:hover,
+.pe-canvas-wrap .pe-item-row.is-editing {
+  box-shadow: inset 0 0 0 2px rgba(0, 84, 166, 0.15);
+}
+
+.pe-canvas-wrap .pe-section-block.is-editing,
+.pe-canvas-wrap .pe-item-row.is-editing {
+  box-shadow: inset 0 0 0 2px #0054a6;
+  background: rgba(0, 84, 166, 0.03);
+}
+
+.pe-canvas-wrap .pe-item-row {
+  position: relative;
+  margin-bottom: 0.75rem;
+  list-style: none;
+  cursor: text;
+}
+
+.pe-canvas-wrap .achievements .pe-item-row {
+  display: inline-flex;
+  margin: 0.25rem;
+  vertical-align: top;
+}
+
+.pe-canvas-wrap .two-col-blocks .pe-item-row {
+  margin-bottom: 0;
+}
+
+.pe-canvas-wrap .two-col-blocks .pe-item-row .info-block {
+  height: 100%;
+}
+
+.pe-canvas-wrap .service-card-grid .pe-item-row,
+.pe-canvas-wrap .article-list .pe-item-row {
+  margin-bottom: 0;
+}
+
+.pe-canvas-wrap .landing-prose blockquote,
+.pe-canvas-wrap .landing-prose .pe-editable {
+  color: var(--ink, #1a2332);
+}
+
+.pe-canvas-wrap .pe-section-block .section-header h2,
+.pe-canvas-wrap .pe-section-block .info-block h4,
+.pe-canvas-wrap .pe-section-block .team-teaser p {
+  color: var(--ink, #1a2332);
+}
+
+.pe-canvas-wrap .pe-section-footer {
+  margin-top: 1.5rem;
+  color: var(--muted, #64748b);
+}
+
+.pe-canvas-wrap .cta-actions .pe-item-row {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+}
+
+.pe-canvas-wrap .landing-prose .pe-item-row:last-child {
+  margin-bottom: 0;
 }
 
 .is-layer-selected {
@@ -189,6 +326,10 @@ body.admin-body.plan-visual-mode .pe-admin-bar {
   vertical-align: baseline;
 }
 
+.page-hero--plan .breadcrumb .pe-block-wrap--inline {
+  display: inline;
+}
+
 .pe-block-actions {
   position: absolute;
   top: 0.5rem;
@@ -202,10 +343,6 @@ body.admin-body.plan-visual-mode .pe-admin-bar {
 .pe-block-wrap:hover > .pe-block-actions,
 .pe-block-wrap.is-editing > .pe-block-actions {
   display: flex;
-}
-
-.pe-block-wrap > .pe-block-actions {
-  display: none;
 }
 
 .pe-block-btn {
@@ -291,14 +428,10 @@ body.admin-body.plan-visual-mode .pe-admin-bar {
   position: relative;
   border-radius: 6px;
   transition: box-shadow 0.15s, outline 0.15s;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  line-break: auto;
 }
 
 .pe-editable.pe-rich,
-.pe-field .pe-editable {
+.pe-field .pe-editable:not(.pe-editable--inline) {
   display: block;
   width: 100%;
   min-height: 1.5em;
@@ -1061,5 +1194,862 @@ tr.pe-block-wrap {
 @media (max-width: 768px) {
   body.admin-body.plan-visual-mode .pe-admin-bar {
     left: 0;
+  }
+}
+
+.pe-dynamic-note {
+  padding: 1rem 1.15rem;
+  border-radius: 10px;
+  background: rgba(0, 84, 166, 0.06);
+  border: 1px dashed rgba(0, 84, 166, 0.25);
+  margin-bottom: 1rem;
+}
+
+.pe-dynamic-note p {
+  margin: 0.35rem 0 0;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.pe-card-grid-preview {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.pe-card-preview {
+  padding: 2rem 1rem;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #64748b;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.landing-add-section {
+  padding: 1rem 1.5rem 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.pe-claim-preview {
+  padding: 2.5rem;
+  text-align: center;
+  background: #f8fafc;
+  border-radius: 12px;
+  color: #64748b;
+}
+
+.landing-prose-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+/* Landing page editor — WYSIWYG preview (match frontend layout) */
+.pe-canvas-wrap--landing-cards {
+  background: var(--white, #fff);
+  padding: 0 0 3rem;
+}
+
+/* ไม่แสดงกรอบ/outline ตอนแก้ไข — ให้เหมือนหน้าเว็บจริง */
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-editable[contenteditable="true"],
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-editable:focus {
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-section-block:hover,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-section-block.is-editing,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-item-row:hover,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-item-row.is-editing {
+  box-shadow: none;
+  background: transparent;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-section-card.is-editing {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-section-card.is-editing .pe-item-row,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-section-card .pe-item-row.is-editing {
+  border-color: transparent;
+  background: transparent;
+}
+
+/* Landing editor — ตัดบรรทัดทุกพื้นที่ contenteditable */
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-editable,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-editable * {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-wrap: break-word;
+  word-break: break-word;
+  line-break: anywhere;
+  max-width: 100%;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-editable {
+  flex: none;
+  box-sizing: border-box;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-editable.pe-rich:not(.achievement-tag):not(.btn):not(.service-card-link),
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards h1.pe-editable,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards h2.pe-editable,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards h3.pe-editable,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards h4.pe-editable,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards p.pe-editable,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards blockquote.pe-editable,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards div.pe-editable.pe-prose-text,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-section-footer,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .page-hero-title,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .page-hero-lead,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .info-block .pe-editable,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .service-card-body .pe-editable,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .team-teaser .pe-editable,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .article-item .pe-editable,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .cta-band .pe-editable:not(.btn) {
+  display: block;
+  width: 100%;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-editable.achievement-tag,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-editable.service-card-link,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards li.pe-item-row > .pe-editable,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .career-featured-preview .pe-editable {
+  display: inline;
+  width: auto;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-editable.btn {
+  display: inline-flex;
+  width: auto;
+  max-width: 100%;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-section-card .pe-item-row {
+  display: block;
+  width: 100%;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-section-card .achievements.pe-list-group > .pe-item-row,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-section-card .cta-actions.pe-list-group > .pe-item-row {
+  display: inline-flex;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  vertical-align: top;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .achievements.pe-list-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .achievements .pe-item-row .achievement-tag {
+  display: inline-block;
+  width: auto;
+  margin: 0;
+  white-space: normal;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .achievements .pe-list-add-btn {
+  margin: 0;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-item-row .pe-editable {
+  flex: none;
+}
+
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-section-card-body,
+.pe-canvas-wrap.pe-canvas-wrap--landing-cards .pe-section-card-preview {
+  overflow: visible;
+}
+
+.pe-landing-stack {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.pe-canvas-wrap--landing-cards .pe-landing-preview-header.site-header {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  z-index: 5;
+  flex-shrink: 0;
+}
+
+.pe-canvas-wrap--landing-cards .pe-landing-preview-header .main-nav a[href="#"] {
+  cursor: default;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card {
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid #e8edf2;
+  box-shadow: none;
+  background: transparent;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card-head {
+  position: sticky;
+  top: var(--pe-bar-h);
+  z-index: 12;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card-preview .page-hero {
+  margin-top: 0;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card-preview .section {
+  padding: 4.5rem 1.5rem;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card-preview .section-inner,
+.pe-canvas-wrap--landing-cards .pe-section-card-preview .page-hero-inner {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card-preview .cta-band {
+  width: calc(100% - 3rem);
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  border-radius: 16px;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card-preview blockquote.pe-prose-quote,
+.pe-canvas-wrap--landing-cards .pe-section-card-preview .pe-prose-quote {
+  font-size: 1.25rem;
+  line-height: 1.75;
+  color: var(--ink);
+  border-left: 4px solid var(--tl-gold);
+  padding-left: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card-preview .pe-prose-text {
+  color: var(--muted);
+  max-width: none;
+  width: 100%;
+  min-height: 120px;
+  margin-bottom: 2rem;
+  line-height: 1.75;
+  display: block;
+  box-sizing: border-box;
+}
+
+/* Prose block structure — each block is its own editor card */
+.pe-canvas-wrap--landing-cards .pe-list-group[data-list-group="blocks"] > .pe-item-row[data-list="blocks"] {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 1.15rem 1.35rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  overflow: visible;
+  height: auto;
+  box-sizing: border-box;
+}
+
+.pe-canvas-wrap--landing-cards .pe-list-group[data-list-group="blocks"] > .pe-item-row[data-list="blocks"]:hover,
+.pe-canvas-wrap--landing-cards .pe-list-group[data-list-group="blocks"] > .pe-item-row[data-list="blocks"].is-editing {
+  border-color: rgba(0, 84, 166, 0.3);
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 84, 166, 0.08);
+}
+
+.pe-canvas-wrap--landing-cards .pe-list-group[data-list-group="blocks"] > .pe-item-row[data-list="blocks"] .pe-prose-quote,
+.pe-canvas-wrap--landing-cards .pe-list-group[data-list-group="blocks"] > .pe-item-row[data-list="blocks"] .pe-prose-text {
+  margin-bottom: 0;
+  min-height: auto;
+  overflow: visible;
+  height: auto;
+}
+
+.pe-canvas-wrap--landing-cards .pe-list-group[data-list-group="blocks"] > .pe-item-row[data-list="blocks"] .pe-media,
+.pe-canvas-wrap--landing-cards .pe-list-group[data-list-group="blocks"] > .pe-item-row[data-list="blocks"] .pe-media-placeholder {
+  margin: 0;
+}
+
+.pe-canvas-wrap--landing-cards .pe-block-type-label {
+  display: inline-block;
+  margin-bottom: 0.65rem;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+  background: #e2e8f0;
+  border-radius: 6px;
+  line-height: 1.4;
+  user-select: none;
+  pointer-events: none;
+}
+
+.pe-canvas-wrap--landing-cards .pe-prose-text > .pe-prose-p,
+.pe-canvas-wrap--landing-cards .pe-prose-text > figure,
+.pe-canvas-wrap--landing-cards .pe-prose-text > ul,
+.pe-canvas-wrap--landing-cards .pe-prose-text > ol,
+.pe-canvas-wrap--landing-cards .pe-prose-text > h3 {
+  display: block;
+  width: 100%;
+  margin: 0 0 0.75rem;
+  min-height: 1.5em;
+}
+
+.pe-canvas-wrap--landing-cards .pe-prose-text > .pe-prose-p:last-child,
+.pe-canvas-wrap--landing-cards .pe-prose-text > :last-child {
+  margin-bottom: 0;
+}
+
+.pe-canvas-wrap--landing-cards .pe-prose-text > .pe-prose-p:empty::before {
+  content: "";
+  display: inline-block;
+}
+
+.pe-canvas-wrap--landing-cards .pe-prose-text span,
+.pe-canvas-wrap--landing-cards .pe-prose-text a,
+.pe-canvas-wrap--landing-cards .pe-prose-text strong,
+.pe-canvas-wrap--landing-cards .pe-prose-text em,
+.pe-canvas-wrap--landing-cards .pe-prose-text u,
+.pe-canvas-wrap--landing-cards .pe-prose-text mark {
+  display: inline;
+  white-space: inherit;
+  overflow-wrap: inherit;
+  word-break: inherit;
+  line-break: inherit;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card[data-section-type="prose"] .profile-panel {
+  margin-top: 1rem;
+  padding: 1.15rem 1.35rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  box-sizing: border-box;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card .pe-item-row {
+  position: relative;
+  margin-bottom: 0;
+  padding: 0;
+  border: 1px dashed transparent;
+  border-radius: 8px;
+  list-style: none;
+  cursor: text;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card:not(.is-editing) .pe-item-row:not([data-list="blocks"]) {
+  padding-top: 0;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card .pe-item-row .pe-editable {
+  cursor: text;
+}
+
+.pe-item-remove {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.4rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  padding: 0;
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  border-radius: 999px;
+  background: #fff;
+  color: #dc2626;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.pe-item-remove svg {
+  width: 12px;
+  height: 12px;
+}
+
+.pe-item-row:hover .pe-item-remove,
+.pe-item-row.is-editing .pe-item-remove,
+.pe-item-remove:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pe-item-remove:hover {
+  background: #fef2f2;
+  border-color: #dc2626;
+}
+
+.pe-canvas-wrap--landing-cards .two-col-blocks .pe-item-row,
+.pe-canvas-wrap--landing-cards .team-teaser .pe-item-row,
+.pe-canvas-wrap--landing-cards .article-list .pe-item-row,
+.pe-canvas-wrap--landing-cards .service-card-grid .pe-item-row {
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-footer {
+  margin-top: 2rem;
+  color: var(--muted);
+}
+
+.pe-canvas-wrap--landing-cards .cta-actions .pe-item-row {
+  display: inline-flex;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.pe-canvas-wrap--landing-cards .pe-dynamic-note {
+  display: none;
+}
+
+.pe-canvas-wrap--landing-cards .pe-add-section-bar {
+  max-width: 1200px;
+  margin: 1.5rem auto 0;
+  border-radius: 12px;
+}
+
+.pe-list-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 0.65rem;
+  border: 1px dashed rgba(5, 150, 105, 0.45);
+  border-radius: 8px;
+  background: #ecfdf5;
+  color: #059669;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+
+.pe-list-add-btn:hover {
+  background: #d1fae5;
+  border-color: #059669;
+}
+
+.pe-list-add-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.pe-canvas-wrap--landing-cards .cta-actions .pe-item-row .pe-editable.btn {
+  display: inline-flex;
+  width: auto;
+  max-width: 100%;
+}
+
+.pe-canvas-wrap--landing-cards .two-col-blocks.pe-list-group .pe-list-add-btn {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 0.25rem;
+}
+
+.pe-canvas-wrap--landing-cards .cta-actions.pe-list-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* Hero preview — flat layout (head + banner as siblings, match live page) */
+.pe-canvas-wrap--landing-cards .pe-section-card--hero {
+  overflow: visible;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--hero .pe-section-card-head {
+  position: relative;
+  top: auto;
+  z-index: 2;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--hero > .page-hero {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 4rem 1.5rem 3rem;
+  overflow: hidden;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--hero > .page-hero .page-hero-inner {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  padding-top: 0;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--hero.is-collapsed > .page-hero {
+  display: none;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--hero .page-hero h1.pe-editable,
+.pe-canvas-wrap--landing-cards .pe-section-card--hero .page-hero p.pe-editable {
+  color: inherit;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--hero .page-hero.pe-section-block:hover,
+.pe-canvas-wrap--landing-cards .pe-section-card--hero .page-hero.pe-section-block.is-editing,
+.pe-canvas-wrap--landing-cards .pe-section-card--hero .page-hero-inner.pe-section-block:hover,
+.pe-canvas-wrap--landing-cards .pe-section-card--hero .page-hero-inner.pe-section-block.is-editing {
+  box-shadow: none;
+  background: transparent;
+}
+
+/* CTA preview — flat layout (head + band as siblings, match live page) */
+.pe-canvas-wrap--landing-cards .pe-section-card--cta {
+  overflow: visible;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--cta .pe-section-card-head {
+  position: relative;
+  top: auto;
+  z-index: 2;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--cta > .cta-band {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: calc(100% - 3rem);
+  max-width: 1200px;
+  margin: 1.25rem auto 3rem;
+  padding: 3rem 2rem;
+  box-sizing: border-box;
+  box-shadow:
+    0 4px 6px rgba(var(--tl-blue-dark-rgb), 0.08),
+    0 16px 40px rgba(var(--tl-blue-dark-rgb), 0.15);
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--cta.is-collapsed > .cta-band {
+  display: none;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--cta .cta-band:hover,
+.pe-canvas-wrap--landing-cards .pe-section-card--cta .cta-band.is-editing {
+  box-shadow:
+    0 4px 6px rgba(var(--tl-blue-dark-rgb), 0.08),
+    0 16px 40px rgba(var(--tl-blue-dark-rgb), 0.15);
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--cta .cta-band h2.pe-editable,
+.pe-canvas-wrap--landing-cards .pe-section-card--cta .cta-band p.pe-editable {
+  color: inherit;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--cta .cta-band p.pe-editable {
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+  max-width: 28rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--cta .cta-actions .pe-item-row,
+.pe-canvas-wrap--landing-cards .pe-section-card--cta .cta-actions .pe-item-row:hover,
+.pe-canvas-wrap--landing-cards .pe-section-card--cta .cta-actions .pe-item-row.is-editing,
+.pe-canvas-wrap--landing-cards .pe-section-card--cta.is-editing .cta-actions .pe-item-row {
+  display: inline-flex;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  cursor: text;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--cta .cta-actions .pe-item-row .pe-editable.btn {
+  display: inline-flex;
+  min-height: 2.75rem;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--cta .cta-actions .pe-list-add-btn {
+  min-width: 2.75rem;
+  height: 2.75rem;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.pe-canvas-wrap--landing-cards .pe-section-card--cta .cta-actions .pe-list-add-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.75);
+  color: #fff;
+}
+
+.pe-canvas-wrap--landing-cards .career-featured-preview.pe-list-group,
+.pe-canvas-wrap--landing-cards .pe-list-group[data-list-group="blocks"] {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pe-canvas-wrap--landing-cards .career-featured-preview .pe-list-add-btn,
+.pe-canvas-wrap--landing-cards .pe-list-group[data-list-group="blocks"] .pe-list-add-btn {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+}
+
+.pe-canvas-wrap--landing-cards .article-list + .pe-list-add-btn,
+.pe-canvas-wrap--landing-cards .service-card-grid + .pe-list-add-btn {
+  margin-top: 0.75rem;
+}
+
+.pe-section-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.pe-section-card.is-dragging {
+  opacity: 0.55;
+}
+
+.pe-section-card.is-drag-over {
+  border-color: #0054a6;
+  box-shadow: 0 0 0 2px rgba(0, 84, 166, 0.2);
+}
+
+.pe-section-card.is-editing {
+  border-color: #0054a6;
+  box-shadow: 0 0 0 2px rgba(0, 84, 166, 0.25);
+}
+
+.pe-section-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 1rem;
+  background: linear-gradient(180deg, #fafbfc 0%, #f4f6f9 100%);
+  border-bottom: 1px solid #e8edf2;
+  min-height: 52px;
+}
+
+.pe-section-card-title {
+  flex: 1;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.35;
+}
+
+.pe-card-drag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #94a3b8;
+  cursor: grab;
+  flex-shrink: 0;
+}
+
+.pe-card-drag:hover:not(:disabled) {
+  background: #e8edf2;
+  color: #475569;
+}
+
+.pe-card-drag:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.pe-card-drag:active:not(:disabled) {
+  cursor: grabbing;
+}
+
+.pe-section-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  flex-shrink: 0;
+}
+
+.pe-card-act {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #334155;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.pe-card-act:hover {
+  background: #e8edf2;
+  color: #0054a6;
+}
+
+.pe-card-act--del:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.pe-section-card.is-collapsed .pe-card-act--toggle svg {
+  transform: rotate(180deg);
+}
+
+.pe-card-act--toggle svg {
+  transition: transform 0.2s;
+}
+
+.pe-section-card-body {
+  overflow: hidden;
+}
+
+.pe-section-card.is-collapsed .pe-section-card-body {
+  display: none;
+}
+
+.pe-section-card-preview {
+  overflow: hidden;
+}
+
+.pe-section-card-preview .section,
+.pe-section-card-preview .page-hero,
+.pe-section-card-preview .cta-band {
+  margin: 0;
+}
+
+.pe-canvas-wrap:not(.pe-canvas-wrap--landing-cards) .pe-section-card-preview .section {
+  padding: 2rem 1.5rem;
+}
+
+.pe-section-card-preview .page-hero {
+  margin-top: 0;
+}
+
+.pe-section-card--hero .pe-section-card-preview .page-hero-inner {
+  padding-top: 0;
+}
+
+.pe-section-card-preview .pe-section-block {
+  padding: 0;
+  box-shadow: none;
+}
+
+.pe-section-card .pe-item-row {
+  position: relative;
+  margin-bottom: 0.65rem;
+  padding: 0.5rem 0.65rem 0.5rem 0.5rem;
+  border-radius: 8px;
+  border: 1px dashed transparent;
+  list-style: none;
+  cursor: text;
+}
+
+.pe-section-card.is-editing .pe-item-row,
+.pe-section-card .pe-item-row.is-editing {
+  border-color: rgba(0, 84, 166, 0.2);
+  background: rgba(0, 84, 166, 0.02);
+}
+
+.pe-add-section-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.15rem;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px dashed #cbd5e1;
+}
+
+.pe-add-section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+@media (max-width: 640px) {
+  .pe-canvas-wrap--landing-cards {
+    padding: 0 0 1.5rem;
+  }
+
+  .pe-canvas-wrap--landing-cards .pe-section-card-preview .section {
+    padding: 2.75rem 1rem;
+  }
+
+  .pe-canvas-wrap--landing-cards .pe-section-card-preview .cta-band {
+    width: calc(100% - 1.5rem);
+    margin-bottom: 2rem;
+  }
+
+  .pe-canvas-wrap--landing-cards .pe-section-card--cta > .cta-band {
+    width: calc(100% - 1.5rem);
+    margin-bottom: 2rem;
+    padding: 2.5rem 1.25rem;
+  }
+
+  .pe-canvas-wrap--landing-cards .pe-add-section-bar {
+    margin: 1rem 0.75rem 0;
+  }
+
+  .pe-section-card-head {
+    flex-wrap: wrap;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .pe-section-card-title {
+    font-size: 0.875rem;
+    width: calc(100% - 40px);
+  }
+
+  .pe-section-card-actions {
+    margin-left: auto;
   }
 }

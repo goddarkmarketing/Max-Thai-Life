@@ -39,6 +39,9 @@
     restoreSelection();
     document.execCommand(cmd, false, value || null);
     saveSelection();
+    if (activeEl && activeEl.classList.contains("pe-prose-text") && global.ProseBlockEditor) {
+      global.ProseBlockEditor.normalize(activeEl);
+    }
     activeEl && activeEl.focus();
   }
 
@@ -58,6 +61,9 @@
       savedRange = range.cloneRange();
     } catch (e) {
       runCmd("insertHTML", "<" + tagName + (className ? ' class="' + className + '"' : "") + ">" + sel.toString() + "</" + tagName + ">");
+    }
+    if (activeEl && activeEl.classList.contains("pe-prose-text") && global.ProseBlockEditor) {
+      global.ProseBlockEditor.normalize(activeEl);
     }
     activeEl && activeEl.focus();
   }

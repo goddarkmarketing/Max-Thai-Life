@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/image-specs.php';
+require_once __DIR__ . '/lucide.php';
 
 $IMAGE_SPECS = require __DIR__ . '/image-specs.php';
 
@@ -27,7 +28,7 @@ function admin_nav_groups(): array
                 ['href' => 'site-footer.php', 'label' => 'Footer', 'icon' => 'layout'],
                 ['href' => 'site-seo.php', 'label' => 'SEO', 'icon' => 'globe'],
                 ['href' => 'home.php', 'label' => 'หน้าแรก', 'icon' => 'home'],
-                ['href' => 'pages.php', 'label' => 'หน้าอื่นๆ', 'icon' => 'file'],
+                ['href' => 'landing-pages.php', 'label' => 'หน้าเว็บ', 'icon' => 'file'],
             ],
         ],
         [
@@ -78,38 +79,15 @@ function admin_nav_is_active(string $active, array $item): bool
     return false;
 }
 
-function admin_nav_icon_svg(string $icon): string
-{
-    $icons = [
-        'grid' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
-        'settings' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>',
-        'home' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z"/></svg>',
-        'file' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>',
-        'shield' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v6c0 4.2 3 7.5 7 9 4-1.5 7-4.8 7-9V6l-7-3z"/><path d="m9 12 2 2 4-4"/></svg>',
-        'article' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h9l3 3v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h8M8 8h3"/></svg>',
-        'news' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6z"/><path d="M7 10h6M7 14h10M7 6h.01"/><path d="M18 6v4h3"/></svg>',
-        'users' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.2 2-4 4-4"/></svg>',
-        'heart' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>',
-        'image' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="M21 16l-5.5-5.5L5 20"/></svg>',
-        'backup' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>',
-        'user' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>',
-        'mail' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>',
-        'menu' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>',
-        'layout' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>',
-        'globe' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/></svg>',
-    ];
-
-    return $icons[$icon] ?? $icons['file'];
-}
-
 function admin_render_sidebar(string $active = ''): void
 {
+    $brand = admin_brand_meta();
     ?>
   <aside class="admin-sidebar" aria-label="เมนูหลังบ้าน">
     <div class="admin-brand">
-      <span class="admin-brand-mark">MTL</span>
+      <img src="<?= admin_h(admin_brand_logo_url()) ?>" alt="<?= admin_h($brand['name']) ?>" class="admin-brand-logo" width="46" height="46">
       <div>
-        <strong>Max Thai Life</strong>
+        <strong><?= admin_h($brand['name']) ?></strong>
         <span>ระบบจัดการเว็บไซต์</span>
       </div>
     </div>
@@ -176,6 +154,7 @@ function admin_layout_end(): void
     ?>
     </main>
   </div>
+  <?php admin_lucide_scripts(); ?>
   <script src="js/admin.js"></script>
 </body>
 </html>
@@ -195,6 +174,8 @@ function admin_visual_layout_start(string $title, string $active = 'plans-list.p
   <link rel="stylesheet" href="css/admin.css">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="css/plan-visual.css">
+  <link rel="stylesheet" href="css/page-visual-editor.css">
+  <?php admin_lucide_scripts(); ?>
 </head>
 <body class="admin-body plan-visual-mode">
   <?php admin_render_sidebar($active); ?>

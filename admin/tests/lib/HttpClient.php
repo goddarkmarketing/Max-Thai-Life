@@ -68,7 +68,38 @@ final class HttpClient
         throw new RuntimeException('ไม่พบ CSRF token ในหน้า');
     }
 
-    public function request(string $method, string $path, $body = null, array $extraHeaders = []): array
+    /** @return array<string, mixed> */
+    public function extractPageVisualData(string $html): array
+    {
+        if (!preg_match('/window\.PAGE_VISUAL_DATA\s*=\s*(\{.*?\});/s', $html, $m)) {
+            throw new RuntimeException('ไม่พบ PAGE_VISUAL_DATA');
+        }
+        $data = json_decode($m[1], true);
+        if (!is_array($data)) {
+            throw new RuntimeException('แปลง PAGE_VISUAL_DATA ไม่สำเร็จ');
+        }
+        return $data;
+    }
+
+    public function postAdminJson(string $path, array $payload): array
+    {
+        return $this->request('POST', '/admin/' . ltrim($path, '/'), json_encode($payload, JSON_UNESCAPED_UNICODE), [
+            'Content-Type: application/json',
+        ]);
+    }
+
+    public function postMultipart(string $path, array $fields, string $fileField, string $filePath): array
+    {
+        if (!is_file($filePath)) {
+            throw new RuntimeException("ไม่พบไฟล์ {$filePath}");
+        }
+        $mime = mime_content_type($filePath) ?: 'application/octet-stream';
+        $body = $fields;
+        $body[$fileField] = new CURLFile($filePath, $mime, basename($filePath));
+        return $this->request('POST', '/admin/' . ltrim($path, '/'), $body);
+    }
+
+    public function request(string $method, string $path, $body = null, array $extraHeaders = [], bool $followRedirects = true): array
     {
         $url = str_starts_with($path, 'http') ? $path : $this->baseUrl . $path;
         $ch = curl_init($url);
@@ -79,7 +110,7 @@ final class HttpClient
         $headers = $extraHeaders;
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_FOLLOWLOCATION => $followRedirects,
             CURLOPT_CUSTOMREQUEST => $method,
             CURLOPT_COOKIEJAR => $this->cookieFile,
             CURLOPT_COOKIEFILE => $this->cookieFile,
@@ -93,6 +124,7 @@ final class HttpClient
 
         $bodyOut = curl_exec($ch);
         $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $redirect = (string) curl_getinfo($ch, CURLINFO_REDIRECT_URL);
         $err = curl_error($ch);
         curl_close($ch);
 
@@ -100,6 +132,10 @@ final class HttpClient
             throw new RuntimeException('HTTP error: ' . $err);
         }
 
-        return ['code' => $code, 'body' => (string) $bodyOut];
+        return [
+            'code' => $code,
+            'body' => (string) $bodyOut,
+            'redirect' => $redirect,
+        ];
     }
 }

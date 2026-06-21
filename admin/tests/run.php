@@ -49,6 +49,8 @@ foreach ($suites as $suiteFile) {
         '04_visibility' => 'suite_visibility',
         '05_http' => 'suite_http',
         '06_inquiries' => 'suite_inquiries',
+        '07_landing_blocks' => 'suite_landing_blocks',
+        '08_visual_api' => 'suite_visual_api',
     ];
     $fn = $map[basename($suiteFile, '.php')] ?? null;
     if ($fn === null || !function_exists($fn)) {
@@ -58,6 +60,8 @@ foreach ($suites as $suiteFile) {
         suite_http($runner, $http);
     } elseif ($fn === 'suite_inquiries') {
         suite_inquiries($runner, $http);
+    } elseif ($fn === 'suite_visual_api') {
+        suite_visual_api($runner, $http);
     } else {
         $fn($runner);
     }

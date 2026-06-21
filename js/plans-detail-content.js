@@ -66,12 +66,24 @@ window.PLANS_DETAIL = {
     disclaimer: "ข้อมูลนี้เป็นภาพรวมจาก Digital Office และบทความแนะนำผลิตภัณฑ์ ไม่ใช่เอกสารเสนอขาย — ผลประโยชน์และเงื่อนไขขั้นสุดท้ายอ้างอิงกรมธรรม์ของ บมจ. ไทยประกันชีวิต",
     ctaTitle: "สนใจเลกาซี ฟิต รีไทร์ 99/10?",
     ctaLead: "ขอใบเสนอเบี้ยและจำลองผลประโยชน์ฟรี",
-    image: "images/plan-cards/card-pension.png"
+    image: "images/plan-cards/card-pension.png",
+    ctaButtons: [
+      {
+        label: "ขอใบเสนอเบี้ย",
+        href: "../contact.html",
+        variant: "white"
+      },
+      {
+        label: "โทร 085-292-5320",
+        href: "tel:0852925320",
+        variant: "outline"
+      }
+    ]
   },
   "tax-saving": {
     title: "ประกันลดหย่อนภาษี แบบสั้น",
     breadcrumb: "ลดหย่อนภาษี แบบสั้น",
-    description: "ประกันลดหย่อนภาษี แบบสั้น — ออมทรัพย์ ลดภาษี คุ้มครองรายได้",
+    description: "แบบประกันออมทรัพย์ ลดหย่อนภาษี มีเงินเก็บ พร้อมคุ้มครองรายได้ตลอดสัญญา",
     heroLead: "แบบประกันออมทรัพย์ ลดหย่อนภาษี มีเงินเก็บ พร้อมคุ้มครองรายได้ตลอดสัญญา",
     overview: "แบบประกัน<strong>ออมทรัพย์ระยะสั้น</strong>ที่ออกแบบให้ผู้มีรายได้เสียภาษีได้ใช้สิทธิลดหย่อนตามกฎหมาย พร้อมสร้างเงินออมและรับความคุ้มครองชีวิตตลอดระยะสัญญา — เป็นหนึ่งในบทความยอดนิยมบน Digital Office",
     highlight: "ออม ลดภาษี และคุ้มครองครอบครัวในแผนเดียว — เหมาะผู้ที่ต้องการผลลัพธ์ในระยะกลางไม่ผูกจ่ายเบี้ยยาวเกินไป",
@@ -135,7 +147,454 @@ window.PLANS_DETAIL = {
     disclaimer: "ข้อมูลนี้เป็นภาพรวมเพื่อการให้คำแนะนำเบื้องต้น ไม่ใช่เอกสารเสนอขาย — เงื่อนไขตามกรมธรรม์ของ บมจ. ไทยประกันชีวิต",
     ctaTitle: "วางแผนลดหย่อนปีนี้",
     ctaLead: "ขอใบเสนอเบี้ยและจัดสรรวงเงินลดหย่อนให้เหมาะสม",
-    image: "images/plan-cards/card-savings.png"
+    image: "images/plan-cards/card-savings.png",
+    sections: [
+      {
+        title: "",
+        subtitle: "",
+        description: "",
+        image: {
+          src: "images/plan-cards/card-savings.png",
+          alt: "ประกันลดหย่อนภาษี แบบสั้น"
+        },
+        buttonText: "",
+        buttonLink: "",
+        isVisible: true,
+        sortOrder: 0,
+        id: "e4bc39f72877bc08",
+        type: "image",
+        alt: false,
+        icon: "shield-check",
+        showIcon: false,
+        items: [],
+        videoUrl: "",
+        videoSrc: "",
+        customHtml: "",
+        columns: 3,
+        visible: true
+      },
+      {
+        title: "ภาพรวมแผน",
+        subtitle: "คำอธิบายย่อย",
+        description: "",
+        image: {
+          src: "",
+          alt: ""
+        },
+        buttonText: "",
+        buttonLink: "",
+        isVisible: true,
+        sortOrder: 1,
+        id: "d6fe723ab5f8e8bf",
+        type: "heading",
+        alt: false,
+        icon: "shield-check",
+        showIcon: false,
+        items: [],
+        videoUrl: "",
+        videoSrc: "",
+        customHtml: "",
+        columns: 3,
+        anchor: "overview",
+        visible: true
+      },
+      {
+        title: "",
+        subtitle: "",
+        description: "แบบประกัน<strong>ออมทรัพย์ระยะสั้น</strong>ที่ออกแบบให้ผู้มีรายได้เสียภาษีได้ใช้สิทธิลดหย่อนตามกฎหมาย พร้อมสร้างเงินออมและรับความคุ้มครองชีวิตตลอดระยะสัญญา — เป็นหนึ่งในบทความยอดนิยมบน Digital Office<div class=\"plan-highlight-box\"><strong>จุดขายหลัก:</strong> ออม ลดภาษี และคุ้มครองครอบครัวในแผนเดียว — เหมาะผู้ที่ต้องการผลลัพธ์ในระยะกลางไม่ผูกจ่ายเบี้ยยาวเกินไป</div>",
+        image: {
+          src: "",
+          alt: ""
+        },
+        buttonText: "",
+        buttonLink: "",
+        isVisible: true,
+        sortOrder: 2,
+        id: "99e04b42841e783b",
+        type: "text",
+        alt: false,
+        icon: "shield-check",
+        showIcon: false,
+        items: [],
+        videoUrl: "",
+        videoSrc: "",
+        customHtml: "",
+        columns: 3,
+        visible: true
+      },
+      {
+        title: "จุดเด่นและผลประโยชน์",
+        subtitle: "คำอธิบายย่อย",
+        description: "",
+        image: {
+          src: "",
+          alt: ""
+        },
+        buttonText: "",
+        buttonLink: "",
+        isVisible: true,
+        sortOrder: 3,
+        id: "76ec5672e00132f6",
+        type: "heading",
+        alt: false,
+        icon: "shield-check",
+        showIcon: false,
+        items: [],
+        videoUrl: "",
+        videoSrc: "",
+        customHtml: "",
+        columns: 3,
+        anchor: "benefits",
+        visible: true
+      },
+      {
+        title: "",
+        subtitle: "",
+        description: "",
+        image: {
+          src: "",
+          alt: ""
+        },
+        buttonText: "",
+        buttonLink: "",
+        isVisible: true,
+        sortOrder: 4,
+        id: "9a0d2342e825b7d3",
+        type: "bulletList",
+        alt: false,
+        icon: "shield-check",
+        showIcon: false,
+        items: [
+          {
+            title: "ลดหย่อนภาษีเงินได้",
+            subtitle: "",
+            description: "จากเบี้ยประกันชีวิตตามกฎหมายภาษีอากร",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          },
+          {
+            title: "สร้างเงินออม",
+            subtitle: "",
+            description: "มูลค่าเงินสดตามเงื่อนไขกรมธรรม์",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          },
+          {
+            title: "คุ้มครองรายได้ครอบครัว",
+            subtitle: "",
+            description: "เมื่อเกิดเหตุไม่คาดคิดตามทุนประกัน",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          },
+          {
+            title: "ระยะสัญญาไม่ยาว",
+            subtitle: "",
+            description: "วางแผนงบประมาณได้ชัดเจน",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          },
+          {
+            title: "เลือกทุนได้",
+            subtitle: "",
+            description: "ปรับตามอายุและความต้องการ",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          }
+        ],
+        videoUrl: "",
+        videoSrc: "",
+        customHtml: "",
+        columns: 3,
+        visible: true
+      },
+      {
+        title: "ข้อมูลแผน (ภาพรวม)",
+        subtitle: "คำอธิบายย่อย",
+        description: "",
+        image: {
+          src: "",
+          alt: ""
+        },
+        buttonText: "",
+        buttonLink: "",
+        isVisible: true,
+        sortOrder: 5,
+        id: "1e2716c895588a13",
+        type: "heading",
+        alt: false,
+        icon: "shield-check",
+        showIcon: false,
+        items: [],
+        videoUrl: "",
+        videoSrc: "",
+        customHtml: "",
+        columns: 3,
+        anchor: "specs",
+        visible: true
+      },
+      {
+        title: "",
+        subtitle: "",
+        description: "",
+        image: {
+          src: "",
+          alt: ""
+        },
+        buttonText: "",
+        buttonLink: "",
+        isVisible: true,
+        sortOrder: 6,
+        id: "f1ca86ee07a9f744",
+        type: "specTable",
+        alt: false,
+        icon: "shield-check",
+        showIcon: false,
+        items: [
+          {
+            title: "ประเภท",
+            subtitle: "",
+            description: "ประกันชีวิตแบบออมทรัพย์ / ลดหย่อนภาษี",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          },
+          {
+            title: "หมวดลดหย่อน",
+            subtitle: "",
+            description: "เบี้ยประกันชีวิต (รวมวงเงินกับกองทุนสำรองเลี้ยงชีพในหมวดเดียวกัน)",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          },
+          {
+            title: "ระยะสัญญา",
+            subtitle: "",
+            description: "ตามแบบประกันที่เลือก (แบบสั้น)",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          },
+          {
+            title: "เอกสารลดหย่อน",
+            subtitle: "",
+            description: "ใบเสร็จ/หลักฐานการชำระเบี้ยจากบริษัทประกัน",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          },
+          {
+            title: "การวางแผนภาษี",
+            subtitle: "",
+            description: "ควรจัดสรรร่วมกับประกันสุขภาพ (พ.ร.บ.) และกองทุนอื่น",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          },
+          {
+            title: "สัญญาเสริม",
+            subtitle: "",
+            description: "เพิ่มความคุ้มครองได้ตามที่เปิดขาย",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          }
+        ],
+        videoUrl: "",
+        videoSrc: "",
+        customHtml: "",
+        columns: 3,
+        visible: true
+      },
+      {
+        title: "เหมาะกับใคร",
+        subtitle: "",
+        description: "",
+        image: {
+          src: "",
+          alt: ""
+        },
+        buttonText: "",
+        buttonLink: "",
+        isVisible: true,
+        sortOrder: 7,
+        id: "0308dac0ab4d829b",
+        type: "infoBlocks",
+        alt: false,
+        icon: "shield-check",
+        showIcon: false,
+        items: [
+          {
+            title: "เหมาะมาก",
+            subtitle: "",
+            description: "พนักงาน ข้าราชการ เจ้าของกิจการที่มีเงินได้เสียภาษี ต้องการออมและลดภาษีในปีเดียว",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          },
+          {
+            title: "ควรปรึกษาเพิ่ม",
+            subtitle: "",
+            description: "ผู้ที่ใช้วงเงินลดหย่อนครบแล้ว — ควรวางแผนร่วมกับนักบัญชีก่อนซื้อเพิ่ม",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 1
+          }
+        ],
+        videoUrl: "",
+        videoSrc: "",
+        customHtml: "",
+        columns: 3,
+        anchor: "who",
+        visible: true
+      },
+      {
+        title: "คำถามที่พบบ่อย",
+        subtitle: "",
+        description: "",
+        image: {
+          src: "",
+          alt: ""
+        },
+        buttonText: "",
+        buttonLink: "",
+        isVisible: true,
+        sortOrder: 8,
+        id: "05cf54fcd4dde044",
+        type: "faq",
+        alt: false,
+        icon: "shield-check",
+        showIcon: false,
+        items: [
+          {
+            title: "ต่างจากเลกาซี ฟิต รีไทร์ 99/10 อย่างไร?",
+            subtitle: "",
+            description: "แบบสั้นเน้นออมและลดภาษีในระยะที่กำหนด ส่วน 99/10 เน้นบำนาญยาวถึง 99 ปี — เลือกตามเป้าหมายระยะยาว",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          },
+          {
+            title: "ถอนเงินก่อนครบสัญญาได้ไหม?",
+            subtitle: "",
+            description: "มีมูลค่าเงินสดตามเงื่อนไข การถอนอาจมีผลต่อผลประโยชน์และภาษี — ควรศึกษาก่อนตัดสินใจ",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          },
+          {
+            title: "ลดหย่อนได้เท่าไรต่อปี?",
+            subtitle: "",
+            description: "ขึ้นกับวงเงินสูงสุดที่กฎหมายกำหนดในแต่ละปีและเบี้ยที่จ่ายจริง — ตัวแทนช่วยสรุปภาพรวมได้",
+            image: {
+              src: "",
+              alt: ""
+            },
+            buttonText: "",
+            buttonLink: "",
+            isVisible: true,
+            sortOrder: 0
+          }
+        ],
+        videoUrl: "",
+        videoSrc: "",
+        customHtml: "",
+        columns: 3,
+        anchor: "faq",
+        visible: true
+      }
+    ],
+    ctaButtons: [
+      {
+        label: "ขอใบเสนอเบี้ย",
+        href: "../contact.html",
+        variant: "white"
+      },
+      {
+        label: "โทร 085-292-5320",
+        href: "tel:0852925320",
+        variant: "outline"
+      }
+    ]
   },
   "money-fit": {
     title: "Money Fit 12/6",
@@ -204,7 +663,19 @@ window.PLANS_DETAIL = {
     disclaimer: "ตารางเงินคืนและผลประโยชน์อ้างอิงเอกสารเสนอขายและกรมธรรม์ล่าสุดของ บมจ. ไทยประกันชีวิต",
     ctaTitle: "สนใจ Money Fit 12/6?",
     ctaLead: "ขอตารางเงินคืนและใบเสนอเบี้ยฟรี",
-    image: "images/cover แผนประกัน/d056b5ba-5c3d-4f52-b70e-90842b6daea0.png"
+    image: "images/cover แผนประกัน/d056b5ba-5c3d-4f52-b70e-90842b6daea0.png",
+    ctaButtons: [
+      {
+        label: "ขอใบเสนอเบี้ย",
+        href: "../contact.html",
+        variant: "white"
+      },
+      {
+        label: "โทร 085-292-5320",
+        href: "tel:0852925320",
+        variant: "outline"
+      }
+    ]
   },
   "money-fit-firm": {
     title: "Money Fit Firm 15/10",
@@ -273,7 +744,19 @@ window.PLANS_DETAIL = {
     disclaimer: "เงินปันผลไม่ใช่ผลตอบแทนคงที่ — อ้างอิงกรมธรรม์และเอกสารข้อมูลสำคัญของ บมจ. ไทยประกันชีวิต",
     ctaTitle: "สนใจ Money Fit Firm 15/10?",
     ctaLead: "ขอใบเสนอเบี้ยและอธิบายเงินปันผลเบื้องต้น",
-    image: "images/cover แผนประกัน/b7410065-57e5-4cc3-91b2-aefc4feb932d.png"
+    image: "images/cover แผนประกัน/b7410065-57e5-4cc3-91b2-aefc4feb932d.png",
+    ctaButtons: [
+      {
+        label: "ขอใบเสนอเบี้ย",
+        href: "../contact.html",
+        variant: "white"
+      },
+      {
+        label: "โทร 085-292-5320",
+        href: "tel:0852925320",
+        variant: "outline"
+      }
+    ]
   },
   "health-working": {
     title: "ประกันสุขภาพ คนวัยทำงาน",
@@ -342,7 +825,19 @@ window.PLANS_DETAIL = {
     disclaimer: "ความคุ้มครอง ข้อยกเว้น และระยะรอคอยตามกรมธรรม์จริงของ บมจ. ไทยประกันชีวิต",
     ctaTitle: "สนใจประกันสุขภาพวัยทำงาน?",
     ctaLead: "ปรึกษาแผนและทุนที่เหมาะกับคุณ",
-    image: "images/plan-cards/card-health.png"
+    image: "images/plan-cards/card-health.png",
+    ctaButtons: [
+      {
+        label: "ขอใบเสนอเบี้ย",
+        href: "../contact.html",
+        variant: "white"
+      },
+      {
+        label: "โทร 085-292-5320",
+        href: "tel:0852925320",
+        variant: "outline"
+      }
+    ]
   },
   "health-kids": {
     title: "ประกันสุขภาพเด็ก วัยซน",
@@ -411,7 +906,19 @@ window.PLANS_DETAIL = {
     disclaimer: "เงื่อนไขและเบี้ยอ้างอิงกรมธรรม์ล่าสุดของ บมจ. ไทยประกันชีวิต",
     ctaTitle: "วางแผนสุขภาพลูกน้อย",
     ctaLead: "ปรึกษาแผนเด็กและเบี้ยฟรี",
-    image: "images/cover แผนประกัน/ba6eb663-3419-48a3-a17b-2290cb6b73f2.png"
+    image: "images/cover แผนประกัน/ba6eb663-3419-48a3-a17b-2290cb6b73f2.png",
+    ctaButtons: [
+      {
+        label: "ขอใบเสนอเบี้ย",
+        href: "../contact.html",
+        variant: "white"
+      },
+      {
+        label: "โทร 085-292-5320",
+        href: "tel:0852925320",
+        variant: "outline"
+      }
+    ]
   },
   infinite: {
     title: "ไทยประกันชีวิต INFINITE",
@@ -480,7 +987,19 @@ window.PLANS_DETAIL = {
     disclaimer: "รายละเอียดสิทธิ์ INFINITE ขึ้นกับเกณฑ์และนโยบายปัจจุบันของ บมจ. ไทยประกันชีวิต",
     ctaTitle: "สอบถามสิทธิ์ INFINITE",
     ctaLead: "ตรวจสอบสิทธิประโยชน์ที่คุณมีหรือควรวางแผน",
-    image: "images/plan-cards/card-rider.png"
+    image: "images/plan-cards/card-rider.png",
+    ctaButtons: [
+      {
+        label: "ขอใบเสนอเบี้ย",
+        href: "../contact.html",
+        variant: "white"
+      },
+      {
+        label: "โทร 085-292-5320",
+        href: "tel:0852925320",
+        variant: "outline"
+      }
+    ]
   },
   "universal-life": {
     title: "ยูนิเวอร์แซลไลฟ์ (Universal Life)",
@@ -549,7 +1068,19 @@ window.PLANS_DETAIL = {
     disclaimer: "ผลตอบแทนการลงทุนไม่รับประกัน — อ้างอิงกรมธรรม์และเอกสารข้อมูลสำคัญของ บมจ. ไทยประกันชีวิต",
     ctaTitle: "ปรึกษายูนิเวอร์แซลไลฟ์",
     ctaLead: "นัดหมายอธิบายความเสี่ยงและโครงสร้างกรมธรรม์",
-    image: "images/plan-cards/card-invest.png"
+    image: "images/plan-cards/card-invest.png",
+    ctaButtons: [
+      {
+        label: "ขอใบเสนอเบี้ย",
+        href: "../contact.html",
+        variant: "white"
+      },
+      {
+        label: "โทร 085-292-5320",
+        href: "tel:0852925320",
+        variant: "outline"
+      }
+    ]
   },
   "life-wealth-fit-99-99": {
     title: "ไลฟ์เวิร์ส เวลท์ ฟิต 99/99",
@@ -641,7 +1172,19 @@ window.PLANS_DETAIL = {
     disclaimer: "“ไทยประกันชีวิต ไลฟ์เวิร์ส” เป็นชื่อทางการตลาด ในกรมธรรม์ระบุชื่อแบบ “ไลฟ์เวิร์ส เวลท์ ฟิต 99/99” — ข้อมูลนี้เป็นภาพรวม ไม่ใช่เอกสารเสนอขาย เงื่อนไขอ้างอิงกรมธรรม์ของ บมจ. ไทยประกันชีวิต",
     ctaTitle: "สนใจไลฟ์เวิร์ส เวลท์ ฟิต 99/99?",
     ctaLead: "ขอใบเสนอเบี้ยและออกแบบความคุ้มครองให้ครอบครัว",
-    image: "images/plan-cards/card-protect.png"
+    image: "images/plan-cards/card-protect.png",
+    ctaButtons: [
+      {
+        label: "ขอใบเสนอเบี้ย",
+        href: "../contact.html",
+        variant: "white"
+      },
+      {
+        label: "โทร 085-292-5320",
+        href: "tel:0852925320",
+        variant: "outline"
+      }
+    ]
   }
 };
 
@@ -655,8 +1198,8 @@ window.PLANS_DETAIL = {
     "universal-life": "images/plan-cards/card-invest.png"
   };
   Object.keys(images).forEach(function (key) {
-    if (window.PLANS_DETAIL[key]) {
-      window.PLANS_DETAIL[key].image = images[key];
-    }
+    var plan = window.PLANS_DETAIL[key];
+    if (!plan || (plan.sections && plan.sections.length)) return;
+    plan.image = images[key];
   });
 })();

@@ -62,6 +62,13 @@ return [
         'hint' => 'JPG, PNG, WEBP · ไม่เกิน 8 MB',
         'path' => 'images/uploads/',
     ],
+    'video_library' => [
+        'label' => 'คลังวิดีโอ',
+        'hint' => 'MP4, WEBM, OGG, MOV · ไม่เกิน 50 MB',
+        'path' => 'videos/uploads/',
+        'extensions' => ['mp4', 'webm', 'ogg', 'mov'],
+        'maxSize' => 50 * 1024 * 1024,
+    ],
     'article_cover' => [
         'label' => 'ภาพปกบทความ/ข่าว',
         'width' => 612,

@@ -24,12 +24,16 @@
     }).join("/");
   }
 
+  function moveIcon(dir) {
+    return window.LucideIcons ? LucideIcons.editor("chevron-" + dir, 14) : "";
+  }
+
   function blockActions(opts) {
     opts = opts || {};
     var move = "";
     if (opts.movable) {
-      if (opts.canMoveUp !== false) move += '<button type="button" class="pe-block-btn pe-block-btn--move pe-block-btn--up" title="เลื่อนขึ้น"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 14l6-6 6 6"/></svg></button>';
-      if (opts.canMoveDown !== false) move += '<button type="button" class="pe-block-btn pe-block-btn--move pe-block-btn--down" title="เลื่อนลง"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 10l6 6 6-6"/></svg></button>';
+      if (opts.canMoveUp !== false) move += '<button type="button" class="pe-block-btn pe-block-btn--move pe-block-btn--up" title="เลื่อนขึ้น">' + moveIcon("up") + "</button>";
+      if (opts.canMoveDown !== false) move += '<button type="button" class="pe-block-btn pe-block-btn--move pe-block-btn--down" title="เลื่อนลง">' + moveIcon("down") + "</button>";
     }
     return (
       '<div class="pe-block-actions">' +
@@ -330,6 +334,7 @@
     renderHero();
     renderBody();
     bindEvents();
+    if (window.LucideIcons) LucideIcons.refresh(document.getElementById("pe-canvas-wrap"));
   }
 
   var bound = false;

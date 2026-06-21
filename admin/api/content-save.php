@@ -31,7 +31,7 @@ if (!admin_verify_csrf($payload['csrf'] ?? null)) {
 
 $type = $payload['type'] ?? '';
 $types = admin_content_types();
-if (!isset($types[$type]) || !in_array($type, ['articles', 'news'], true)) {
+if (!isset($types[$type]) || !in_array($type, ['articles', 'news', 'careers', 'claims'], true)) {
     http_response_code(400);
     echo json_encode(['ok' => false, 'error' => 'Invalid type']);
     exit;

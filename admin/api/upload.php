@@ -9,7 +9,7 @@ admin_require_login();
 
 $specs = require __DIR__ . '/../includes/image-specs.php';
 $allowed = array_keys($specs);
-$allowedExt = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'];
+$defaultExt = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'];
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -37,20 +37,27 @@ if (!in_array($specKey, $allowed, true)) {
 }
 
 $file = $_FILES['file'];
+$spec = $specs[$specKey] ?? [];
+$allowedExt = $spec['extensions'] ?? $defaultExt;
+$maxSize = (int) ($spec['maxSize'] ?? 8 * 1024 * 1024);
 $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 if (!in_array($ext, $allowedExt, true)) {
     http_response_code(400);
-    echo json_encode(['ok' => false, 'error' => 'รองรับเฉพาะ JPG, PNG, WEBP, GIF, SVG']);
+    $extHint = $specKey === 'video_library'
+        ? 'รองรับเฉพาะ MP4, WEBM, OGG, MOV'
+        : 'รองรับเฉพาะ JPG, PNG, WEBP, GIF, SVG';
+    echo json_encode(['ok' => false, 'error' => $extHint]);
     exit;
 }
 
-if ($file['size'] > 8 * 1024 * 1024) {
+if ($file['size'] > $maxSize) {
     http_response_code(400);
-    echo json_encode(['ok' => false, 'error' => 'ไฟล์ใหญ่เกิน 8 MB']);
+    $mb = (int) round($maxSize / (1024 * 1024));
+    echo json_encode(['ok' => false, 'error' => 'ไฟล์ใหญ่เกิน ' . $mb . ' MB']);
     exit;
 }
 
-$basePath = $specs[$specKey]['path'] ?? 'images/uploads/';
+$basePath = $spec['path'] ?? 'images/uploads/';
 if (str_ends_with($basePath, '/')) {
     $targetDir = ROOT_PATH . '/' . rtrim(str_replace('\\', '/', $basePath), '/');
 } else {

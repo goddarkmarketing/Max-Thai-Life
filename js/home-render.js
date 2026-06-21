@@ -13,11 +13,6 @@
     return path || '';
   }
 
-  if (site && site.meta && site.meta.description) {
-    var meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute('content', site.meta.description);
-  }
-
   if (site && site.brand) {
     document.querySelectorAll('.brand-name').forEach(function (el) {
       el.textContent = site.brand.name || el.textContent;
@@ -186,7 +181,11 @@
       if (points && inquiry.points) {
         points.innerHTML = inquiry.points
           .map(function (pt) {
-            return '<li><span class="home-inquiry-point-icon" aria-hidden="true">✓</span>' + h(pt) + '</li>';
+            return '<li><span class="home-inquiry-point-icon" aria-hidden="true">' +
+              (window.LucideIcons
+                ? LucideIcons.defer("check", { size: 20, strokeWidth: 1.75 })
+                : '<i data-lucide="circle-check" style="width:20px;height:20px" aria-hidden="true"></i>') +
+              "</span>" + h(pt) + "</li>";
           })
           .join('');
       }

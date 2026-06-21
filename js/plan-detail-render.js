@@ -1,12 +1,17 @@
-﻿(function () {
+(function () {
   var id = document.body.getAttribute("data-plan-id");
   var plan = window.PLANS_DETAIL && window.PLANS_DETAIL[id];
   if (!plan) return;
 
+  var cardImage = "";
+
   (window.PLANS_DATA || []).forEach(function (card) {
     var slug = (card.href || "").replace(/^plans\//, "").replace(/\.html$/, "");
     if (slug === id && card.image) {
-      plan.image = card.image;
+      cardImage = card.image;
+      if (!(plan.sections && plan.sections.length)) {
+        plan.image = card.image;
+      }
     }
   });
 
@@ -39,9 +44,9 @@
   var heroInner = document.getElementById("plan-hero-inner");
   if (heroInner) {
     heroInner.innerHTML =
-      '<p class="breadcrumb"><a href="../plans.html">แผนประกัน</a> / ' +
+      '<div class="breadcrumb"><a href="../plans.html">แผนประกัน</a> / ' +
       plan.breadcrumb +
-      '</p><span class="page-hero-eyebrow">แผนประกันไทยประกันชีวิต</span><h1>' +
+      '</div><span class="page-hero-eyebrow">แผนประกันไทยประกันชีวิต</span><h1>' +
       plan.title +
       '</h1><p class="page-hero-lead">' +
       plan.heroLead +
@@ -62,9 +67,10 @@
 
   var faqChevron =
     '<span class="faq-item__icon" aria-hidden="true">' +
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">' +
-    '<path d="M6 9l6 6 6-6"/>' +
-    "</svg></span>";
+    (window.LucideIcons
+      ? LucideIcons.icon("chevron-down", { size: 20, strokeWidth: 2.25 })
+      : '<i data-lucide="chevron-down" aria-hidden="true"></i>') +
+    "</span>";
 
   var faqListHtml = plan.faq
     .map(function (item) {
@@ -258,33 +264,58 @@
     faq: buildFaqSection,
   };
 
-  var sectionOrder = (plan.sectionOrder || DEFAULT_SECTION_ORDER.slice()).filter(function (id) {
-    return id !== "brochure";
-  });
-  var contentHtml = sectionOrder
-    .map(function (id) {
-      var build = sectionBuilders[id];
-      return build ? build() : "";
-    })
-    .filter(function (html) {
-      return html !== "";
-    })
-    .join("");
+  var contentHtml = "";
+  var navLinks = "";
 
-  var navSections = sectionOrder;
-  var navLinks = navSections
-    .map(function (id, index) {
-      return (
-        '<a href="#' +
-        id +
-        '"' +
-        (index === 0 ? ' class="active"' : "") +
-        ">" +
-        NAV_LABELS[id] +
-        "</a>"
-      );
-    })
-    .join("");
+  if (plan.sections && plan.sections.length && window.PageBlockRender) {
+    var R = PageBlockRender;
+    var ctx = {
+      base: "../",
+      agent: (window.SITE_DATA && window.SITE_DATA.agent) || {},
+      meta: {},
+      cardImage: cardImage,
+    };
+    contentHtml = R.renderPlanSections(plan.sections, ctx);
+    navLinks = R.planNavEntries(plan.sections)
+      .map(function (entry, index) {
+        return (
+          '<a href="#' +
+          entry.anchor +
+          '"' +
+          (index === 0 ? ' class="active"' : "") +
+          ">" +
+          entry.label +
+          "</a>"
+        );
+      })
+      .join("");
+  } else {
+    var sectionOrder = (plan.sectionOrder || DEFAULT_SECTION_ORDER.slice()).filter(function (id) {
+      return id !== "brochure";
+    });
+    contentHtml = sectionOrder
+      .map(function (id) {
+        var build = sectionBuilders[id];
+        return build ? build() : "";
+      })
+      .filter(function (html) {
+        return html !== "";
+      })
+      .join("");
+    navLinks = sectionOrder
+      .map(function (id, index) {
+        return (
+          '<a href="#' +
+          id +
+          '"' +
+          (index === 0 ? ' class="active"' : "") +
+          ">" +
+          NAV_LABELS[id] +
+          "</a>"
+        );
+      })
+      .join("");
+  }
 
   var root = document.getElementById("plan-detail-root");
   if (root) {
@@ -304,6 +335,7 @@
       "</div></div>";
 
     initPlanSidebarNav(root);
+    if (window.LucideIcons) LucideIcons.refresh(root);
   }
 
   function initPlanSidebarNav(layoutRoot) {
@@ -373,14 +405,34 @@
 
   var cta = document.getElementById("plan-cta");
   if (cta) {
+    var ctaButtons = plan.ctaButtons;
+    var actionsHtml = "";
+    if (ctaButtons && ctaButtons.length) {
+      actionsHtml = ctaButtons
+        .map(function (btn) {
+          var label = btn.label || btn.buttonText || "";
+          var href = btn.href || btn.buttonLink || "../contact.html";
+          var cls =
+            btn.variant === "outline"
+              ? "btn btn-outline"
+              : btn.variant === "white"
+                ? "btn btn-white"
+                : "btn btn-primary";
+          return '<a href="' + href + '" class="' + cls + '">' + label + "</a>";
+        })
+        .join("");
+    } else {
+      actionsHtml =
+        '<a href="../contact.html" class="btn btn-white">ขอใบเสนอเบี้ย</a>' +
+        '<a href="tel:0852925320" class="btn btn-outline">โทร 085-292-5320</a>';
+    }
     cta.innerHTML =
       "<h2>" +
       plan.ctaTitle +
       "</h2>" +
       (plan.ctaLead ? "<p>" + plan.ctaLead + "</p>" : "") +
       '<div class="cta-actions">' +
-      '<a href="../contact.html" class="btn btn-white">ขอใบเสนอเบี้ย</a>' +
-      '<a href="tel:0852925320" class="btn btn-outline">โทร 085-292-5320</a>' +
+      actionsHtml +
       "</div>";
   }
 })();

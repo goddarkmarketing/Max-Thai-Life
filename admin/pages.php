@@ -57,6 +57,8 @@ $plans = $data['plans'] ?? [];
 admin_layout_start('หน้าอื่นๆ', 'pages.php');
 ?>
 
+<p class="admin-hint" style="margin-bottom:1rem">หน้า เกี่ยวกับเรา / บทความ / แนะนำอาชีพ / ข่าว / รีวิวเคลม — <a href="landing-pages.php">แก้ไขแบบ Visual</a></p>
+
 <div class="admin-tabs">
   <a href="pages.php?page=about" class="admin-tab<?= $page === 'about' ? ' is-active' : '' ?>">เกี่ยวกับเรา</a>
   <a href="pages.php?page=contact" class="admin-tab<?= $page === 'contact' ? ' is-active' : '' ?>">ติดต่อ</a>

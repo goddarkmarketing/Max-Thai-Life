@@ -20,15 +20,23 @@ try {
             throw new RuntimeException('ไม่พบไฟล์สำรอง');
         }
         if (!class_exists('ZipArchive')) {
-            throw new RuntimeException('เซิร์ฟเวอร์ไม่รองรับ Zip — ดาวน์โหลดทีละไฟล์แทน');
+            throw new RuntimeException('เซิร์ฟเวอร์ไม่รองรับ Zip');
         }
         $zip = new ZipArchive();
         $tmp = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'backup-' . $backupId . '-' . bin2hex(random_bytes(4)) . '.zip';
         if ($zip->open($tmp, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
             throw new RuntimeException('สร้างไฟล์ zip ไม่สำเร็จ');
         }
-        foreach (glob($dir . '/*.json') ?: [] as $jsonFile) {
-            $zip->addFile($jsonFile, basename($jsonFile));
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+        foreach ($iterator as $item) {
+            if (!$item->isFile()) {
+                continue;
+            }
+            $path = $item->getPathname();
+            $rel = str_replace('\\', '/', substr($path, strlen($dir) + 1));
+            $zip->addFile($path, $rel);
         }
         $zip->close();
         header('Content-Type: application/zip');
@@ -40,7 +48,13 @@ try {
     }
 
     $path = admin_backup_file_path($id, $file);
-    header('Content-Type: application/json; charset=utf-8');
+    $mime = 'application/octet-stream';
+    if (str_ends_with(strtolower($path), '.json')) {
+        $mime = 'application/json; charset=utf-8';
+    } elseif (str_ends_with(strtolower($path), '.js')) {
+        $mime = 'application/javascript; charset=utf-8';
+    }
+    header('Content-Type: ' . $mime);
     header('Content-Disposition: attachment; filename="' . basename($path) . '"');
     header('Content-Length: ' . (string) filesize($path));
     readfile($path);

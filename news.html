@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
@@ -7,8 +7,10 @@
   <title>ข่าว/กิจกรรม | Max Thai Life</title>
 <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-  <header class="site-header">
+<body data-landing-page="news">
+  <script src="js/vendor/lucide.min.js"></script>
+  <script src="js/lucide-helper.js"></script>
+<header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="brand">
         <img src="images/logo/LOGO-THAILIFE.png" alt="ไทยประกันชีวิต" class="brand-logo" width="46" height="46">
@@ -18,7 +20,7 @@
         </span>
       </a>
       <button class="nav-toggle" type="button" aria-label="เปิดเมนู" aria-expanded="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <i data-lucide="menu" aria-hidden="true"></i>
       </button>
       <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html">หน้าหลัก</a>
@@ -34,56 +36,19 @@
   </header>
 
   <header class="page-hero">
-    <div class="page-hero-inner">
-      <p class="breadcrumb"><a href="index.html">หน้าหลัก</a> / ข่าวสารและกิจกรรม</p>
-      <h1>ข่าวสารและกิจกรรม</h1>
-      <p>อัปเดตข่าว กิจกรรม และข้อมูลสำคัญจากไทยประกันชีวิต</p>
-    </div>
+    <div class="page-hero-inner" id="page-hero-inner"></div>
   </header>
 
-  <section class="section">
-    <div class="section-inner reveal">
-      <ul class="product-card-grid" id="news-card-grid"></ul>
-    </div>
-  </section>
-
-  <section class="section section-alt">
-    <div class="section-inner reveal">
-      <header class="section-header" data-icon="share">
-        <h2>ติดตามไทยประกันชีวิต</h2>
-      </header>
-      <ul class="article-list" style="border-top:none">
-        <li class="article-item">
-          <div>
-            <h3>Facebook @thailifepage</h3>
-          </div>
-        </li>
-        <li class="article-item">
-          <div>
-            <h3>Line @thailifeinsurance</h3>
-          </div>
-        </li>
-        <li class="article-item">
-          <div>
-            <h3>Youtube THAILIFECHANNEL</h3>
-          </div>
-        </li>
-      </ul>
-      <p style="margin-top:1rem"><a href="https://www.thailife.com" target="_blank" rel="noopener">เยี่ยมชม thailife.com →</a></p>
-    </div>
-  </section>
-
-  <section class="cta-band reveal">
-    <h2>สอบถามข่าวหรือกิจกรรม</h2>
-    <p>ติดต่อทีมงานเพื่อรับข้อมูลกิจกรรมในพื้นที่นครปฐม</p>
-    <div class="cta-actions">
-      <a href="contact.html" class="btn btn-primary">ติดต่อสอบถาม</a>
-    </div>
-  </section>
+  <div id="landing-root"></div>
+  <div id="landing-cta-root"></div>
 
   <footer id="site-footer"></footer>
+  <script src="js/site-data.js"></script>
+  <script src="js/pages-data.js"></script>
+  <script src="js/page-block-render.js"></script>
+  <script src="js/page-landing-render.js"></script>
   <script src="js/section-headers.js"></script>
-  <script src="js/main.js"></script>
+<script src="js/main.js"></script>
   <script src="js/footer.js"></script>
   <script src="js/news-data.js"></script>
   <script src="js/news-list.js"></script>

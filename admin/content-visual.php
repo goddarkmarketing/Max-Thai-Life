@@ -8,8 +8,8 @@ require_once __DIR__ . '/includes/layout.php';
 admin_require_login();
 
 $type = $_GET['type'] ?? 'articles';
-if (!in_array($type, ['articles', 'news'], true)) {
-    admin_flash('error', 'Visual editor รองรับเฉพาะบทความและข่าว');
+if (!in_array($type, ['articles', 'news', 'careers', 'claims'], true)) {
+    admin_flash('error', 'ไม่รองรับประเภทเนื้อหานี้');
     header('Location: content-list.php');
     exit;
 }
@@ -32,10 +32,16 @@ if ($item === null) {
 }
 
 $coverSpec = $cfg['coverSpec'];
-$dataAttr = $type === 'news' ? 'data-news-id' : 'data-article-id';
-$baseList = $type === 'news' ? 'content-list.php?type=news' : 'content-list.php?type=articles';
-$listLabel = $type === 'news' ? 'ข่าว/กิจกรรม' : 'บทความ';
-$listUrl = $type === 'news' ? '../news.html' : '../products.html';
+$listMap = [
+    'articles' => ['label' => 'บทความ', 'url' => '../products.html', 'list' => 'content-list.php?type=articles'],
+    'news' => ['label' => 'ข่าว/กิจกรรม', 'url' => '../news.html', 'list' => 'content-list.php?type=news'],
+    'careers' => ['label' => 'แนะนำอาชีพ', 'url' => '../career.html', 'list' => 'content-list.php?type=careers'],
+    'claims' => ['label' => 'รีวิวเคลม', 'url' => '../claim-reviews.html', 'list' => 'content-list.php?type=claims'],
+];
+$listInfo = $listMap[$type] ?? $listMap['articles'];
+$baseList = $listInfo['list'];
+$listLabel = $listInfo['label'];
+$listUrl = $listInfo['url'];
 
 $payload = [
     'type' => $type,

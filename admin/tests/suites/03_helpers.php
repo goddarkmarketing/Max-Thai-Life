@@ -46,11 +46,51 @@ function suite_helpers(TestRunner $t): void
 
     $t->test('admin_create_manual_backup + admin_delete_backup', function (TestRunner $t) {
         $id = admin_create_manual_backup();
-        $t->assertTrue(is_dir(BACKUP_PATH . '/' . $id), 'ต้องสร้างโฟลเดอร์สำรอง');
-        $files = glob(BACKUP_PATH . '/' . $id . '/*.json') ?: [];
-        $t->assertTrue(count($files) > 0, 'ต้องมีไฟล์ JSON ในสำรอง');
+        $dir = BACKUP_PATH . '/' . $id;
+        $t->assertTrue(is_dir($dir), 'ต้องสร้างโฟลเดอร์สำรอง');
+        $t->assertFileExists($dir . '/manifest.json');
+        $manifest = admin_read_backup_manifest($dir);
+        $t->assertEquals('full', $manifest['kind'] ?? null);
+        $t->assertTrue((int) ($manifest['counts']['data'] ?? 0) > 0, 'ต้องมี JSON');
+        $t->assertTrue((int) ($manifest['counts']['js'] ?? 0) > 0, 'ต้องมี JS หน้าบ้าน');
         admin_delete_backup($id);
-        $t->assertFalse(is_dir(BACKUP_PATH . '/' . $id), 'ต้องลบสำรองได้');
+        $t->assertFalse(is_dir($dir), 'ต้องลบสำรองได้');
+    });
+
+    $t->test('admin_prune_backups เก็บไม่เกิน 15 ชุด', function (TestRunner $t) {
+        $fakeIds = [
+            '2000-01-01_00-00-01',
+            '2000-01-02_00-00-02',
+            '2000-01-03_00-00-03',
+            '2000-01-04_00-00-04',
+        ];
+        $before = count(admin_backup_ids());
+        foreach ($fakeIds as $id) {
+            $dir = BACKUP_PATH . '/' . $id;
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+            file_put_contents($dir . '/manifest.json', json_encode(['kind' => 'full', 'totalFiles' => 1, 'totalBytes' => 1, 'counts' => []]) . "\n");
+        }
+        $removed = admin_prune_backups($before + 2);
+        $t->assertEquals(2, $removed);
+        foreach ($fakeIds as $id) {
+            $dir = BACKUP_PATH . '/' . $id;
+            if (is_dir($dir)) {
+                admin_delete_backup($id);
+            }
+        }
+    });
+
+    $t->test('admin_delete_all_backups ลบครบทุกชุด', function (TestRunner $t) {
+        $id = '2099-12-31_23-59-59';
+        $dir = BACKUP_PATH . '/' . $id;
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        file_put_contents($dir . '/manifest.json', "{}\n");
+        admin_delete_backup($id);
+        $t->assertFalse(is_dir($dir));
     });
 
     $t->test('admin_apply_site_* บันทึก navigation และ footer', function (TestRunner $t) {

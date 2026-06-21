@@ -37,9 +37,29 @@ function suite_infrastructure(TestRunner $t): void
 
     $adminPages = [
         'dashboard.php', 'site.php', 'site-nav.php', 'site-footer.php', 'site-seo.php',
-        'home.php', 'pages.php', 'plans-list.php', 'media.php', 'backups.php',
+        'home.php', 'pages.php', 'landing-pages.php', 'page-visual.php', 'plans-list.php',
+        'plan-visual.php', 'media.php', 'backups.php',
         'inquiries.php', 'account.php', 'publish.php',
     ];
+
+    $adminApis = [
+        'api/upload.php', 'api/page-save.php', 'api/plan-save.php', 'api/content-save.php',
+    ];
+    foreach ($adminApis as $api) {
+        $t->test("ไฟล์ API: {$api}", function (TestRunner $t) use ($api) {
+            $t->assertFileExists(ADMIN_PATH . '/' . $api);
+        });
+    }
+
+    $adminJs = [
+        'admin/js/page-visual-editor.js', 'admin/js/page-block-builder.js', 'js/page-block-render.js',
+    ];
+    foreach ($adminJs as $js) {
+        $t->test("ไฟล์ JS editor: {$js}", function (TestRunner $t) use ($js) {
+            $path = ROOT_PATH . '/' . $js;
+            $t->assertFileExists($path);
+        });
+    }
     foreach ($adminPages as $page) {
         $t->test("ไฟล์ admin: {$page}", function (TestRunner $t) use ($page) {
             $t->assertFileExists(ADMIN_PATH . '/' . $page);

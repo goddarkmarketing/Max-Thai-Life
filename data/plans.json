@@ -1,87 +1,87 @@
 {
-  "items": [
-    {
-      "category": "savings",
-      "tag": "ออมทรัพย์",
-      "title": "ประกันลดหย่อนภาษี แบบสั้น",
-      "desc": "แบบประกันออมทรัพย์ ลดหย่อนภาษี มีเงินเก็บ พร้อมคุ้มครองรายได้ตลอดสัญญา",
-      "features": [
-        "ลดหย่อนภาษีได้",
-        "ระยะสั้น",
-        "ออมและคุ้มครอง"
-      ],
-      "href": "plans/tax-saving.html",
-      "image": "images/plan-cards/card-savings.png",
-      "theme": "tax"
-    },
-    {
-      "category": "protect",
-      "tag": "คุ้มครองชีวิต",
-      "title": "ไลฟ์เวิร์ส เวลท์ ฟิต 99/99",
-      "desc": "One Lifetime Policy — กรมธรรม์เดียวปรับได้ทุกช่วงวัย คุ้มครองถึง 99 ปี วางแผนครอบครัวครบจบ",
-      "features": [
-        "คุ้มครองถึง 99 ปี",
-        "ปรับเบี้ย/ความคุ้มครองได้",
-        "ลดหย่อนภาษี"
-      ],
-      "href": "plans/life-wealth-fit-99-99.html",
-      "image": "images/plan-cards/card-protect.png",
-      "theme": "protect"
-    },
-    {
-      "category": "health",
-      "tag": "ประกันสุขภาพ",
-      "title": "ประกันสุขภาพ คนวัยทำงาน",
-      "desc": "ตอบโจทย์วัยทำงาน ดูแลค่ารักษาและสุขภาพอย่างครบวงจร",
-      "features": [
-        "ค่ารักษาพยาบาล",
-        "วัย 20–50 ปี",
-        "เสริมได้"
-      ],
-      "href": "plans/health-working.html",
-      "image": "images/plan-cards/card-health.png",
-      "theme": "health"
-    },
-    {
-      "category": "rider",
-      "tag": "สัญญาเพิ่มเติม",
-      "title": "ไทยประกันชีวิต INFINITE",
-      "desc": "การดูแลที่มากกว่า — บริการและสิทธิประโยชน์สำหรับลูกค้าพิเศษ",
-      "features": [
-        "บริการดูแล",
-        "สิทธิพิเศษ"
-      ],
-      "href": "plans/infinite.html",
-      "image": "images/plan-cards/card-rider.png",
-      "theme": "infinite"
-    },
-    {
-      "category": "pension",
-      "tag": "บำนาญ/เกษียณ",
-      "title": "เลกาซี ฟิต รีไทร์ 99/10",
-      "desc": "ออมสั้น 10 ปี รับบำนาญยาวถึงอายุ 99 ลดหย่อนภาษีได้ มีมรดกให้ลูกหลาน",
-      "features": [
-        "ชำระเบี้ย 10 ปี",
-        "รับบำนาญถึง 99 ปี",
-        "ลดหย่อนภาษี"
-      ],
-      "href": "plans/legacy-fit-retire.html",
-      "image": "images/plan-cards/card-pension.png",
-      "theme": "retire"
-    },
-    {
-      "category": "invest",
-      "tag": "ลงทุน/Life Verse",
-      "title": "ยูนิเวอร์แซลไลฟ์",
-      "desc": "ควบการลงทุนและความคุ้มครอง — วางแผนระยะยาว",
-      "features": [
-        "ปรับเบี้ยได้",
-        "มูลค่าเงินสด",
-        "ยืดหยุ่น"
-      ],
-      "href": "plans/universal-life.html",
-      "image": "images/plan-cards/card-invest.png",
-      "theme": "universal"
-    }
-  ]
+    "items": [
+        {
+            "category": "savings",
+            "tag": "ออมทรัพย์",
+            "title": "ประกันลดหย่อนภาษี แบบสั้น",
+            "desc": "แบบประกันออมทรัพย์ ลดหย่อนภาษี มีเงินเก็บ พร้อมคุ้มครองรายได้ตลอดสัญญา",
+            "features": [
+                "ลดหย่อนภาษีได้",
+                "ระยะสั้น",
+                "ออมและคุ้มครอง"
+            ],
+            "href": "plans/tax-saving.html",
+            "image": "images/plan-cards/card-savings.png",
+            "theme": "tax"
+        },
+        {
+            "category": "protect",
+            "tag": "คุ้มครองชีวิต",
+            "title": "ไลฟ์เวิร์ส เวลท์ ฟิต 99/99",
+            "desc": "One Lifetime Policy — กรมธรรม์เดียวปรับได้ทุกช่วงวัย คุ้มครองถึง 99 ปี วางแผนครอบครัวครบจบ",
+            "features": [
+                "คุ้มครองถึง 99 ปี",
+                "ปรับเบี้ย/ความคุ้มครองได้",
+                "ลดหย่อนภาษี"
+            ],
+            "href": "plans/life-wealth-fit-99-99.html",
+            "image": "images/plan-cards/card-protect.png",
+            "theme": "protect"
+        },
+        {
+            "category": "health",
+            "tag": "ประกันสุขภาพ",
+            "title": "ประกันสุขภาพ คนวัยทำงาน",
+            "desc": "ตอบโจทย์วัยทำงาน ดูแลค่ารักษาและสุขภาพอย่างครบวงจร",
+            "features": [
+                "ค่ารักษาพยาบาล",
+                "วัย 20–50 ปี",
+                "เสริมได้"
+            ],
+            "href": "plans/health-working.html",
+            "image": "images/plan-cards/card-health.png",
+            "theme": "health"
+        },
+        {
+            "category": "rider",
+            "tag": "สัญญาเพิ่มเติม",
+            "title": "ไทยประกันชีวิต INFINITE",
+            "desc": "การดูแลที่มากกว่า — บริการและสิทธิประโยชน์สำหรับลูกค้าพิเศษ",
+            "features": [
+                "บริการดูแล",
+                "สิทธิพิเศษ"
+            ],
+            "href": "plans/infinite.html",
+            "image": "images/plan-cards/card-rider.png",
+            "theme": "infinite"
+        },
+        {
+            "category": "pension",
+            "tag": "บำนาญ/เกษียณ",
+            "title": "เลกาซี ฟิต รีไทร์ 99/10",
+            "desc": "ออมสั้น 10 ปี รับบำนาญยาวถึงอายุ 99 ลดหย่อนภาษีได้ มีมรดกให้ลูกหลาน",
+            "features": [
+                "ชำระเบี้ย 10 ปี",
+                "รับบำนาญถึง 99 ปี",
+                "ลดหย่อนภาษี"
+            ],
+            "href": "plans/legacy-fit-retire.html",
+            "image": "images/plan-cards/card-pension.png",
+            "theme": "retire"
+        },
+        {
+            "category": "invest",
+            "tag": "ลงทุน/Life Verse",
+            "title": "ยูนิเวอร์แซลไลฟ์",
+            "desc": "ควบการลงทุนและความคุ้มครอง — วางแผนระยะยาว",
+            "features": [
+                "ปรับเบี้ยได้",
+                "มูลค่าเงินสด",
+                "ยืดหยุ่น"
+            ],
+            "href": "plans/universal-life.html",
+            "image": "images/plan-cards/card-invest.png",
+            "theme": "universal"
+        }
+    ]
 }

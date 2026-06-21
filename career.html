@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
@@ -7,8 +7,10 @@
   <title>แนะนำอาชีพ | Max Thai Life</title>
 <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-  <header class="site-header">
+<body data-landing-page="career">
+  <script src="js/vendor/lucide.min.js"></script>
+  <script src="js/lucide-helper.js"></script>
+<header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="brand">
         <img src="images/logo/LOGO-THAILIFE.png" alt="ไทยประกันชีวิต" class="brand-logo" width="46" height="46">
@@ -18,7 +20,7 @@
         </span>
       </a>
       <button class="nav-toggle" type="button" aria-label="เปิดเมนู" aria-expanded="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <i data-lucide="menu" aria-hidden="true"></i>
       </button>
       <nav class="main-nav" aria-label="เมนูหลัก">
         <a href="index.html">หน้าหลัก</a>
@@ -34,41 +36,19 @@
   </header>
 
   <header class="page-hero">
-    <div class="page-hero-inner">
-      <p class="breadcrumb"><a href="index.html">หน้าหลัก</a> / แนะนำอาชีพ</p>
-      <h1>แนะนำอาชีพ</h1>
-      <p>เริ่มต้นอาชีพที่ 2 ด้วยความมั่นใจ — งานที่เปิดโอกาสสร้างรายได้และอิสระ</p>
-    </div>
+    <div class="page-hero-inner" id="page-hero-inner"></div>
   </header>
 
-  <section class="section">
-    <div class="section-inner reveal">
-      <ul class="product-card-grid" id="career-card-grid"></ul>
-    </div>
-  </section>
-
-  <section class="section section-alt">
-    <div class="section-inner reveal">
-      <header class="section-header" data-icon="monitor">
-        <h2>สำนักงานตัวแทนแม็ก (Digital Agent)</h2>
-        <p>ระบบสำนักงานตัวแทนดิจิทัลของไทยประกันชีวิต ช่วยให้ทำงานและบริหารลูกค้าได้อย่างมีประสิทธิภาพ</p>
-      </header>
-      <div id="career-featured"></div>
-    </div>
-  </section>
-
-  <section class="cta-band reveal">
-    <h2>สนใจเป็นตัวแทน?</h2>
-    <p>ติดต่อเพื่อสอบถามรายละเอียดการสมัครและโอกาสในพื้นที่นครปฐม</p>
-    <div class="cta-actions">
-      <a href="contact.html?topic=agent" class="btn btn-primary">สนใจเป็นตัวแทน</a>
-      <a href="tel:0852925320" class="btn btn-outline">โทร 085-292-5320</a>
-    </div>
-  </section>
+  <div id="landing-root"></div>
+  <div id="landing-cta-root"></div>
 
   <footer id="site-footer"></footer>
+  <script src="js/site-data.js"></script>
+  <script src="js/pages-data.js"></script>
+  <script src="js/page-block-render.js"></script>
+  <script src="js/page-landing-render.js"></script>
   <script src="js/section-headers.js"></script>
-  <script src="js/main.js"></script>
+<script src="js/main.js"></script>
   <script src="js/footer.js"></script>
   <script src="js/careers-data.js"></script>
   <script src="js/career-list.js"></script>
