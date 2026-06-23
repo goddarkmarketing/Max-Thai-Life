@@ -19,7 +19,9 @@ function admin_lucide_name(string $key): string
         'mail' => 'mail',
         'menu' => 'menu',
         'layout' => 'panel-left',
-        'globe' => 'globe',
+        'copy' => 'copy',
+        'share' => 'share-2',
+        'message-circle' => 'message-circle',
     ];
 
     return $map[$key] ?? $key;

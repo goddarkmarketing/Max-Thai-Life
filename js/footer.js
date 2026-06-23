@@ -29,9 +29,6 @@
     var phoneDisplay = agent.phoneDisplay || "085-292-5320";
     var phoneRaw = agent.phone || "0852925320";
     var license = agent.license || "5701116295";
-    var fb = social.facebook || "#";
-    var line = social.line || "#";
-    var email = social.email || "contact@example.com";
     var avatar = "images/profile/agent-profile.png";
 
     function u(path) {
@@ -76,6 +73,89 @@
       return '<i data-lucide="' + name + '" aria-hidden="true"></i>';
     }
 
+    function socialColor(link) {
+      if (link.color) return link.color;
+      var presets = {
+        facebook: "#1877f2",
+        line: "#06c755",
+        email: "#015fd9",
+        phone: "#015fd9",
+        default: "#015fd9",
+      };
+      return presets[link.style] || "#015fd9";
+    }
+
+    function socialLinksHtml() {
+      var links = social.links;
+      if (!links || !links.length) {
+        links = [];
+        if (social.facebook) {
+          links.push({ label: "Facebook", href: social.facebook, icon: "facebook", style: "facebook", visible: true });
+        }
+        if (social.line) {
+          links.push({ label: "Line", href: social.line, icon: "message-circle", style: "line", visible: true });
+        }
+        if (social.email) {
+          var em = social.email;
+          links.push({
+            label: "Email",
+            href: /^mailto:/i.test(em) ? em : "mailto:" + em,
+            icon: "mail",
+            style: "email",
+            visible: true,
+          });
+        }
+        if (!links.length) {
+          links = [
+            { label: "Facebook", href: "#", icon: "facebook", style: "facebook", visible: true },
+            { label: "Line", href: "#", icon: "message-circle", style: "line", visible: true },
+            { label: "Email", href: "mailto:contact@example.com", icon: "mail", style: "email", visible: true },
+          ];
+        }
+      }
+      return links
+        .filter(linkVisible)
+        .map(function (link) {
+          var href = link.href || "#";
+          if (link.style === "email" && !/^mailto:/i.test(href)) {
+            href = "mailto:" + href;
+          }
+          href = /^(https?:|tel:|mailto:|#)/i.test(href) ? href : u(href);
+          var bg = socialColor(link);
+          var external = /^https?:/i.test(href);
+          var attrs = external ? ' target="_blank" rel="noopener"' : "";
+          return (
+            '<a href="' +
+            esc(href) +
+            '" class="footer-social-link" style="background:' +
+            esc(bg) +
+            '" aria-label="' +
+            esc(link.label || "") +
+            '"' +
+            attrs +
+            ">" +
+            socialIcon(link.icon || "link") +
+            "</a>"
+          );
+        })
+        .join("");
+    }
+
+    function extraContactsHtml() {
+      var items = agent.extraContacts || [];
+      return items
+        .filter(linkVisible)
+        .map(function (item) {
+          var text = esc(item.text || "");
+          if (item.href) {
+            var href = /^(https?:|tel:|mailto:)/i.test(item.href) ? item.href : u(item.href);
+            return '<li><span class="footer-label">' + esc(item.label || "") + "</span> <a href=\"" + esc(href) + '">' + text + "</a></li>";
+          }
+          return '<li><span class="footer-label">' + esc(item.label || "") + "</span> " + text + "</li>";
+        })
+        .join("");
+    }
+
     function agentColumnHtml(col) {
       return (
         '<div class="footer-col footer-col-contact">' +
@@ -86,17 +166,10 @@
         '<li><span class="footer-label">สาขา</span> ' + esc(agentBranch) + "</li>" +
         '<li><span class="footer-label">โทร</span> <a href="tel:' + esc(phoneRaw) + '">' + esc(phoneDisplay) + "</a></li>" +
         '<li><span class="footer-label">ใบอนุญาต</span> ' + esc(license) + "</li>" +
+        extraContactsHtml() +
         "</ul>" +
         '<div class="footer-social">' +
-        '<a href="' + esc(fb) + '" class="footer-social-link footer-social-link--facebook" aria-label="Facebook">' +
-        socialIcon("facebook") +
-        "</a>" +
-        '<a href="' + esc(line) + '" class="footer-social-link footer-social-link--line" aria-label="Line">' +
-        socialIcon("line") +
-        "</a>" +
-        '<a href="mailto:' + esc(email) + '" class="footer-social-link footer-social-link--email" aria-label="Email">' +
-        socialIcon("mail") +
-        "</a>" +
+        socialLinksHtml() +
         "</div>" +
         "</div>"
       );

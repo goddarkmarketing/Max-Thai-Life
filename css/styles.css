@@ -1405,6 +1405,32 @@ a:hover {
   color: var(--tl-blue-dark);
 }
 
+.product-card-title-btn,
+button.product-card-link,
+button.product-card-media {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+button.product-card-media {
+  display: block;
+  width: 100%;
+}
+
+.product-card-title-btn {
+  width: 100%;
+}
+
+.product-card-title-btn:hover,
+button.product-card-link:hover {
+  color: var(--tl-blue);
+}
+
 /* Service area */
 .service-area-card {
   display: flex;
@@ -1584,18 +1610,7 @@ a:hover {
   opacity: 1;
   transform: translateY(0) scale(1);
   pointer-events: auto;
-}
-
-.contact-dock.is-open .contact-dock-action:nth-child(3) {
-  transition-delay: 0.04s;
-}
-
-.contact-dock.is-open .contact-dock-action:nth-child(2) {
-  transition-delay: 0.09s;
-}
-
-.contact-dock.is-open .contact-dock-action:nth-child(1) {
-  transition-delay: 0.14s;
+  transition-delay: calc(0.04s * var(--dock-i, 1));
 }
 
 .contact-dock-action:hover {
@@ -2858,6 +2873,11 @@ a:hover {
 
 .footer-social-link--facebook {
   background: #1877f2;
+}
+
+.footer-social-link--default,
+.footer-social-link--phone {
+  background: var(--tl-blue);
 }
 
 .footer-social-link--line {
@@ -4785,6 +4805,11 @@ a:hover {
   .claim-review-card-body {
     padding: 1.1rem 1.15rem 1.25rem;
   }
+}
+
+/* Claim reviews — grid + modal detail */
+.claim-reviews-grid-wrap {
+  width: 100%;
 }
 
 /* Claim reviews — card slider + gallery */

@@ -1,0 +1,69 @@
+/* Plan card editor — preview (left) + form (right) */
+
+.plan-card-edit-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.plan-card-edit-preview {
+  position: sticky;
+  top: 1rem;
+}
+
+.plan-card-edit-preview__label {
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--admin-muted, #64748b);
+}
+
+.plan-card-edit-preview__hint {
+  margin: 0.65rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--admin-muted, #64748b);
+}
+
+.plan-card-edit-preview__stage {
+  padding: 1.25rem;
+  border: 1px solid var(--admin-border, #e2e8f0);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+}
+
+.plan-card-edit-preview__stage .plan-grid {
+  margin: 0;
+}
+
+.plan-card-edit-preview__stage .plan-card {
+  pointer-events: none;
+  max-width: 100%;
+}
+
+.plan-card-edit-preview__stage .btn-plan-detail {
+  cursor: default;
+}
+
+.plan-card-edit-fields {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.plan-card-edit-fields .admin-card {
+  margin-bottom: 0;
+}
+
+@media (max-width: 1024px) {
+  .plan-card-edit-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .plan-card-edit-preview {
+    position: static;
+  }
+}

@@ -256,16 +256,22 @@ function admin_normalize_block_section(array $sec, int $index = 0): array
         }
     }
 
-    if ($type === 'infoBlocks' && !empty($sec['items'])) {
+    if (in_array($type, ['infoBlocks', 'serviceCards'], true) && !empty($sec['items'])) {
         foreach ($sec['items'] as $i => &$item) {
             if (!is_array($item)) {
                 continue;
             }
+            if (!empty($item['meta']) && empty($item['subtitle'])) {
+                $item['subtitle'] = (string) $item['meta'];
+            }
             if (!empty($item['text']) && empty($item['description'])) {
-                $item['description'] = $item['text'];
+                $item['description'] = (string) $item['text'];
+            }
+            if (!empty($item['linkText']) && empty($item['buttonText'])) {
+                $item['buttonText'] = (string) $item['linkText'];
             }
             if (!empty($item['href']) && empty($item['buttonLink'])) {
-                $item['buttonLink'] = $item['href'];
+                $item['buttonLink'] = (string) $item['href'];
             }
             $item['sortOrder'] = $i;
         }

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/contact-pickers.php';
 
 function json_read(string $file): array
 {
@@ -178,6 +179,49 @@ function admin_save_password(string $current, string $newPass): bool
     $cfg['passHash'] = password_hash($newPass, PASSWORD_DEFAULT);
     json_write('admin.json', $cfg);
     return true;
+}
+
+function admin_current_user(): string
+{
+    return (string) ($_SESSION['admin_user'] ?? ADMIN_USER);
+}
+
+/** Read-only account info for the account settings page */
+function admin_account_details(): array
+{
+    $cfg = admin_load_admin_config();
+    $username = (string) ($cfg['user'] ?? ADMIN_USER);
+    $site = json_read('site.json');
+    $agent = $site['agent'] ?? [];
+    $brand = $site['brand'] ?? [];
+    $adminPath = DATA_PATH . '/admin.json';
+    $configUpdated = file_exists($adminPath) ? filemtime($adminPath) : false;
+    $loginAt = $_SESSION['admin_login_at'] ?? null;
+
+    $agentLabel = trim(
+        implode(' · ', array_filter([
+            (string) ($agent['name'] ?? ''),
+            (string) ($agent['title'] ?? ''),
+            (string) ($agent['branch'] ?? ''),
+        ]))
+    );
+
+    return [
+        ['label' => 'ชื่อผู้ใช้', 'value' => $username],
+        ['label' => 'บทบาท', 'value' => 'ผู้ดูแลระบบ'],
+        ['label' => 'สถานะ', 'value' => 'ใช้งานอยู่', 'badge' => 'ok'],
+        ['label' => 'แบรนด์บนเว็บ', 'value' => (string) ($brand['name'] ?? '—')],
+        ['label' => 'ตัวแทนบนเว็บ', 'value' => $agentLabel !== '' ? $agentLabel : '—'],
+        ['label' => 'โทรศัพท์ตัวแทน', 'value' => (string) ($agent['phoneDisplay'] ?? $agent['phone'] ?? '—')],
+        [
+            'label' => 'เข้าสู่ระบบเมื่อ',
+            'value' => is_string($loginAt) && $loginAt !== '' ? admin_format_datetime_th($loginAt) : '—',
+        ],
+        [
+            'label' => 'เปลี่ยนรหัสผ่านล่าสุด',
+            'value' => $configUpdated ? admin_format_datetime_th(date('c', $configUpdated)) : '—',
+        ],
+    ];
 }
 
 function admin_filter_visible_list(array $items): array
@@ -768,6 +812,7 @@ function admin_default_navigation(): array
 
 function admin_apply_site_general_post(array $data): array
 {
+    $extraContacts = $data['agent']['extraContacts'] ?? null;
     $data['brand'] = [
         'name' => admin_post('brand_name'),
         'sub' => admin_post('brand_sub'),
@@ -783,11 +828,9 @@ function admin_apply_site_general_post(array $data): array
         'ulRights' => admin_post('agent_ul'),
         'tagline' => admin_post('agent_tagline'),
     ];
-    $data['social'] = [
-        'facebook' => admin_post('social_facebook'),
-        'line' => admin_post('social_line'),
-        'email' => admin_post('social_email'),
-    ];
+    if (is_array($extraContacts)) {
+        $data['agent']['extraContacts'] = $extraContacts;
+    }
     return $data;
 }
 
@@ -824,6 +867,313 @@ function admin_apply_site_navigation_post(array $data): array
     }
     $data['navigation'] = $nav !== [] ? $nav : admin_default_navigation();
     return $data;
+}
+
+function admin_nav_item_visible(array $item): bool
+{
+    return !isset($item['visible']) || (bool) $item['visible'];
+}
+
+function admin_nav_preview_url(string $href): string
+{
+    $href = trim($href);
+    if ($href === '') {
+        return '#';
+    }
+    if (preg_match('#^(https?://|tel:|mailto:)#i', $href)) {
+        return $href;
+    }
+    return '../' . ltrim(str_replace('\\', '/', $href), '/');
+}
+
+function admin_nav_is_plans_href(string $href): bool
+{
+    $path = strtok($href, '?') ?: $href;
+    return $path === 'plans.html' || str_ends_with($path, '/plans.html');
+}
+
+/** @return list<array<string, mixed>> */
+function admin_nav_parse_children_from_post(array $post): array
+{
+    $labels = is_array($post['nav_child_label'] ?? null) ? $post['nav_child_label'] : [];
+    $hrefs = is_array($post['nav_child_href'] ?? null) ? $post['nav_child_href'] : [];
+    $categories = is_array($post['nav_child_category'] ?? null) ? $post['nav_child_category'] : [];
+    $children = [];
+    foreach ($labels as $i => $label) {
+        $label = trim((string) $label);
+        $href = trim((string) ($hrefs[$i] ?? ''));
+        if ($label === '' || $href === '') {
+            continue;
+        }
+        $child = ['label' => $label, 'href' => $href];
+        $cat = trim((string) ($categories[$i] ?? ''));
+        if ($cat !== '') {
+            $child['category'] = $cat;
+        }
+        $children[] = $child;
+    }
+    return $children;
+}
+
+/**
+ * @param list<array<string, mixed>> $navigation
+ * @return list<array<string, mixed>>
+ */
+function admin_nav_save_item(array $navigation, string $index, array $post): array
+{
+    $label = trim((string) ($post['label'] ?? ''));
+    $href = trim((string) ($post['href'] ?? ''));
+    if ($label === '' || $href === '') {
+        throw new RuntimeException('กรุณากรอกชื่อเมนูและลิงก์');
+    }
+
+    $item = [
+        'label' => $label,
+        'href' => $href,
+        'visible' => isset($post['visible']),
+    ];
+    if (isset($post['cta'])) {
+        $item['cta'] = true;
+    }
+
+    $wantsChildren = isset($post['has_children']) || admin_nav_is_plans_href($href);
+    if ($wantsChildren) {
+        $children = admin_nav_parse_children_from_post($post);
+        if ($children !== []) {
+            $item['children'] = $children;
+        } elseif (admin_nav_is_plans_href($href)) {
+            $item['children'] = admin_default_plan_nav_children();
+        }
+    }
+
+    if ($index === 'new') {
+        $navigation[] = $item;
+        return $navigation;
+    }
+
+    $indexInt = (int) $index;
+    if (!isset($navigation[$indexInt])) {
+        throw new RuntimeException('ไม่พบเมนู');
+    }
+    $navigation[$indexInt] = $item;
+    return $navigation;
+}
+
+/**
+ * @param list<array<string, mixed>> $navigation
+ * @return list<array<string, mixed>>
+ */
+function admin_nav_delete_item(array $navigation, int $index): array
+{
+    if (!isset($navigation[$index])) {
+        throw new RuntimeException('ไม่พบเมนู');
+    }
+    array_splice($navigation, $index, 1);
+    return array_values($navigation);
+}
+
+/**
+ * @param list<array<string, mixed>> $navigation
+ * @return list<array<string, mixed>>
+ */
+function admin_nav_toggle_visible(array $navigation, int $index): array
+{
+    if (!isset($navigation[$index])) {
+        throw new RuntimeException('ไม่พบเมนู');
+    }
+    $navigation[$index]['visible'] = !admin_nav_item_visible($navigation[$index]);
+    return $navigation;
+}
+
+/** บันทึก navigation ใน site.json แล้ว sync ไป js/site-data.js ทันที */
+function admin_nav_publish_site(array $data): void
+{
+    json_write('site.json', $data);
+    require_once __DIR__ . '/generate-js.php';
+    generate_all_js();
+}
+
+function admin_inline_drag_icon(): string
+{
+    return '<svg class="nav-drag-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>';
+}
+
+/**
+ * @param list<mixed> $list
+ * @param list<int|string> $order
+ * @return list<mixed>
+ */
+function admin_reorder_list_by_indices(array $list, array $order): array
+{
+    $new = [];
+    foreach ($order as $idx) {
+        $idx = (int) $idx;
+        if (isset($list[$idx])) {
+            $new[] = $list[$idx];
+        }
+    }
+    if (count($new) !== count($list)) {
+        throw new RuntimeException('ลำดับไม่ถูกต้อง');
+    }
+    return $new;
+}
+
+/** บันทึก footer ใน site.json แล้ว sync ไป js/site-data.js ทันที */
+function admin_footer_publish_site(array $data): void
+{
+    json_write('site.json', $data);
+    require_once __DIR__ . '/generate-js.php';
+    generate_all_js();
+}
+
+/**
+ * @param list<int|string> $order
+ */
+function admin_footer_reorder(array $footer, string $section, int $col, array $order): array
+{
+    if ($section === 'topCta') {
+        $footer['topCta'] = admin_reorder_list_by_indices($footer['topCta'] ?? [], $order);
+    } elseif ($section === 'bottom') {
+        $footer['bottom']['links'] = admin_reorder_list_by_indices($footer['bottom']['links'] ?? [], $order);
+    } elseif ($section === 'link') {
+        if (!isset($footer['columns'][$col])) {
+            throw new RuntimeException('ไม่พบคอลัมน์');
+        }
+        $footer['columns'][$col]['links'] = admin_reorder_list_by_indices($footer['columns'][$col]['links'] ?? [], $order);
+    } else {
+        throw new RuntimeException('ไม่รองรับการจัดลำดับ');
+    }
+    return admin_normalize_footer($footer);
+}
+
+/**
+ * @param list<array<string, mixed>> $navigation
+ * @return list<array<string, mixed>>
+ */
+function admin_nav_patch_item(array $navigation, int $index, array $post): array
+{
+    if (!isset($navigation[$index])) {
+        throw new RuntimeException('ไม่พบเมนู');
+    }
+    $existing = $navigation[$index];
+    $label = trim((string) ($post['label'] ?? ''));
+    $href = trim((string) ($post['href'] ?? ''));
+    if ($label === '' || $href === '') {
+        throw new RuntimeException('กรุณากรอกชื่อเมนูและลิงก์');
+    }
+
+    $item = [
+        'label' => $label,
+        'href' => $href,
+        'visible' => isset($post['visible']),
+    ];
+    if (isset($post['cta'])) {
+        $item['cta'] = true;
+    }
+    if (!empty($existing['children'])) {
+        $item['children'] = $existing['children'];
+    }
+
+    $navigation[$index] = $item;
+    return $navigation;
+}
+
+/**
+ * @param list<array<string, mixed>> $navigation
+ * @return list<array<string, mixed>>
+ */
+function admin_nav_patch_child(array $navigation, int $parentIndex, string $childIndex, array $post): array
+{
+    if (!isset($navigation[$parentIndex])) {
+        throw new RuntimeException('ไม่พบเมนูหลัก');
+    }
+    $children = $navigation[$parentIndex]['children'] ?? [];
+    $label = trim((string) ($post['label'] ?? ''));
+    $href = trim((string) ($post['href'] ?? ''));
+    if ($label === '' || $href === '') {
+        throw new RuntimeException('กรุณากรอกชื่อและลิงก์เมนูย่อย');
+    }
+
+    $child = ['label' => $label, 'href' => $href];
+    $cat = trim((string) ($post['category'] ?? ''));
+    if ($cat !== '') {
+        $child['category'] = $cat;
+    }
+
+    if ($childIndex === 'new') {
+        $children[] = $child;
+    } else {
+        $childIndexInt = (int) $childIndex;
+        if (!isset($children[$childIndexInt])) {
+            throw new RuntimeException('ไม่พบเมนูย่อย');
+        }
+        $children[$childIndexInt] = $child;
+    }
+
+    $navigation[$parentIndex]['children'] = array_values($children);
+    return $navigation;
+}
+
+/**
+ * @param list<array<string, mixed>> $navigation
+ * @return list<array<string, mixed>>
+ */
+function admin_nav_delete_child(array $navigation, int $parentIndex, int $childIndex): array
+{
+    if (!isset($navigation[$parentIndex]['children'][$childIndex])) {
+        throw new RuntimeException('ไม่พบเมนูย่อย');
+    }
+    array_splice($navigation[$parentIndex]['children'], $childIndex, 1);
+    $navigation[$parentIndex]['children'] = array_values($navigation[$parentIndex]['children']);
+    if ($navigation[$parentIndex]['children'] === []) {
+        unset($navigation[$parentIndex]['children']);
+    }
+    return $navigation;
+}
+
+/**
+ * @param list<array<string, mixed>> $navigation
+ * @param list<int|string> $order
+ * @return list<array<string, mixed>>
+ */
+function admin_nav_reorder(array $navigation, array $order): array
+{
+    $new = [];
+    foreach ($order as $idx) {
+        $idx = (int) $idx;
+        if (isset($navigation[$idx])) {
+            $new[] = $navigation[$idx];
+        }
+    }
+    if (count($new) !== count($navigation)) {
+        throw new RuntimeException('ลำดับเมนูไม่ถูกต้อง');
+    }
+    return $new;
+}
+
+/**
+ * @param list<array<string, mixed>> $navigation
+ * @param list<int|string> $order
+ * @return list<array<string, mixed>>
+ */
+function admin_nav_reorder_children(array $navigation, int $parentIndex, array $order): array
+{
+    if (!isset($navigation[$parentIndex]['children'])) {
+        throw new RuntimeException('ไม่พบเมนูย่อย');
+    }
+    $children = $navigation[$parentIndex]['children'];
+    $new = [];
+    foreach ($order as $idx) {
+        $idx = (int) $idx;
+        if (isset($children[$idx])) {
+            $new[] = $children[$idx];
+        }
+    }
+    if (count($new) !== count($children)) {
+        throw new RuntimeException('ลำดับเมนูย่อยไม่ถูกต้อง');
+    }
+    $navigation[$parentIndex]['children'] = $new;
+    return $navigation;
 }
 
 function admin_apply_site_footer_post(array $data): array
@@ -953,6 +1303,218 @@ function admin_normalize_footer(array $footer): array
     return $footer;
 }
 
+function admin_default_contact_dock(): array
+{
+    return [
+        'enabled' => true,
+        'items' => [
+            ['label' => 'โทร', 'href' => 'tel:0852925320', 'icon' => 'phone', 'color' => '#015fd9', 'visible' => true],
+            ['label' => 'แอดไลน์', 'href' => 'contact.html', 'icon' => 'message-circle', 'color' => '#06c755', 'visible' => true],
+            ['label' => 'ใบเสนอเบี้ย', 'href' => 'contact.html?topic=insurance', 'icon' => 'file-text', 'color' => '#38bdf8', 'visible' => true],
+        ],
+    ];
+}
+
+function admin_normalize_contact_dock(array $dock): array
+{
+    $default = admin_default_contact_dock();
+    if (!isset($dock['items']) || !is_array($dock['items']) || $dock['items'] === []) {
+        $dock['items'] = $default['items'];
+    }
+    if (!isset($dock['enabled'])) {
+        $dock['enabled'] = $default['enabled'];
+    }
+    $dock['items'] = array_map(
+        static fn(array $item): array => admin_normalize_contact_item($item),
+        $dock['items']
+    );
+    return $dock;
+}
+
+function admin_contact_dock_save_item(array $dock, string $index, array $post): array
+{
+    $dock = admin_normalize_contact_dock($dock);
+    $isNew = $index === 'new';
+    $indexInt = $isNew ? -1 : (int) $index;
+    $icons = array_keys(admin_contact_icon_options());
+    $icon = trim((string) ($post['icon'] ?? ''));
+    if (!in_array($icon, $icons, true)) {
+        $icon = 'message-circle';
+    }
+    $item = [
+        'label' => trim((string) ($post['label'] ?? '')),
+        'href' => trim((string) ($post['href'] ?? '')),
+        'icon' => $icon,
+        'color' => admin_normalize_hex_color((string) ($post['color'] ?? '#015fd9')),
+        'visible' => ($post['visible'] ?? '') === '1',
+    ];
+    if ($item['label'] === '' || $item['href'] === '') {
+        throw new RuntimeException('กรุณากรอกชื่อและลิงก์');
+    }
+    if ($isNew) {
+        $dock['items'][] = $item;
+    } elseif (isset($dock['items'][$indexInt])) {
+        $dock['items'][$indexInt] = $item;
+    } else {
+        throw new RuntimeException('ไม่พบรายการ');
+    }
+    return $dock;
+}
+
+function admin_contact_dock_reorder(array $dock, array $order): array
+{
+    $dock = admin_normalize_contact_dock($dock);
+    $dock['items'] = admin_reorder_list_by_indices($dock['items'], $order);
+    return $dock;
+}
+
+function admin_default_social_links(): array
+{
+    return [
+        ['label' => 'Facebook', 'href' => '#', 'icon' => 'facebook', 'color' => '#1877f2', 'visible' => true],
+        ['label' => 'Line', 'href' => '#', 'icon' => 'message-circle', 'color' => '#06c755', 'visible' => true],
+        ['label' => 'Email', 'href' => 'mailto:contact@example.com', 'icon' => 'mail', 'color' => '#015fd9', 'visible' => true],
+    ];
+}
+
+function admin_normalize_social(array $social): array
+{
+    if (isset($social['links']) && is_array($social['links']) && $social['links'] !== []) {
+        return [
+            'links' => array_values(array_map(
+                static fn(array $item): array => admin_normalize_contact_item($item),
+                $social['links']
+            )),
+        ];
+    }
+
+    $links = [];
+    if (!empty($social['facebook'])) {
+        $links[] = [
+            'label' => 'Facebook',
+            'href' => (string) $social['facebook'],
+            'icon' => 'facebook',
+            'style' => 'facebook',
+            'visible' => true,
+        ];
+    }
+    if (!empty($social['line'])) {
+        $links[] = [
+            'label' => 'Line',
+            'href' => (string) $social['line'],
+            'icon' => 'message-circle',
+            'style' => 'line',
+            'visible' => true,
+        ];
+    }
+    if (!empty($social['email'])) {
+        $email = (string) $social['email'];
+        $href = str_starts_with($email, 'mailto:') ? $email : 'mailto:' . $email;
+        $links[] = [
+            'label' => 'Email',
+            'href' => $href,
+            'icon' => 'mail',
+            'style' => 'email',
+            'visible' => true,
+        ];
+    }
+    if ($links === []) {
+        $links = admin_default_social_links();
+    }
+
+    return [
+        'links' => array_values(array_map(
+            static fn(array $item): array => admin_normalize_contact_item($item),
+            $links
+        )),
+    ];
+}
+
+function admin_social_save_link(array $social, string $index, array $post): array
+{
+    $social = admin_normalize_social($social);
+    $isNew = $index === 'new';
+    $indexInt = $isNew ? -1 : (int) $index;
+    $icons = array_keys(admin_contact_icon_options());
+    $icon = trim((string) ($post['icon'] ?? ''));
+    if (!in_array($icon, $icons, true)) {
+        $icon = 'message-circle';
+    }
+    $item = [
+        'label' => trim((string) ($post['label'] ?? '')),
+        'href' => trim((string) ($post['href'] ?? '')),
+        'icon' => $icon,
+        'color' => admin_normalize_hex_color((string) ($post['color'] ?? '#015fd9')),
+        'visible' => ($post['visible'] ?? '') === '1',
+    ];
+    if ($item['label'] === '' || $item['href'] === '') {
+        throw new RuntimeException('กรุณากรอกชื่อและลิงก์');
+    }
+    if ($isNew) {
+        $social['links'][] = $item;
+    } elseif (isset($social['links'][$indexInt])) {
+        $social['links'][$indexInt] = $item;
+    } else {
+        throw new RuntimeException('ไม่พบรายการ');
+    }
+    return $social;
+}
+
+function admin_social_reorder_links(array $social, array $order): array
+{
+    $social = admin_normalize_social($social);
+    $social['links'] = admin_reorder_list_by_indices($social['links'], $order);
+    return $social;
+}
+
+function admin_normalize_agent_contacts(array $agent): array
+{
+    if (!isset($agent['extraContacts']) || !is_array($agent['extraContacts'])) {
+        $agent['extraContacts'] = [];
+    }
+    return $agent;
+}
+
+function admin_agent_contact_save_item(array $agent, string $index, array $post): array
+{
+    $agent = admin_normalize_agent_contacts($agent);
+    $isNew = $index === 'new';
+    $indexInt = $isNew ? -1 : (int) $index;
+    $item = [
+        'label' => trim((string) ($post['label'] ?? '')),
+        'text' => trim((string) ($post['text'] ?? '')),
+        'href' => trim((string) ($post['href'] ?? '')),
+        'visible' => ($post['visible'] ?? '') === '1',
+    ];
+    if ($item['label'] === '' || $item['text'] === '') {
+        throw new RuntimeException('กรุณากรอกชื่อหัวข้อและข้อความแสดง');
+    }
+    if ($isNew) {
+        $agent['extraContacts'][] = $item;
+    } elseif (isset($agent['extraContacts'][$indexInt])) {
+        $agent['extraContacts'][$indexInt] = $item;
+    } else {
+        throw new RuntimeException('ไม่พบรายการ');
+    }
+    return $agent;
+}
+
+function admin_agent_contact_reorder(array $agent, array $order): array
+{
+    $agent = admin_normalize_agent_contacts($agent);
+    $agent['extraContacts'] = admin_reorder_list_by_indices($agent['extraContacts'], $order);
+    return $agent;
+}
+
+function admin_post_return_page(string $default): string
+{
+    $return = trim(admin_post('return', $default));
+    if ($return === '' || str_contains($return, '://') || str_contains($return, '..')) {
+        return $default;
+    }
+    return $return;
+}
+
 function admin_footer_href_slug(string $href): string
 {
     $href = trim($href);
@@ -1063,6 +1625,18 @@ function admin_normalize_meta(array $meta, array $brand = []): array
     return $meta;
 }
 
+function admin_plan_default_theme_for_category(string $category): string
+{
+    return match ($category) {
+        'protect' => 'protect',
+        'health' => 'health',
+        'rider' => 'infinite',
+        'pension' => 'retire',
+        'invest' => 'universal',
+        default => 'tax',
+    };
+}
+
 function admin_save_site_footer(array $footer): void
 {
     $data = json_read('site.json');
@@ -1136,6 +1710,15 @@ function admin_footer_save_item(array $footer, string $section, int $col, string
         } else {
             throw new RuntimeException('ไม่พบรายการ');
         }
+    } elseif ($section === 'moreLink') {
+        if (!isset($footer['columns'][$col])) {
+            throw new RuntimeException('ไม่พบคอลัมน์');
+        }
+        $footer['columns'][$col]['moreLink'] = [
+            'label' => trim($post['label'] ?? ''),
+            'href' => trim($post['href'] ?? ''),
+            'visible' => ($post['visible'] ?? '') === '1',
+        ];
     } else {
         throw new RuntimeException('ไม่รองรับประเภทรายการ');
     }

@@ -105,6 +105,24 @@ function suite_landing_blocks(TestRunner $t): void
         $t->assertTrue(count($sections[0]['items'] ?? []) > 0);
     });
 
+    $t->test('admin_normalize_block_section แมป serviceCards legacy fields', function (TestRunner $t) {
+        $sec = admin_normalize_block_section([
+            'type' => 'serviceCards',
+            'items' => [[
+                'meta' => 'สายด่วน',
+                'title' => 'ฮอตไลน์ 1124',
+                'text' => 'สอบถามสิทธิ์เคลม',
+                'href' => 'tel:1124',
+                'linkText' => 'โทร 1124 →',
+            ]],
+        ], 0);
+        $item = $sec['items'][0] ?? [];
+        $t->assertEquals('สายด่วน', $item['subtitle'] ?? '');
+        $t->assertEquals('สอบถามสิทธิ์เคลม', $item['description'] ?? '');
+        $t->assertEquals('โทร 1124 →', $item['buttonText'] ?? '');
+        $t->assertEquals('tel:1124', $item['buttonLink'] ?? '');
+    });
+
     $t->test('image-specs มี plan_content และ media_library', function (TestRunner $t) {
         $specs = require ADMIN_PATH . '/includes/image-specs.php';
         $t->assertTrue(isset($specs['plan_content']));

@@ -5,7 +5,9 @@
   if (!boot || !R || !B) return;
 
   var isPlan = boot.editorKind === "plan";
+  var isContent = boot.editorKind === "content";
   var catalog = boot.sectionCatalog || {};
+  var contentItem = boot.item || {};
 
   function defaultPageData() {
     return {
@@ -16,6 +18,18 @@
   }
 
   function normalizePageData(raw) {
+    if (isContent) {
+      var sections = (raw && raw.sections) || [];
+      return {
+        sections: sections.map(function (sec, i) {
+          if (sec.visible !== undefined && sec.isVisible === undefined) sec.isVisible = sec.visible;
+          sec.isVisible = sec.isVisible !== false;
+          sec.visible = sec.isVisible;
+          sec.sortOrder = i;
+          return sec;
+        }),
+      };
+    }
     var base = defaultPageData();
     if (!raw || typeof raw !== "object") return base;
     var copy = JSON.parse(JSON.stringify(raw));
@@ -172,7 +186,7 @@
     var sel = state.selected && state.selected.target === target && state.selected.index === index;
     var editIcon = window.LucideIcons ? LucideIcons.editor("edit", 16) : "✎";
     var deleteBtn = "";
-    if (target === "section" && state.pageData.sections.length > 1) {
+    if (target === "section" && (isContent || state.pageData.sections.length > 1)) {
       var delIcon = window.LucideIcons ? LucideIcons.editor("del", 16) : "×";
       deleteBtn = '<button type="button" class="pe-preview-delete-btn" data-pe-delete title="ลบ" aria-label="ลบ">' + delIcon + "</button>";
     }
@@ -192,6 +206,60 @@
     return '<div class="pe-drop-zone" data-pe-drop-index="' + index + '" aria-hidden="true"><span class="pe-drop-zone-line"></span></div>';
   }
 
+  function renderContentHero(item) {
+    var listUrl = boot.listUrl || "../products.html";
+    var listLabel = boot.listLabel || "บทความ";
+    return (
+      '<header class="page-hero"><div class="page-hero-inner">' +
+      '<p class="breadcrumb"><a href="../index.html">หน้าหลัก</a> / <a href="' +
+      R.esc(listUrl) +
+      '">' +
+      R.esc(listLabel) +
+      "</a> / " +
+      R.esc(item.category || "") +
+      "</p>" +
+      "<h1>" +
+      R.esc(item.title || "") +
+      "</h1>" +
+      '<p class="page-hero-lead">' +
+      R.esc(item.description || "") +
+      "</p></div></header>"
+    );
+  }
+
+  function renderContentArticleHeader(item, ctx) {
+    var image = item.image || "";
+    var cover =
+      image !== ""
+        ? '<div class="article-detail-cover"><img src="' +
+          R.esc(ctx.imgSrc(image)) +
+          '" alt="' +
+          R.esc(item.title || "") +
+          '" width="1200" height="675" loading="eager" decoding="async"></div>'
+        : "";
+    var date = item.datePublished || "";
+    var stats = "";
+    if (item.views) {
+      stats =
+        '<span class="article-detail-stats">' +
+        Number(item.views).toLocaleString("th-TH") +
+        " views" +
+        (item.shares ? " · " + item.shares + " shares" : "") +
+        "</span>";
+    }
+    return (
+      '<header class="article-detail-header">' +
+      cover +
+      '<div class="article-detail-meta">' +
+      '<span class="article-detail-category">' +
+      R.esc(item.category || "") +
+      "</span>" +
+      (date ? '<time class="article-detail-date" datetime="' + R.esc(date) + '">' + R.esc(date) + "</time>" : "") +
+      stats +
+      "</div></header>"
+    );
+  }
+
   function renderPlanHero(hero) {
     var bc = hero.breadcrumb || hero.title || "";
     return (
@@ -207,9 +275,19 @@
     var frame = document.getElementById("pe-preview-frame");
     if (!frame) return;
     var data = state.pageData;
+    if (!data.hero || typeof data.hero !== "object") {
+      data.hero = Object.assign({}, defaultPageData().hero);
+    }
+    if (!data.cta || typeof data.cta !== "object") {
+      data.cta = Object.assign({}, defaultPageData().cta);
+    }
+    if (!Array.isArray(data.sections)) {
+      data.sections = [];
+    }
     var ctx = renderCtx();
     var brand = state.brand;
 
+    try {
     var headerHtml =
       '<header class="site-header pe-landing-preview-header" aria-hidden="true"><div class="header-inner"><span class="brand">' +
       '<img src="../' + R.esc(brand.logo || "images/logo/LOGO-THAILIFE.png") + '" alt="" class="brand-logo" width="46" height="46">' +
@@ -238,6 +316,16 @@
         previewBlockWrap("hero", null, "Hero แผน", heroInner, data.hero.isVisible !== false) +
         planBody +
         previewBlockWrap("cta", null, "ปุ่ม CTA", ctaInner, data.cta.isVisible !== false);
+    } else if (isContent) {
+      var articleBody =
+        '<section class="section pe-content-preview-body"><div class="section-inner">' +
+        '<div class="article-detail-layout">' +
+        '<article class="article-detail article-detail-main">' +
+        renderContentArticleHeader(contentItem, ctx) +
+        '<div class="article-prose pe-content-prose" id="landing-root">' +
+        sectionsHtml +
+        "</div></article></div></div></section>";
+      frame.innerHTML = headerHtml + renderContentHero(contentItem) + articleBody;
     } else {
       frame.innerHTML =
         headerHtml +
@@ -248,7 +336,45 @@
 
     if (window.initSectionHeaders) initSectionHeaders(frame);
     if (window.LucideIcons) LucideIcons.refresh(frame);
+    hydrateClaimWidgetPreview(frame);
     bindDropZones();
+    } catch (err) {
+      console.error("[page-visual-editor] renderPreview failed", err);
+      frame.innerHTML =
+        '<div class="pe-preview-error"><p>โหลดตัวอย่างหน้าไม่สำเร็จ</p><p class="pe-preview-error-detail">' +
+        R.esc(err && err.message ? err.message : String(err)) +
+        "</p></div>";
+      setStatus("โหลด Preview ไม่สำเร็จ", "error");
+    }
+  }
+
+  function hydrateClaimWidgetPreview(frame) {
+    if (!frame || !window.CLAIM_REVIEWS_DETAIL || !window.CLAIM_REVIEWS_LIST) return;
+    var grid = frame.querySelector("#claim-card-grid-preview, #claim-card-grid");
+    if (!grid) return;
+
+    var entries = window.CLAIM_REVIEWS_LIST.map(function (slug) {
+      return window.CLAIM_REVIEWS_DETAIL[slug];
+    }).filter(Boolean);
+    if (!entries.length) return;
+
+    grid.innerHTML = entries
+      .map(function (entry) {
+        var img = R.imgSrc(entry.image, "../");
+        return (
+          "<li><article class=\"product-card\">" +
+          '<span class="product-card-media" aria-hidden="true">' +
+          '<img src="' + R.esc(img) + '" alt="' + R.esc(entry.title || "") + '" loading="lazy" decoding="async">' +
+          "</span>" +
+          '<div class="product-card-body">' +
+          '<p class="product-card-meta">' + R.esc(entry.category || "") + "</p>" +
+          "<h3>" + R.esc(entry.title || "") + "</h3>" +
+          '<p class="product-card-excerpt">' + R.esc(entry.description || "") + "</p>" +
+          '<span class="product-card-link">อ่านต่อ →</span>' +
+          "</div></article></li>"
+        );
+      })
+      .join("");
   }
 
   function renderTools() {
@@ -272,7 +398,7 @@
       target: sel.target,
       index: sel.index,
       totalSections: (state.pageData.sections || []).length,
-      canDelete: sel.target === "section" && state.pageData.sections.length > 1,
+      canDelete: sel.target === "section" && (isContent || state.pageData.sections.length > 1),
       isPlan: isPlan,
       imgSrc: function (p) { return R.imgSrc(p, "../"); },
     };
@@ -400,7 +526,7 @@
     if (!file) return;
     var fd = new FormData();
     fd.append("file", file);
-    fd.append("spec", spec || (isPlan ? "plan_content" : "media_library"));
+    fd.append("spec", spec || uploadSpecDefault());
     fd.append("csrf", state.csrf);
     fetch("api/upload.php", { method: "POST", body: fd })
       .then(function (r) {
@@ -435,7 +561,7 @@
       var file = input.files && input.files[0];
       input.value = "";
       if (!file) return;
-      uploadImageFile(file, spec || (isPlan ? "plan_content" : "media_library"), cb);
+      uploadImageFile(file, spec || uploadSpecDefault(), cb);
     };
     input.click();
   }
@@ -491,20 +617,38 @@
   }
 
   function refreshViewPageLink() {
-    if (!isPlan || !boot.previewUrl) return;
+    if ((!isPlan && !isContent) || !boot.previewUrl) return;
     var el = document.getElementById("pe-view-page");
     if (!el) return;
     var base = boot.previewUrl.split("?")[0];
     el.href = base + "?v=" + Date.now();
   }
 
+  function uploadSpecDefault() {
+    if (isContent) return "media_library";
+    if (isPlan) return "plan_content";
+    return "media_library";
+  }
+
   function save(publish) {
     if (state.draft) applyDraftToState();
     setStatus("กำลังบันทึก...", "");
-    var url = isPlan ? "api/plan-save.php" : "api/page-save.php";
-    var body = isPlan
-      ? { slug: state.slug, csrf: state.csrf, pageData: state.pageData, card: state.card, publish: !!publish }
-      : { page: state.page, csrf: state.csrf, pageData: state.pageData, publish: !!publish };
+    var url = isPlan ? "api/plan-save.php" : isContent ? "api/content-save.php" : "api/page-save.php";
+    var body;
+    if (isPlan) {
+      body = { slug: state.slug, csrf: state.csrf, pageData: state.pageData, card: state.card, publish: !!publish };
+    } else if (isContent) {
+      body = {
+        type: boot.contentType,
+        slug: state.slug,
+        csrf: state.csrf,
+        visual: true,
+        pageData: state.pageData,
+        publish: !!publish,
+      };
+    } else {
+      body = { page: state.page, csrf: state.csrf, pageData: state.pageData, publish: !!publish };
+    }
     fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -514,6 +658,9 @@
       .then(function (data) {
         if (!data.ok) throw new Error(data.error || "บันทึกไม่สำเร็จ");
         if (isPlan) {
+          refreshViewPageLink();
+          setStatus(publish ? "เผยแพร่แล้ว — หน้าเว็บอัปเดตแล้ว ✓" : "บันทึกแล้ว — กด「ดูหน้า」เพื่อตรวจสอบ ✓", "ok");
+        } else if (isContent) {
           refreshViewPageLink();
           setStatus(publish ? "เผยแพร่แล้ว — หน้าเว็บอัปเดตแล้ว ✓" : "บันทึกแล้ว — กด「ดูหน้า」เพื่อตรวจสอบ ✓", "ok");
         } else {
@@ -548,7 +695,7 @@
   }
 
   function deleteSection(index) {
-    if (state.pageData.sections.length <= 1) return;
+    if (!isContent && state.pageData.sections.length <= 1) return;
     if (!window.confirm("ลบ Section นี้?")) return;
     applyDraftToState();
     state.pageData.sections.splice(index, 1);
@@ -707,7 +854,7 @@
         e.preventDefault();
         var uploadBtn = e.target.closest("[data-pve-upload]");
         var prefix = uploadBtn.getAttribute("data-pve-upload");
-        var spec = uploadBtn.getAttribute("data-pve-upload-spec") || (isPlan ? "plan_content" : "media_library");
+        var spec = uploadBtn.getAttribute("data-pve-upload-spec") || uploadSpecDefault();
         var accept = uploadBtn.getAttribute("data-pve-upload-accept");
         uploadImage(spec, accept, function (path) {
           applyUploadedMedia(form, prefix, path);
@@ -724,7 +871,7 @@
           ? pveImage.getAttribute("data-pve-image")
           : pveVideo.getAttribute("data-pve-video");
         var uploadBtn = (pveImage || pveVideo).querySelector("[data-pve-upload]");
-        var spec = (uploadBtn && uploadBtn.getAttribute("data-pve-upload-spec")) || (isPlan ? "plan_content" : "media_library");
+        var spec = (uploadBtn && uploadBtn.getAttribute("data-pve-upload-spec")) || uploadSpecDefault();
         var accept = uploadBtn && uploadBtn.getAttribute("data-pve-upload-accept");
         uploadImage(spec, accept, function (path) {
           applyUploadedMedia(form, prefix, path);
@@ -814,7 +961,7 @@
           if (!pveImage) return;
           var prefix = pveImage.getAttribute("data-pve-image");
           var uploadBtn = pveImage.querySelector("[data-pve-upload]");
-          var spec = (uploadBtn && uploadBtn.getAttribute("data-pve-upload-spec")) || (isPlan ? "plan_content" : "media_library");
+          var spec = (uploadBtn && uploadBtn.getAttribute("data-pve-upload-spec")) || uploadSpecDefault();
           setStatus("กำลังอัปโหลดรูป...", "");
           uploadImageFile(file, spec, function (path) {
             applyUploadedMedia(form, prefix, path);
@@ -1078,7 +1225,7 @@
     renderRail();
     renderPreview();
     renderPanel();
-    if (isPlan) refreshViewPageLink();
+    if (isPlan || isContent) refreshViewPageLink();
     bindEvents();
     bindFormEvents();
     bindDropZones();

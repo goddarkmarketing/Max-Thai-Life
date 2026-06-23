@@ -112,6 +112,9 @@ admin_visual_layout_start($pageTitle, 'landing-pages.php');
 </script>
 <script src="../js/page-block-render.js"></script>
 <script src="../js/section-headers.js"></script>
+<?php if ($pageKey === 'claimReviews'): ?>
+<script src="../js/claim-reviews-data.js"></script>
+<?php endif; ?>
 <script src="js/page-block-builder.js"></script>
 <script src="js/page-visual-editor.js"></script>
 

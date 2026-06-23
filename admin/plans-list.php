@@ -9,15 +9,13 @@ admin_require_login();
 
 $plans = json_read('plans.json');
 $items = $plans['items'] ?? [];
-$details = json_read('plans-detail.json');
-$detailItems = $details['items'] ?? [];
 
 admin_layout_start('แผนประกัน', 'plans-list.php');
 ?>
 
 <?php admin_card_start('รายการแผนประกัน'); ?>
 <div class="admin-list-toolbar">
-  <a href="plan-edit.php?slug=new&tab=card" class="admin-btn admin-btn--primary">+ เพิ่มแผนประกัน</a>
+  <a href="plan-edit.php?slug=new" class="admin-btn admin-btn--primary">+ เพิ่มแผนประกัน</a>
   <input type="search" class="admin-input admin-table-search" placeholder="ค้นหาชื่อแผน…" data-table-search>
 </div>
 <div class="admin-table-wrap">
@@ -35,7 +33,6 @@ admin_layout_start('แผนประกัน', 'plans-list.php');
         <?php
           $href = $plan['href'] ?? '';
           $slug = preg_replace('#^plans/|\.html$#', '', $href);
-          $hasDetail = isset($detailItems[$slug]);
           $visible = admin_is_visible($plan);
         ?>
         <tr data-search-text="<?= admin_h(strtolower(($plan['title'] ?? '') . ' ' . ($plan['category'] ?? '') . ' ' . ($plan['tag'] ?? ''))) ?>">
@@ -51,12 +48,8 @@ admin_layout_start('แผนประกัน', 'plans-list.php');
           <td>
             <div class="admin-table-actions">
               <a href="<?= admin_h(admin_content_preview_url('plans', $slug)) ?>" target="_blank" rel="noopener" class="admin-btn admin-btn--ghost admin-btn--sm">ดูหน้า</a>
-              <a href="plan-edit.php?slug=<?= admin_h($slug) ?>&tab=card" class="admin-btn admin-btn--secondary admin-btn--sm">การ์ด</a>
-              <?php if ($hasDetail): ?>
-                <a href="plan-visual.php?slug=<?= admin_h($slug) ?>" class="admin-btn admin-btn--primary admin-btn--sm">แก้ไขหน้า</a>
-              <?php else: ?>
-                <a href="plan-edit.php?slug=<?= admin_h($slug) ?>&tab=detail" class="admin-btn admin-btn--secondary admin-btn--sm">+ รายละเอียด</a>
-              <?php endif; ?>
+              <a href="plan-edit.php?slug=<?= admin_h($slug) ?>" class="admin-btn admin-btn--secondary admin-btn--sm">การ์ด</a>
+              <a href="plan-visual.php?slug=<?= admin_h($slug) ?>" class="admin-btn admin-btn--primary admin-btn--sm">แก้ไขหน้า</a>
               <form method="post" action="toggle-visible.php" class="admin-inline-form">
                 <input type="hidden" name="csrf" value="<?= admin_h(admin_csrf_token()) ?>">
                 <input type="hidden" name="kind" value="plan">

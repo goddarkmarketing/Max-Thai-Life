@@ -37,7 +37,6 @@ function test_site_form_fields(array $site, array $overrides = []): array
 {
     $brand = $site['brand'] ?? [];
     $agent = $site['agent'] ?? [];
-    $social = $site['social'] ?? [];
     return array_merge([
         'brand_name' => $brand['name'] ?? '',
         'brand_sub' => $brand['sub'] ?? '',
@@ -50,9 +49,6 @@ function test_site_form_fields(array $site, array $overrides = []): array
         'agent_license' => $agent['license'] ?? '',
         'agent_ul' => $agent['ulRights'] ?? '',
         'agent_tagline' => $agent['tagline'] ?? '',
-        'social_facebook' => $social['facebook'] ?? '',
-        'social_line' => $social['line'] ?? '',
-        'social_email' => $social['email'] ?? '',
     ], $overrides);
 }
 

@@ -26,8 +26,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_verify_csrf($_POST['csrf'] ??
     exit;
 }
 
+$accountDetails = admin_account_details();
+
 admin_layout_start('บัญชีผู้ใช้', 'account.php');
 ?>
+
+<?php admin_card_start('รายละเอียดผู้ใช้', 'ข้อมูลบัญชีที่ใช้เข้าสู่ระบบหลังบ้าน'); ?>
+<?php admin_render_detail_table($accountDetails); ?>
+<p class="admin-hint admin-hint--tight">แก้ไขชื่อตัวแทน โทรศัพท์ และข้อมูลบนเว็บได้ที่ <a href="site.php">ตั้งค่าเว็บไซต์</a></p>
+<?php admin_card_end(); ?>
 
 <?php admin_card_start('เปลี่ยนรหัสผ่าน'); ?>
 <form method="post">

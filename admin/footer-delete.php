@@ -6,9 +6,11 @@ require_once __DIR__ . '/includes/helpers.php';
 
 admin_require_login();
 
+$return = admin_post_return_page('site-footer.php');
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !admin_verify_csrf($_POST['csrf'] ?? null)) {
     admin_flash('error', 'คำขอไม่ถูกต้อง');
-    header('Location: site-footer.php');
+    header('Location: ' . $return);
     exit;
 }
 
@@ -32,12 +34,12 @@ if ($section === 'topCta' && isset($footer['topCta'][$index])) {
 
 if (!$removed) {
     admin_flash('error', 'ไม่พบรายการที่จะลบ');
-    header('Location: site-footer.php');
+    header('Location: ' . $return);
     exit;
 }
 
 $data['footer'] = $footer;
-json_write('site.json', $data);
-admin_flash('success', 'ลบรายการ Footer แล้ว — กดเผยแพร่ขึ้นเว็บเพื่ออัปเดตหน้าเว็บ');
-header('Location: site-footer.php');
+admin_footer_publish_site($data);
+admin_flash('success', 'ลบรายการและเผยแพร่ขึ้นเว็บแล้ว');
+header('Location: ' . $return);
 exit;

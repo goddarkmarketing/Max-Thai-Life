@@ -19,12 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_verify_csrf($_POST['csrf'] ??
 
 $brand = $data['brand'] ?? [];
 $agent = $data['agent'] ?? [];
-$social = $data['social'] ?? [];
 
 admin_layout_start('ตั้งค่าเว็บไซต์', 'site.php');
 ?>
 
-<form method="post">
+<form method="post" class="admin-page-form">
   <input type="hidden" name="csrf" value="<?= admin_h(admin_csrf_token()) ?>">
 
   <?php admin_card_start('แบรนด์และโลโก้'); ?>
@@ -36,7 +35,7 @@ admin_layout_start('ตั้งค่าเว็บไซต์', 'site.php');
   <?php admin_card_end(); ?>
 
   <?php admin_card_start('ข้อมูลตัวแทน', 'ใช้ทั้งหน้าแรก footer และหน้าติดต่อ'); ?>
-  <div class="admin-grid admin-grid--2">
+  <div class="admin-grid admin-grid--2 admin-grid--3-wide">
     <?php admin_field('ชื่อ-นามสกุล', 'agent_name', $agent['name'] ?? ''); ?>
     <?php admin_field('ตำแหน่ง', 'agent_title', $agent['title'] ?? ''); ?>
     <?php admin_field('สาขา', 'agent_branch', $agent['branch'] ?? ''); ?>
@@ -48,13 +47,7 @@ admin_layout_start('ตั้งค่าเว็บไซต์', 'site.php');
   <?php admin_field('ข้อความแนะนำ (Hero)', 'agent_tagline', $agent['tagline'] ?? '', ['type' => 'textarea', 'rows' => 2]); ?>
   <?php admin_card_end(); ?>
 
-  <?php admin_card_start('โซเชียล'); ?>
-  <div class="admin-grid admin-grid--2">
-    <?php admin_field('Facebook URL', 'social_facebook', $social['facebook'] ?? ''); ?>
-    <?php admin_field('LINE URL', 'social_line', $social['line'] ?? ''); ?>
-    <?php admin_field('อีเมล', 'social_email', $social['email'] ?? '', ['type' => 'email']); ?>
-  </div>
-  <?php admin_card_end(); ?>
+  <p class="admin-hint admin-hint--tight">ไอคอนโซเชียลและช่องทางติดต่อเพิ่มเติม แก้ที่เมนู <a href="site-social.php">โซเชียล</a> · ปุ่มลอยมุมขวาล่างที่ <a href="site-contact-dock.php">ปุ่มลอย</a> · แถบ Footer ที่ <a href="site-footer.php">Footer</a> — หลังบันทึกให้กด <strong>เผยแพร่ขึ้นเว็บ</strong> ที่แดชบอร์ด</p>
 
   <?php admin_actions('dashboard.php'); ?>
 </form>

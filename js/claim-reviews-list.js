@@ -8,7 +8,7 @@
 
   var entries = window.CLAIM_REVIEWS_LIST.map(function (slug) {
     return window.CLAIM_REVIEWS_DETAIL[slug];
-  });
+  }).filter(Boolean);
 
   function imgSrc(src) {
     if (/^https?:\/\//i.test(src)) return src;
@@ -29,10 +29,25 @@
 
   function renderSections(sections) {
     if (!sections || !sections.length) return "";
+    if (window.ContentSectionsRender && ContentSectionsRender.isBlockFormat(sections)) {
+      return ContentSectionsRender.render(sections, {
+        base: base,
+        preview: false,
+        imgSrc: function (p) {
+          if (window.PageBlockRender) return PageBlockRender.imgSrc(p, base);
+          return base + p;
+        },
+      });
+    }
     return sections
       .map(function (section) {
         var html = '<div class="claim-review-section">';
         if (section.heading) html += "<h4>" + section.heading + "</h4>";
+        if (section.paragraphs) {
+          section.paragraphs.forEach(function (p) {
+            html += "<p>" + p + "</p>";
+          });
+        }
         if (section.list && section.list.length) {
           html +=
             "<ul>" +
@@ -49,11 +64,11 @@
       .join("");
   }
 
-  function reviewCardHtml(entry, opts) {
+  function reviewDetailHtml(entry, opts) {
     opts = opts || {};
     var titleId = opts.titleId ? ' id="' + opts.titleId + '"' : "";
     return (
-      '<article class="claim-review-card">' +
+      '<article class="claim-review-card claim-review-card--modal">' +
       '<div class="claim-review-card-media">' +
       '<img src="' +
       imgSrc(entry.image) +
@@ -90,36 +105,56 @@
     );
   }
 
-  function cardHtml(entry) {
-    return "<li>" + reviewCardHtml(entry) + "</li>";
-  }
+  function cardHtml(entry, index) {
+    var stats = "";
+    if (entry.views) {
+      stats =
+        '<p class="product-card-stats">' +
+        entry.views.toLocaleString("th-TH") +
+        " views";
+      if (entry.shares) stats += " · " + entry.shares + " shares";
+      stats += "</p>";
+    }
 
-  function galleryHtml(entry, index) {
-    var active = index === 0 ? " is-active" : "";
-    var slide = typeof entry.slide === "number" ? entry.slide : index;
     return (
-      '<button type="button" class="claim-gallery-item' +
-      active +
-      '" data-slide="' +
-      slide +
-      '" aria-label="' +
-      entry.title.replace(/"/g, "&quot;") +
+      "<li>" +
+      '<article class="product-card" data-claim-index="' +
+      index +
       '">' +
+      '<button type="button" class="product-card-media" data-claim-open="' +
+      index +
+      '" tabindex="-1" aria-hidden="true">' +
       '<img src="' +
       imgSrc(entry.image) +
-      '" alt="" width="120" height="120" loading="lazy" decoding="async">' +
-      '<span class="claim-gallery-caption">' +
+      '" alt="' +
+      entry.title.replace(/"/g, "&quot;") +
+      '" loading="lazy" decoding="async">' +
+      "</button>" +
+      '<div class="product-card-body">' +
+      '<p class="product-card-meta">' +
+      entry.category +
+      "</p>" +
+      '<h3><button type="button" class="product-card-title-btn" data-claim-open="' +
+      index +
+      '">' +
       entry.title +
-      "</span>" +
-      "</button>"
+      "</button></h3>" +
+      '<p class="product-card-excerpt">' +
+      entry.description +
+      "</p>" +
+      stats +
+      '<button type="button" class="product-card-link" data-claim-open="' +
+      index +
+      '">อ่านต่อ →</button>' +
+      "</div></article></li>"
     );
   }
 
-  function openModal(slideIndex) {
-    var entry = entries[slideIndex];
+  function openModal(index) {
+    var entry = entries[index];
     if (!entry || !modal || !modalContent) return;
 
-    modalContent.innerHTML = reviewCardHtml(entry, { titleId: "claim-modal-title" });
+    modalContent.innerHTML = reviewDetailHtml(entry, { titleId: "claim-modal-title" });
     modal.hidden = false;
     document.body.classList.add("claim-modal-open");
 
@@ -149,100 +184,22 @@
         }
       });
     }
-  }
 
-  function bindGallery() {
-    var track = document.getElementById("claim-review-slider-track");
-    var gallery = document.getElementById("claim-gallery");
-    var galleryMore = document.getElementById("claim-gallery-more");
-    var sliderRoot = document.querySelector("[data-claim-slider]");
-    if (!sliderRoot || !gallery) return;
-
-    var slider = sliderRoot._contentSlider;
-
-    function allGalleryItems() {
-      var items = gallery.querySelectorAll(".claim-gallery-item");
-      var extra = galleryMore ? galleryMore.querySelectorAll(".claim-gallery-item") : [];
-      return Array.prototype.slice.call(items).concat(Array.prototype.slice.call(extra));
-    }
-
-    function setActive(i) {
-      allGalleryItems().forEach(function (btn) {
-        var slide = parseInt(btn.getAttribute("data-slide"), 10);
-        btn.classList.toggle("is-active", slide === i);
-      });
-    }
-
-    allGalleryItems().forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var i = parseInt(btn.getAttribute("data-slide"), 10);
-        if (slider) {
-          slider.stopAuto();
-          slider.goTo(i);
-          slider.startAuto();
-        }
-        setActive(i);
-        openModal(i);
-      });
+    document.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-claim-open]");
+      if (!btn) return;
+      e.preventDefault();
+      var index = parseInt(btn.getAttribute("data-claim-open"), 10);
+      if (!isNaN(index)) openModal(index);
     });
-
-    if (slider && slider.viewport) {
-      slider.viewport.addEventListener(
-        "scroll",
-        function () {
-          if (!slider.viewport) return;
-          var w = slider.viewport.clientWidth;
-          if (!w) return;
-          var i = Math.round(slider.viewport.scrollLeft / w);
-          setActive(i);
-        },
-        { passive: true }
-      );
-    }
-
-    if (track && slider) {
-      slider.refresh();
-    }
   }
 
   function mount() {
-    var track = document.getElementById("claim-review-slider-track");
-    var gallery = document.getElementById("claim-gallery");
-    var galleryMore = document.getElementById("claim-gallery-more");
-    var moreBtn = document.getElementById("claim-gallery-more-btn");
-    if (!track) return;
+    var grid = document.getElementById("claim-card-grid");
+    if (!grid) return;
 
     bindUiOnce();
-
-    track.innerHTML = entries.map(cardHtml).join("");
-
-    if (gallery) {
-      gallery.innerHTML = entries.map(galleryHtml).join("");
-    }
-
-    if (galleryMore && window.CLAIM_GALLERY_MORE && window.CLAIM_GALLERY_MORE.length) {
-      galleryMore.innerHTML = window.CLAIM_GALLERY_MORE.map(function (item, i) {
-        return galleryHtml(item, entries.length + i);
-      }).join("");
-      if (moreBtn) moreBtn.hidden = false;
-    } else if (moreBtn) {
-      moreBtn.hidden = true;
-    }
-
-    if (moreBtn && galleryMore && !moreBtn.dataset.bound) {
-      moreBtn.dataset.bound = "1";
-      moreBtn.addEventListener("click", function () {
-        var expanded = moreBtn.getAttribute("aria-expanded") === "true";
-        galleryMore.hidden = expanded;
-        moreBtn.setAttribute("aria-expanded", expanded ? "false" : "true");
-        moreBtn.textContent = expanded ? "ดูเพิ่มเติม" : "แสดงน้อยลง";
-        if (!expanded) {
-          galleryMore.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }
-      });
-    }
-
-    bindGallery();
+    grid.innerHTML = entries.map(cardHtml).join("");
     document.dispatchEvent(new CustomEvent("claim-reviews:updated"));
   }
 

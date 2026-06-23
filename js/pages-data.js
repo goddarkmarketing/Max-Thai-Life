@@ -613,9 +613,9 @@ window.PAGES_DATA = {
     hero: {
       breadcrumb: "รีวิวเคลม",
       title: "รีวิวการเคลม",
-      lead: "ภาพและประสบการณ์จริงจากลูกค้า — เลื่อนดูการ์ดรีวิวและแกลเลอรี่การเคลม",
-      visible: true,
-      isVisible: true
+      lead: "ประสบการณ์จริงจากลูกค้า — เลือกอ่านรีวิวการเคลมแต่ละเรื่อง",
+      isVisible: true,
+      visible: true
     },
     sections: [
       {
@@ -656,7 +656,7 @@ window.PAGES_DATA = {
         sortOrder: 1,
         id: "00f9977e1dee5d09",
         type: "serviceCards",
-        alt: true,
+        alt: false,
         icon: "heart",
         showIcon: true,
         items: [
@@ -665,21 +665,39 @@ window.PAGES_DATA = {
             title: "ไทยประกันชีวิต iService",
             text: "ยื่นเคลมผู้ป่วยนอก ตรวจสถานะ และดูเอกสารกรมธรรม์ผ่านแอปมือถือ",
             href: "https://www.thailife.com",
-            linkText: "ใช้บริการ →"
+            linkText: "ใช้บริการ →",
+            subtitle: "ออนไลน์",
+            description: "ยื่นเคลมผู้ป่วยนอก ตรวจสถานะ และดูเอกสารกรมธรรม์ผ่านแอปมือถือ",
+            buttonText: "ใช้บริการ →",
+            buttonLink: "https://www.thailife.com",
+            sortOrder: 0,
+            isVisible: true
           },
           {
             meta: "สายด่วน",
             title: "ฮอตไลน์ 1124",
             text: "สอบถามสิทธิ์เคลมและบริการลูกค้า 24 ชั่วโมง",
             href: "tel:1124",
-            linkText: "โทร 1124 →"
+            linkText: "โทร 1124 →",
+            subtitle: "สายด่วน",
+            description: "สอบถามสิทธิ์เคลมและบริการลูกค้า 24 ชั่วโมง",
+            buttonText: "โทร 1124 →",
+            buttonLink: "tel:1124",
+            sortOrder: 1,
+            isVisible: true
           },
           {
             meta: "สุขภาพ",
             title: "เมดิแคร์ / ฮอตเคลม",
             text: "ใช้สิทธิ์เครือข่ายโรงพยาบาล ไม่ต้องสำรองจ่ายเต็มจำนวน",
             href: "https://www.thailife.com",
-            linkText: "ดูรายละเอียด →"
+            linkText: "ดูรายละเอียด →",
+            subtitle: "สุขภาพ",
+            description: "ใช้สิทธิ์เครือข่ายโรงพยาบาล ไม่ต้องสำรองจ่ายเต็มจำนวน",
+            buttonText: "ดูรายละเอียด →",
+            buttonLink: "https://www.thailife.com",
+            sortOrder: 2,
+            isVisible: true
           }
         ],
         videoUrl: "",
@@ -705,10 +723,10 @@ window.PAGES_DATA = {
           variant: "outline"
         }
       ],
-      visible: true,
-      isVisible: true
+      isVisible: true,
+      visible: true
     },
     title: "รีวิวการเคลม",
-    lead: "ภาพและประสบการณ์จริงจากลูกค้า — เลื่อนดูการ์ดรีวิวและแกลเลอรี่การเคลม"
+    lead: "ประสบการณ์จริงจากลูกค้า — เลือกอ่านรีวิวการเคลมแต่ละเรื่อง"
   }
 };

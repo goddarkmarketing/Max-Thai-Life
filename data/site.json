@@ -12,12 +12,33 @@
         "phoneDisplay": "085-292-5320",
         "license": "5701116295",
         "ulRights": "มีสิทธิ์",
-        "tagline": "ที่ปรึกษาประกันชีวิตและการเงิน · สาขานครปฐม · ใบอนุญาต 5701116295"
+        "tagline": "ที่ปรึกษาประกันชีวิตและการเงิน · สาขานครปฐม · ใบอนุญาต 5701116295",
+        "extraContacts": []
     },
     "social": {
-        "facebook": "#",
-        "line": "#",
-        "email": "contact@example.com"
+        "links": [
+            {
+                "label": "Facebook",
+                "href": "#",
+                "icon": "facebook",
+                "color": "#1877f2",
+                "visible": true
+            },
+            {
+                "label": "Line",
+                "href": "#",
+                "icon": "message-circle",
+                "color": "#06c755",
+                "visible": true
+            },
+            {
+                "label": "Email",
+                "href": "mailto:contact@example.com",
+                "icon": "mail",
+                "color": "#015fd9",
+                "visible": true
+            }
+        ]
     },
     "footer": {
         "tagline": "ที่ปรึกษาทางการเงินและประกันชีวิต · สาขานครปฐม",
@@ -309,19 +330,10 @@
             "visible": true
         },
         {
-            "label": "เกี่ยวกับเรา",
-            "href": "about.html",
-            "visible": true
-        },
-        {
             "label": "แผนประกัน",
             "href": "plans.html",
             "visible": true,
             "children": [
-                {
-                    "label": "แผนประกันทั้งหมด",
-                    "href": "plans.html"
-                },
                 {
                     "label": "ออมทรัพย์",
                     "href": "plans.html?category=savings#savings",
@@ -331,6 +343,10 @@
                     "label": "คุ้มครองชีวิต",
                     "href": "plans.html?category=protect#protect",
                     "category": "protect"
+                },
+                {
+                    "label": "แผนประกันทั้งหมด",
+                    "href": "plans.html"
                 },
                 {
                     "label": "ประกันสุขภาพ",
@@ -353,6 +369,11 @@
                     "category": "invest"
                 }
             ]
+        },
+        {
+            "label": "เกี่ยวกับเรา",
+            "href": "about.html",
+            "visible": true
         },
         {
             "label": "บทความ",
@@ -380,5 +401,31 @@
             "visible": true,
             "cta": true
         }
-    ]
+    ],
+    "contactDock": {
+        "enabled": true,
+        "items": [
+            {
+                "label": "โทร",
+                "href": "tel:0852925320",
+                "icon": "phone",
+                "color": "#015fd9",
+                "visible": true
+            },
+            {
+                "label": "แอดไลน์",
+                "href": "contact.html",
+                "icon": "message-circle",
+                "color": "#06c755",
+                "visible": true
+            },
+            {
+                "label": "ใบเสนอเบี้ย",
+                "href": "contact.html?topic=insurance",
+                "icon": "file-text",
+                "color": "#38bdf8",
+                "visible": true
+            }
+        ]
+    }
 }

@@ -527,35 +527,19 @@ window.PageBlockRender = (function () {
     );
   }
 
-  function renderBlock(sec, ctx) {
+  function claimWidgetHtml(isPreview) {
     if (isPreview) {
       return (
-        '<div class="claim-review-slider-wrap lp-claim-preview">' +
-        '<article class="claim-review-card">' +
-        '<div class="claim-review-card-media lp-card-skeleton-media" aria-hidden="true"></div>' +
-        '<div class="claim-review-card-body">' +
-        '<p class="claim-review-category">รีวิวเคลม</p>' +
-        "<h3>ตัวอย่างการ์ดรีวิว</h3>" +
-        '<p class="claim-review-summary">ดึงรายการรีวิวจากเมนูเนื้อหา — บนเว็บจริงแสดงเป็นสไลด์และแกลเลอรี่ด้านล่าง</p>' +
-        "</div></article>" +
-        '<div class="claim-gallery lp-claim-gallery-preview" aria-hidden="true">' +
-        '<div class="lp-claim-thumb"></div><div class="lp-claim-thumb"></div><div class="lp-claim-thumb"></div>' +
-        "</div></div>"
+        '<div class="claim-reviews-grid-wrap lp-claim-preview">' +
+        '<ul class="product-card-grid product-card-grid--3" id="claim-card-grid-preview"></ul>' +
+        '<p class="lp-dynamic-note">ดึงรายการรีวิวจากเมนูเนื้อหา → รีวิวเคลม</p>' +
+        "</div>"
       );
     }
     return (
-      '<div class="claim-review-slider-wrap">' +
-      '<div class="content-slider claim-review-slider" data-claim-slider data-content-slider data-slider-always data-slider-name="รีวิวเคลม">' +
-      '<div class="content-slider-viewport">' +
-      '<ul class="content-slider-track" id="claim-review-slider-track"></ul>' +
-      "</div>" +
-      '<div data-slider-controls></div>' +
-      "</div>" +
-      '<div class="claim-gallery" id="claim-gallery"></div>' +
-      '<div class="claim-gallery claim-gallery--more" id="claim-gallery-more" hidden></div>' +
-      '<div class="claim-gallery-actions">' +
-      '<button type="button" class="btn btn-primary" id="claim-gallery-more-btn" aria-expanded="false" hidden>ดูเพิ่มเติม</button>' +
-      "</div></div>"
+      '<div class="claim-reviews-grid-wrap">' +
+      '<ul class="product-card-grid product-card-grid--3" id="claim-card-grid"></ul>' +
+      "</div>"
     );
   }
 
@@ -720,6 +704,7 @@ window.PageBlockRender = (function () {
 
   function renderHero(hero, ctx) {
     ctx = ctx || {};
+    if (!hero || typeof hero !== "object") return "";
     if (!isVisible(hero)) return "";
     var meta = ctx.meta || {};
     var bc = hero.breadcrumb || meta.breadcrumb || "";

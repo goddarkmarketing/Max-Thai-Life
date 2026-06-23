@@ -53,5 +53,5 @@ if (isset($details['items'][$slug])) {
 admin_create_content_shell('plans', $newSlug);
 generate_all_js();
 admin_flash('success', 'สำเนาแผนแล้ว — สถานะ: ซ่อนจากเว็บ');
-header('Location: plan-edit.php?slug=' . urlencode($newSlug) . '&tab=card');
+header('Location: plan-edit.php?slug=' . urlencode($newSlug));
 exit;

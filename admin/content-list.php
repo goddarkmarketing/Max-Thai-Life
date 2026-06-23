@@ -54,10 +54,10 @@ admin_layout_start($cfg['label'], 'content-list.php?type=' . $type);
               <?php if ($type !== 'claims'): ?>
                 <a href="<?= admin_h(admin_content_preview_url($previewType, $slug)) ?>" target="_blank" rel="noopener" class="admin-btn admin-btn--ghost admin-btn--sm">ดูหน้า</a>
               <?php endif; ?>
+              <a href="content-edit.php?type=<?= admin_h($type) ?>&id=<?= admin_h($slug) ?>" class="admin-btn admin-btn--secondary admin-btn--sm">การ์ด</a>
               <?php if ($hasVisual): ?>
                 <a href="content-visual.php?type=<?= admin_h($type) ?>&id=<?= admin_h($slug) ?>" class="admin-btn admin-btn--primary admin-btn--sm">แก้ไขหน้า</a>
               <?php endif; ?>
-              <a href="content-edit.php?type=<?= admin_h($type) ?>&id=<?= admin_h($slug) ?>" class="admin-btn admin-btn--secondary admin-btn--sm">ฟอร์ม</a>
               <form method="post" action="toggle-visible.php" class="admin-inline-form">
                 <input type="hidden" name="csrf" value="<?= admin_h(admin_csrf_token()) ?>">
                 <input type="hidden" name="kind" value="<?= admin_h($type) ?>">

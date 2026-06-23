@@ -185,6 +185,16 @@ function suite_visual_api(TestRunner $t, HttpClient $http): void
         }
     });
 
+    $t->test('หน้า page-visual.php claimReviews มี PAGE_VISUAL_DATA และ claimWidget', function (TestRunner $t) use ($http) {
+        $res = $http->getAdminPage('page-visual.php?page=claimReviews');
+        $t->assertEquals(200, $res['code']);
+        $boot = $http->extractPageVisualData($res['body']);
+        $t->assertTrue(!empty($boot['pageData']['hero']['title']), 'ต้องมี hero title');
+        $types = array_column($boot['pageData']['sections'] ?? [], 'type');
+        $t->assertTrue(in_array('claimWidget', $types, true), 'ต้องมี claimWidget section');
+        $t->assertContains('claim-reviews-data.js', $res['body'], 'ต้องโหลด claim-reviews-data.js');
+    });
+
     $guest = new HttpClient('http://localhost/1496');
     $t->test('API upload.php ต้อง login ก่อน', function (TestRunner $t) use ($guest) {
         $res = $guest->request('POST', '/admin/api/upload.php', ['csrf' => 'x', 'spec' => 'media_library'], [], false);

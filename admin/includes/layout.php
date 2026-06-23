@@ -26,6 +26,8 @@ function admin_nav_groups(): array
                 ['href' => 'site.php', 'label' => 'ตั้งค่าเว็บไซต์', 'icon' => 'settings'],
                 ['href' => 'site-nav.php', 'label' => 'เมนูเว็บ', 'icon' => 'menu'],
                 ['href' => 'site-footer.php', 'label' => 'Footer', 'icon' => 'layout'],
+                ['href' => 'site-social.php', 'label' => 'โซเชียล', 'icon' => 'share'],
+                ['href' => 'site-contact-dock.php', 'label' => 'ปุ่มลอย', 'icon' => 'message-circle'],
                 ['href' => 'site-seo.php', 'label' => 'SEO', 'icon' => 'globe'],
                 ['href' => 'home.php', 'label' => 'หน้าแรก', 'icon' => 'home'],
                 ['href' => 'landing-pages.php', 'label' => 'หน้าเว็บ', 'icon' => 'file'],
@@ -115,7 +117,7 @@ function admin_render_sidebar(string $active = ''): void
     <?php
 }
 
-function admin_layout_start(string $title, string $active = ''): void
+function admin_layout_start(string $title, string $active = '', array $opts = []): void
 {
     global $IMAGE_SPECS;
     $flash = admin_get_flash();
@@ -127,6 +129,9 @@ function admin_layout_start(string $title, string $active = ''): void
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= admin_h($title) ?> | Max Thai Life Admin</title>
   <link rel="stylesheet" href="css/admin.css">
+  <?php foreach ($opts['stylesheets'] ?? [] as $cssHref): ?>
+  <link rel="stylesheet" href="<?= admin_h($cssHref) ?>">
+  <?php endforeach; ?>
 </head>
 <body class="admin-body">
   <?php admin_render_sidebar($active); ?>
@@ -215,6 +220,26 @@ function admin_card_start(string $title = '', string $subtitle = ''): void
 function admin_card_end(): void
 {
     echo '</div></section>';
+}
+
+function admin_render_detail_table(array $rows): void
+{
+    echo '<div class="admin-table-wrap"><table class="admin-table admin-table--details"><tbody>';
+    foreach ($rows as $row) {
+        if (!is_array($row)) {
+            continue;
+        }
+        $label = (string) ($row['label'] ?? '');
+        $value = (string) ($row['value'] ?? '—');
+        echo '<tr><th scope="row">' . admin_h($label) . '</th><td>';
+        if (($row['badge'] ?? '') === 'ok') {
+            echo '<span class="admin-badge admin-badge--ok">' . admin_h($value) . '</span>';
+        } else {
+            echo admin_h($value);
+        }
+        echo '</td></tr>';
+    }
+    echo '</tbody></table></div>';
 }
 
 function admin_render_quick_link(string $href, string $icon, string $title, string $desc): void
@@ -493,6 +518,61 @@ function admin_render_nav_repeater(array $items): void
               <input type="checkbox" name="nav_cta[__INDEX__]" value="1">
               เป็นปุ่ม CTA (เน้นสี)
             </label>
+          </div>
+        </article>
+      </template>
+    </div>
+    <?php
+}
+
+function admin_render_nav_children_repeater(array $children, array $opts = []): void
+{
+    $title = (string) ($opts['title'] ?? 'เมนูย่อย');
+    $min = (int) ($opts['min'] ?? 0);
+    $emptyRow = !empty($opts['emptyRow']);
+    if ($children === [] && $emptyRow) {
+        $children = [['label' => '', 'href' => '', 'category' => '']];
+    }
+    ?>
+    <div class="admin-repeater" data-repeater="navChildren" data-repeater-min="<?= $min ?>">
+      <div class="admin-repeater-head">
+        <h3 class="admin-subtitle"><?= admin_h($title) ?></h3>
+        <button type="button" class="admin-btn admin-btn--secondary admin-btn--sm" data-repeater-add>+ เพิ่มรายการ</button>
+      </div>
+      <div class="admin-repeater-list" data-repeater-list>
+        <?php foreach ($children as $i => $child): ?>
+          <article class="admin-repeater-item" data-repeater-item>
+            <header class="admin-repeater-item-head">
+              <strong data-repeater-label data-label-prefix="รายการ">รายการ <?= (int) $i + 1 ?></strong>
+              <button type="button" class="admin-btn admin-btn--ghost admin-btn--sm" data-repeater-remove>ลบ</button>
+            </header>
+            <div class="admin-grid admin-grid--3">
+              <?php admin_field('ชื่อ', "nav_child_label[{$i}]", $child['label'] ?? ''); ?>
+              <?php admin_field('ลิงก์', "nav_child_href[{$i}]", $child['href'] ?? ''); ?>
+              <?php admin_field('หมวด (category)', "nav_child_category[{$i}]", $child['category'] ?? '', ['hint' => 'เช่น savings, protect — ว่างได้']); ?>
+            </div>
+          </article>
+        <?php endforeach; ?>
+      </div>
+      <template data-repeater-template>
+        <article class="admin-repeater-item" data-repeater-item>
+          <header class="admin-repeater-item-head">
+            <strong data-repeater-label data-label-prefix="รายการ">รายการ</strong>
+            <button type="button" class="admin-btn admin-btn--ghost admin-btn--sm" data-repeater-remove>ลบ</button>
+          </header>
+          <div class="admin-grid admin-grid--3">
+            <div class="admin-field">
+              <label class="admin-label">ชื่อ</label>
+              <input class="admin-input" type="text" name="nav_child_label[__INDEX__]" value="">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label">ลิงก์</label>
+              <input class="admin-input" type="text" name="nav_child_href[__INDEX__]" value="">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label">หมวด (category)</label>
+              <input class="admin-input" type="text" name="nav_child_category[__INDEX__]" value="">
+            </div>
           </div>
         </article>
       </template>

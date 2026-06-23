@@ -415,11 +415,11 @@ window.PageBlockBuilder = (function () {
     }
     var html =
       field("หัวข้อ", input(p + "title", item.title)) +
-      field("คำอธิบายย่อย", input(p + "subtitle", item.subtitle)) +
-      field("รายละเอียด", textarea(p + "description", item.description, 3));
+      field("คำอธิบายย่อย", input(p + "subtitle", item.subtitle || item.meta || "")) +
+      field("รายละเอียด", textarea(p + "description", item.description || item.text || "", 3));
     if (opts.image) html += imageField("item_" + i, item.image, IMAGE_HINTS[opts.image] || IMAGE_HINTS.default, ctx);
-    html += field("ข้อความปุ่ม", input(p + "buttonText", item.buttonText));
-    html += field("ลิงก์ปุ่ม", input(p + "buttonLink", item.buttonLink));
+    html += field("ข้อความปุ่ม", input(p + "buttonText", item.buttonText || item.linkText || ""));
+    html += field("ลิงก์ปุ่ม", input(p + "buttonLink", item.buttonLink || item.href || ""));
     html += check(p + "isVisible", "แสดงรายการนี้", item.isVisible !== false);
     return html;
   }
@@ -436,7 +436,7 @@ window.PageBlockBuilder = (function () {
       if (opts.imageOnly) {
         summary = item.image && item.image.src ? String(item.image.src).split("/").pop() : "รูป " + (i + 1);
       } else {
-        summary = item.title || item.description || ("รายการ " + (i + 1));
+        summary = item.title || item.description || item.text || ("รายการ " + (i + 1));
       }
       if (typeof item === "string") summary = item;
       return repeaterItem(String(summary).slice(0, 48), itemFields(typeof item === "object" ? item : { title: item }, i, opts), i);
@@ -707,6 +707,10 @@ window.PageBlockBuilder = (function () {
         var el = form.querySelector('[data-pve-field="' + p + f + '"]');
         if (el) item[f] = el.value;
       });
+      if (item.subtitle) item.meta = item.subtitle;
+      if (item.description) item.text = item.description;
+      if (item.buttonText) item.linkText = item.buttonText;
+      if (item.buttonLink) item.href = item.buttonLink;
       var iconEl = form.querySelector('[data-pve-field="' + p + 'icon"]');
       if (iconEl) item.icon = iconEl.value;
       var vis = form.querySelector('[data-pve-field="' + p + 'isVisible"]');

@@ -31,6 +31,7 @@ function admin_login(string $user, string $pass): bool
     }
     $_SESSION['admin_logged_in'] = true;
     $_SESSION['admin_user'] = $user;
+    $_SESSION['admin_login_at'] = date('c');
     return true;
 }
 

@@ -38,6 +38,8 @@
               if (!data.ok) throw new Error(data.error || 'อัปโหลดไม่สำเร็จ');
               input.value = data.path;
               preview.innerHTML = '<img src="../' + data.path + '" alt="">';
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+              document.dispatchEvent(new CustomEvent('imageUploaded'));
             })
             .catch(function (err) {
               alert(err.message || 'อัปโหลดไม่สำเร็จ');
@@ -54,6 +56,8 @@
         clearBtn.addEventListener('click', function () {
           input.value = '';
           preview.innerHTML = '<span class="admin-image-empty">ยังไม่มีรูป</span>';
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          document.dispatchEvent(new CustomEvent('imageUploaded'));
         });
       }
     });

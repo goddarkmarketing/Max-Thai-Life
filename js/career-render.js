@@ -152,6 +152,12 @@
   }
 
   function renderSections(sections) {
+    if (window.ContentSectionsRender) {
+      return ContentSectionsRender.render(sections, { base: base, preview: false, imgSrc: function (p) {
+        if (window.PageBlockRender) return PageBlockRender.imgSrc(p, base);
+        return base + p;
+      }});
+    }
     return sections
       .map(function (section) {
         var html = '<section class="article-prose-section">';

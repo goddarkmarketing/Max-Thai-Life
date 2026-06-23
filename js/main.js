@@ -516,9 +516,39 @@
   });
 
   if (!document.querySelector(".contact-dock")) {
+    var site = window.SITE_DATA || {};
+    var agent = site.agent || {};
+    var dockCfg = site.contactDock || {};
+    if (dockCfg.enabled === false) {
+      // skip rendering
+    } else {
+    var phoneRaw = agent.phone || "0852925320";
     var quoteHref = document.getElementById("inquiry")
       ? "#inquiry"
       : siteBase() + "contact.html?topic=insurance";
+
+    var dockItems = (dockCfg.items || []).filter(function (item) {
+      return item && item.label && item.href && item.visible !== false;
+    });
+    if (!dockItems.length) {
+      dockItems = [
+        { label: "โทร", href: "tel:" + phoneRaw, icon: "phone", color: "#015fd9" },
+        { label: "แอดไลน์", href: siteBase() + "contact.html", icon: "message-circle", color: "#06c755" },
+        { label: "ใบเสนอเบี้ย", href: quoteHref, icon: "file-text", color: "#38bdf8" },
+      ];
+    }
+
+    function dockColor(item) {
+      if (item.color) return item.color;
+      var presets = { phone: "#015fd9", line: "#06c755", quote: "#38bdf8", blue: "#015fd9" };
+      return presets[item.style] || "#015fd9";
+    }
+
+    function dockHref(href) {
+      if (!href) return "#";
+      if (/^(https?:|tel:|mailto:|#)/i.test(href)) return href;
+      return siteBase() + href.replace(/^\//, "");
+    }
 
     function dockIcon(name, cls) {
       return window.LucideIcons
@@ -526,29 +556,42 @@
         : '<i data-lucide="' + name + '" class="' + (cls || "contact-dock-icon") + '" aria-hidden="true"></i>';
     }
 
+    var actionsHtml = dockItems
+      .map(function (item, i) {
+        var href = item.href === "contact.html?topic=insurance" && document.getElementById("inquiry")
+          ? "#inquiry"
+          : dockHref(item.href);
+        var delay = dockItems.length - i;
+        var bg = dockColor(item);
+        return (
+          '<a href="' +
+          href +
+          '" class="contact-dock-action" style="background:' +
+          bg +
+          ";--dock-i:" +
+          delay +
+          '" role="menuitem">' +
+          dockIcon(item.icon || "message-circle") +
+          '<span class="contact-dock-label">' +
+          (item.label || "") +
+          "</span></a>"
+        );
+      })
+      .join("");
+
     var dock = document.createElement("nav");
     dock.className = "contact-dock";
     dock.setAttribute("aria-label", "ติดต่อด่วน");
     dock.innerHTML =
       '<div class="contact-dock-menu" id="contact-dock-menu" role="menu" aria-hidden="true">' +
-      '<a href="tel:0852925320" class="contact-dock-action contact-dock-action--phone" role="menuitem">' +
-      dockIcon("phone") +
-      '<span class="contact-dock-label">โทร</span></a>' +
-      '<a href="' + siteBase() + 'contact.html" class="contact-dock-action contact-dock-action--line" role="menuitem">' +
-      dockIcon("line") +
-      '<span class="contact-dock-label">แอดไลน์</span></a>' +
-      '<a href="' +
-      quoteHref +
-      '" class="contact-dock-action contact-dock-action--quote" role="menuitem">' +
-      dockIcon("file-text") +
-      '<span class="contact-dock-label">ใบเสนอเบี้ย</span></a>' +
+      actionsHtml +
       "</div>" +
       '<button type="button" class="contact-dock-toggle" aria-expanded="false" aria-controls="contact-dock-menu" aria-label="เปิดเมนูติดต่อ">' +
       '<span class="contact-dock-toggle-icon contact-dock-toggle-icon--chat" aria-hidden="true">' +
-      dockIcon("chat", "") +
+      dockIcon("message-circle", "") +
       "</span>" +
       '<span class="contact-dock-toggle-icon contact-dock-toggle-icon--close" aria-hidden="true">' +
-      dockIcon("close", "") +
+      dockIcon("x", "") +
       "</span>" +
       "</button>";
 
@@ -594,6 +637,7 @@
     });
 
     if (window.LucideIcons) LucideIcons.refresh(dock);
+    }
   }
 
   if (window.LucideIcons) LucideIcons.refresh();

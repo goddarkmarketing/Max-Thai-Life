@@ -363,8 +363,22 @@ body.admin-body.plan-visual-mode .admin-main--visual {
   text-align: center;
 }
 
-.pe-preview-block-inner .lp-card-skeleton-media {
-  min-height: 0;
+.pe-preview-block-inner .lp-card-skeleton-media,
+.pe-preview-block-inner .product-card-media {
+  min-height: 8rem;
+}
+
+.pe-preview-error {
+  padding: 2rem 1.5rem;
+  text-align: center;
+  color: #b91c1c;
+}
+
+.pe-preview-error-detail {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: #64748b;
+  word-break: break-word;
 }
 
 .pe-preview-block-inner .lp-claim-preview .claim-review-card {

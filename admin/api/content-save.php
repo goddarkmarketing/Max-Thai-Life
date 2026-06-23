@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/helpers.php';
 require_once __DIR__ . '/../includes/generate-js.php';
+require_once __DIR__ . '/../includes/content-blocks.php';
 
 admin_require_login();
 
@@ -38,26 +39,46 @@ if (!isset($types[$type]) || !in_array($type, ['articles', 'news', 'careers', 'c
 }
 
 $slug = trim($payload['slug'] ?? '');
-$item = $payload['item'] ?? null;
-if ($slug === '' || !is_array($item)) {
+if ($slug === '') {
     http_response_code(400);
-    echo json_encode(['ok' => false, 'error' => 'Missing data']);
+    echo json_encode(['ok' => false, 'error' => 'Missing slug']);
     exit;
 }
 
 $cfg = $types[$type];
 $store = json_read($cfg['file']);
 $key = $cfg['itemsKey'];
-$existing = $store[$key][$slug] ?? [];
-$item['slug'] = $slug;
-$item['dateModified'] = date('Y-m-d');
-if (!isset($item['visible'])) {
-    $item['visible'] = $existing['visible'] ?? true;
+$existing = $store[$key][$slug] ?? null;
+if ($existing === null) {
+    http_response_code(404);
+    echo json_encode(['ok' => false, 'error' => 'Item not found']);
+    exit;
 }
-$store[$key][$slug] = array_merge($existing, $item);
+
+if (!empty($payload['visual']) && isset($payload['pageData']) && is_array($payload['pageData'])) {
+    $merged = admin_content_page_data_to_item($payload['pageData'], $existing);
+    $existing = array_merge($existing, $merged);
+} else {
+    $item = $payload['item'] ?? null;
+    if (!is_array($item)) {
+        http_response_code(400);
+        echo json_encode(['ok' => false, 'error' => 'Missing data']);
+        exit;
+    }
+    $existing = array_merge($existing, $item);
+}
+
+$existing['slug'] = $slug;
+$existing['dateModified'] = date('Y-m-d');
+if (!isset($existing['visible'])) {
+    $existing['visible'] = true;
+}
+
+$store[$key][$slug] = $existing;
 json_write($cfg['file'], $store);
 
-if (!empty($payload['publish'])) {
+$publish = !empty($payload['publish']) || !empty($payload['visual']);
+if ($publish) {
     generate_all_js();
 }
 
