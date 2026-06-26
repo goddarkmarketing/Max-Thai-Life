@@ -249,7 +249,9 @@
       "</div>" +
       "</header>" +
       '<div class="article-prose" itemprop="articleBody">' +
-      renderSections(career.sections) +
+      (career.editor === "richtext" && typeof career.bodyHtml === "string"
+        ? '<div class="lp-rich ql-content">' + career.bodyHtml + "</div>"
+        : renderSections(career.sections)) +
       "</div>" +
       '<aside class="article-related-plan">' +
       "<h2>สนใจสมัครเป็นตัวแทน?</h2>" +

@@ -2,59 +2,20 @@ var PLAN_COVER = "images/cover แผนประกัน/";
 
 window.PLANS_DATA = [
   {
-    category: "savings",
-    tag: "ออมทรัพย์",
-    title: "ประกันลดหย่อนภาษี แบบสั้น",
-    desc: "แบบประกันออมทรัพย์ ลดหย่อนภาษี มีเงินเก็บ พร้อมคุ้มครองรายได้ตลอดสัญญา",
+    category: "invest",
+    tag: "ลงทุน/Life Verse",
+    title: "ยูนิเวอร์แซลไลฟ์",
+    desc: "ควบการลงทุนและความคุ้มครอง — วางแผนระยะยาว",
     features: [
-      "ลดหย่อนภาษีได้",
-      "ระยะสั้น",
-      "ออมและคุ้มครอง"
+      "ปรับเบี้ยได้",
+      "มูลค่าเงินสด",
+      "ยืดหยุ่น"
     ],
-    href: "plans/tax-saving.html",
-    image: "images/plan-cards/card-savings.png",
-    theme: "tax"
-  },
-  {
-    category: "protect",
-    tag: "คุ้มครองชีวิต",
-    title: "ไลฟ์เวิร์ส เวลท์ ฟิต 99/99",
-    desc: "One Lifetime Policy — กรมธรรม์เดียวปรับได้ทุกช่วงวัย คุ้มครองถึง 99 ปี วางแผนครอบครัวครบจบ",
-    features: [
-      "คุ้มครองถึง 99 ปี",
-      "ปรับเบี้ย/ความคุ้มครองได้",
-      "ลดหย่อนภาษี"
-    ],
-    href: "plans/life-wealth-fit-99-99.html",
-    image: "images/plan-cards/card-protect.png",
-    theme: "protect"
-  },
-  {
-    category: "health",
-    tag: "ประกันสุขภาพ",
-    title: "ประกันสุขภาพ คนวัยทำงาน",
-    desc: "ตอบโจทย์วัยทำงาน ดูแลค่ารักษาและสุขภาพอย่างครบวงจร",
-    features: [
-      "ค่ารักษาพยาบาล",
-      "วัย 20–50 ปี",
-      "เสริมได้"
-    ],
-    href: "plans/health-working.html",
-    image: "images/plan-cards/card-health.png",
-    theme: "health"
-  },
-  {
-    category: "rider",
-    tag: "สัญญาเพิ่มเติม",
-    title: "ไทยประกันชีวิต INFINITE",
-    desc: "การดูแลที่มากกว่า — บริการและสิทธิประโยชน์สำหรับลูกค้าพิเศษ",
-    features: [
-      "บริการดูแล",
-      "สิทธิพิเศษ"
-    ],
-    href: "plans/infinite.html",
-    image: "images/plan-cards/card-rider.png",
-    theme: "infinite"
+    href: "plans/universal-life.html",
+    image: "images/plan-cards/card-invest.png",
+    theme: "universal",
+    pinned: true,
+    pinnedAt: "2026-06-26T10:24:03+07:00"
   },
   {
     category: "pension",
@@ -68,20 +29,66 @@ window.PLANS_DATA = [
     ],
     href: "plans/legacy-fit-retire.html",
     image: "images/plan-cards/card-pension.png",
-    theme: "retire"
+    theme: "retire",
+    pinned: true,
+    pinnedAt: "2026-06-26T10:24:06+07:00"
   },
   {
-    category: "invest",
-    tag: "ลงทุน/Life Verse",
-    title: "ยูนิเวอร์แซลไลฟ์",
-    desc: "ควบการลงทุนและความคุ้มครอง — วางแผนระยะยาว",
+    category: "savings",
+    tag: "ออมทรัพย์",
+    title: "ประกันลดหย่อนภาษี แบบสั้น",
+    desc: "แบบประกันออมทรัพย์ ลดหย่อนภาษี มีเงินเก็บ พร้อมคุ้มครองรายได้ตลอดสัญญา",
     features: [
-      "ปรับเบี้ยได้",
-      "มูลค่าเงินสด",
-      "ยืดหยุ่น"
+      "ลดหย่อนภาษีได้",
+      "ระยะสั้น",
+      "ออมและคุ้มครอง"
     ],
-    href: "plans/universal-life.html",
-    image: "images/plan-cards/card-invest.png",
-    theme: "universal"
+    href: "plans/tax-saving.html",
+    image: "images/plan-cards/card-savings.png",
+    theme: "tax",
+    pinned: false
+  },
+  {
+    category: "protect",
+    tag: "คุ้มครองชีวิต",
+    title: "ไลฟ์เวิร์ส เวลท์ ฟิต 99/99",
+    desc: "One Lifetime Policy — กรมธรรม์เดียวปรับได้ทุกช่วงวัย คุ้มครองถึง 99 ปี วางแผนครอบครัวครบจบ",
+    features: [
+      "คุ้มครองถึง 99 ปี",
+      "ปรับเบี้ย/ความคุ้มครองได้",
+      "ลดหย่อนภาษี"
+    ],
+    href: "plans/life-wealth-fit-99-99.html",
+    image: "images/plan-cards/card-protect.png",
+    theme: "protect",
+    pinned: false
+  },
+  {
+    category: "health",
+    tag: "ประกันสุขภาพ",
+    title: "ประกันสุขภาพ คนวัยทำงาน",
+    desc: "ตอบโจทย์วัยทำงาน ดูแลค่ารักษาและสุขภาพอย่างครบวงจร",
+    features: [
+      "ค่ารักษาพยาบาล",
+      "วัย 20–50 ปี",
+      "เสริมได้"
+    ],
+    href: "plans/health-working.html",
+    image: "images/plan-cards/card-health.png",
+    theme: "health",
+    pinned: false
+  },
+  {
+    category: "rider",
+    tag: "สัญญาเพิ่มเติม",
+    title: "ไทยประกันชีวิต INFINITE",
+    desc: "การดูแลที่มากกว่า — บริการและสิทธิประโยชน์สำหรับลูกค้าพิเศษ",
+    features: [
+      "บริการดูแล",
+      "สิทธิพิเศษ"
+    ],
+    href: "plans/infinite.html",
+    image: "images/plan-cards/card-rider.png",
+    theme: "infinite"
   }
 ];

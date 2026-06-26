@@ -5360,3 +5360,166 @@ body.claim-modal-open {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Rich text page content (Quill output) ── */
+.lp-rich-section {
+  margin-top: var(--header-h);
+}
+
+.lp-rich {
+  width: 100%;
+  color: #1f2937;
+  font-size: 1.05rem;
+  line-height: 1.85;
+  word-break: break-word;
+}
+
+.lp-rich h1,
+.lp-rich h2,
+.lp-rich h3,
+.lp-rich h4 {
+  color: #0f172a;
+  line-height: 1.3;
+  margin: 1.8rem 0 0.8rem;
+  font-weight: 700;
+}
+
+.lp-rich h1 {
+  font-size: 2rem;
+  margin-top: 0;
+}
+
+.lp-rich h2 {
+  font-size: 1.5rem;
+}
+
+.lp-rich h3 {
+  font-size: 1.25rem;
+}
+
+.lp-rich p {
+  margin: 0 0 1rem;
+}
+
+.lp-rich a {
+  color: #c8102e;
+  text-decoration: underline;
+}
+
+.lp-rich a:hover {
+  color: #9b0c23;
+}
+
+.lp-rich ul,
+.lp-rich ol {
+  margin: 0 0 1.2rem;
+  padding-left: 1.6rem;
+}
+
+.lp-rich li {
+  margin: 0.35rem 0;
+}
+
+.lp-rich blockquote {
+  margin: 1.2rem 0;
+  padding: 0.9rem 1.3rem;
+  border-left: 4px solid #c8102e;
+  background: #fdf2f4;
+  border-radius: 0 12px 12px 0;
+  color: #374151;
+  font-style: italic;
+}
+
+.lp-rich img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+  margin: 0.6rem 0;
+}
+
+.lp-rich pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  overflow: auto;
+}
+
+/* Quill alignment / indent helper classes */
+.lp-rich .ql-align-center {
+  text-align: center;
+}
+
+.lp-rich .ql-align-right {
+  text-align: right;
+}
+
+.lp-rich .ql-align-justify {
+  text-align: justify;
+}
+
+.lp-rich .ql-indent-1 { padding-left: 3rem; }
+.lp-rich .ql-indent-2 { padding-left: 6rem; }
+.lp-rich .ql-indent-3 { padding-left: 9rem; }
+.lp-rich .ql-indent-4 { padding-left: 12rem; }
+.lp-rich .ql-indent-5 { padding-left: 15rem; }
+.lp-rich .ql-indent-6 { padding-left: 18rem; }
+.lp-rich .ql-indent-7 { padding-left: 21rem; }
+.lp-rich .ql-indent-8 { padding-left: 24rem; }
+
+/* Quill font sizes */
+.lp-rich .ql-size-small { font-size: 0.75em; }
+.lp-rich .ql-size-large { font-size: 1.5em; }
+.lp-rich .ql-size-huge { font-size: 2.25em; }
+
+/* Headings 4–6 */
+.lp-rich h5 { font-size: 1.1rem; }
+.lp-rich h6 { font-size: 1rem; }
+
+/* Sub / superscript */
+.lp-rich sub,
+.lp-rich sup { font-size: 0.75em; }
+
+/* Code block (Quill output) */
+.lp-rich .ql-code-block-container,
+.lp-rich pre.ql-syntax {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  overflow: auto;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.95em;
+  line-height: 1.6;
+}
+
+.lp-rich .ql-code-block {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Embedded video (iframe) */
+.lp-rich .ql-video,
+.lp-rich iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+  border-radius: 14px;
+  margin: 1rem 0;
+}
+
+@media (max-width: 560px) {
+  .lp-rich {
+    font-size: 1rem;
+  }
+
+  .lp-rich h1 {
+    font-size: 1.65rem;
+  }
+
+  .lp-rich h2 {
+    font-size: 1.35rem;
+  }
+}

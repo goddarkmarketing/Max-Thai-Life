@@ -32,6 +32,12 @@ if ($item === null) {
     exit;
 }
 
+// รายการที่เปลี่ยนมาใช้ Rich Text editor แล้ว ให้เด้งไปหน้า rich text แทน Block Builder
+if (($item['editor'] ?? '') === 'richtext' && in_array($type, ['articles', 'news', 'careers'], true)) {
+    header('Location: content-richtext.php?type=' . urlencode($type) . '&id=' . urlencode($id));
+    exit;
+}
+
 $listMap = [
     'articles' => ['label' => 'บทความ', 'list' => 'content-list.php?type=articles'],
     'news' => ['label' => 'ข่าว/กิจกรรม', 'list' => 'content-list.php?type=news'],

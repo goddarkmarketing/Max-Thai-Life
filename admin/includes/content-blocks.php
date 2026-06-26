@@ -14,6 +14,150 @@ function admin_content_sections_are_blocks(array $sections): bool
     return false;
 }
 
+/**
+ * Convert a content item's detail sections into a single Rich Text HTML body.
+ * Handles the legacy {heading, paragraphs[], list[]} shape and falls back to a
+ * basic conversion for block-format sections. Output uses only Quill-friendly tags.
+ */
+function admin_content_sections_to_richtext_html(array $sections): string
+{
+    $html = '';
+
+    foreach ($sections as $sec) {
+        if (!is_array($sec)) {
+            continue;
+        }
+        if (isset($sec['visible']) && $sec['visible'] === false) {
+            continue;
+        }
+        if (isset($sec['isVisible']) && $sec['isVisible'] === false) {
+            continue;
+        }
+
+        if (!empty($sec['type'])) {
+            $html .= admin_content_block_to_richtext_html($sec);
+            continue;
+        }
+
+        $heading = trim((string) ($sec['heading'] ?? ''));
+        if ($heading !== '') {
+            $html .= '<h2>' . $heading . '</h2>';
+        }
+        foreach (($sec['paragraphs'] ?? []) as $p) {
+            $p = trim((string) $p);
+            if ($p !== '') {
+                $html .= '<p>' . $p . '</p>';
+            }
+        }
+        $list = $sec['list'] ?? [];
+        if (is_array($list) && $list !== []) {
+            $html .= '<ul>';
+            foreach ($list as $li) {
+                $li = trim((string) $li);
+                if ($li !== '') {
+                    $html .= '<li>' . $li . '</li>';
+                }
+            }
+            $html .= '</ul>';
+        }
+    }
+
+    if (trim($html) === '') {
+        $html = '<p></p>';
+    }
+
+    return $html;
+}
+
+/** Basic block-format section → Quill-friendly HTML (safety net for block content) */
+function admin_content_block_to_richtext_html(array $sec): string
+{
+    $type = (string) ($sec['type'] ?? '');
+    $html = '';
+
+    $title = trim((string) ($sec['title'] ?? ''));
+    $subtitle = trim((string) ($sec['subtitle'] ?? ''));
+    $description = trim((string) ($sec['description'] ?? ''));
+    $items = is_array($sec['items'] ?? null) ? $sec['items'] : [];
+
+    if ($type === 'heading') {
+        if ($title !== '') {
+            $html .= '<h2>' . $title . '</h2>';
+        }
+        if ($subtitle !== '') {
+            $html .= '<p>' . $subtitle . '</p>';
+        }
+        return $html;
+    }
+
+    if ($type === 'image') {
+        $src = trim((string) ($sec['image']['src'] ?? ''));
+        $alt = trim((string) ($sec['image']['alt'] ?? $title));
+        if ($src !== '') {
+            $html .= '<p><img src="' . $src . '" alt="' . htmlspecialchars($alt, ENT_QUOTES) . '"></p>';
+        }
+        return $html;
+    }
+
+    if ($type === 'video') {
+        $url = trim((string) ($sec['videoUrl'] ?? $sec['videoSrc'] ?? ''));
+        if ($url !== '') {
+            $html .= '<p><a href="' . htmlspecialchars($url, ENT_QUOTES) . '">' . htmlspecialchars($url, ENT_QUOTES) . '</a></p>';
+        }
+        return $html;
+    }
+
+    if ($type === 'customHtml') {
+        return trim((string) ($sec['customHtml'] ?? ''));
+    }
+
+    // Generic blocks with a title/description + item list
+    if ($title !== '') {
+        $html .= '<h2>' . $title . '</h2>';
+    }
+    if ($subtitle !== '') {
+        $html .= '<p>' . $subtitle . '</p>';
+    }
+    if ($description !== '') {
+        $html .= '<p>' . $description . '</p>';
+    }
+
+    if ($items !== []) {
+        if ($type === 'faq' || $type === 'infoBlocks') {
+            foreach ($items as $it) {
+                if (!is_array($it)) {
+                    continue;
+                }
+                $t = trim((string) ($it['title'] ?? ''));
+                $d = trim((string) ($it['description'] ?? ''));
+                if ($t !== '') {
+                    $html .= '<h3>' . $t . '</h3>';
+                }
+                if ($d !== '') {
+                    $html .= '<p>' . $d . '</p>';
+                }
+            }
+        } else {
+            $html .= '<ul>';
+            foreach ($items as $it) {
+                if (!is_array($it)) {
+                    continue;
+                }
+                $t = trim((string) ($it['title'] ?? ''));
+                $d = trim((string) ($it['description'] ?? ''));
+                $line = $t !== '' && $d !== '' ? ('<strong>' . $t . ':</strong> ' . $d) : ($t . $d);
+                $line = trim($line);
+                if ($line !== '') {
+                    $html .= '<li>' . $line . '</li>';
+                }
+            }
+            $html .= '</ul>';
+        }
+    }
+
+    return $html;
+}
+
 /** Convert legacy {heading, paragraphs, list} → landing block sections */
 function admin_content_legacy_to_sections(array $sections): array
 {

@@ -320,6 +320,30 @@ body {
   padding: 1.5rem var(--admin-content-pad-x) 3rem;
 }
 
+.admin-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+/* คอลัมน์คำรีวิว: แสดงบรรทัดเดียว ตัดด้วย … เมื่อยาวเกินไป */
+.admin-cell-quote {
+  max-width: 360px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-checkbox input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--admin-primary, #c8102e);
+  cursor: pointer;
+}
+
 .admin-page-form {
   width: 100%;
   max-width: 100%;
@@ -1494,6 +1518,17 @@ input.admin-btn {
   background: #fef3c7;
   color: #b45309;
   margin-left: 0.35rem;
+}
+
+.admin-badge--pin {
+  background: #eef2ff;
+  color: #4338ca;
+  margin-left: 0.35rem;
+}
+
+.admin-pin-flag {
+  font-size: 0.9em;
+  margin-right: 0.15rem;
 }
 
 .admin-inline-form {

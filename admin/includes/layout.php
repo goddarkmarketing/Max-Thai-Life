@@ -41,6 +41,7 @@ function admin_nav_groups(): array
                 ['href' => 'content-list.php?type=news', 'label' => 'ข่าว/กิจกรรม', 'icon' => 'news'],
                 ['href' => 'content-list.php?type=careers', 'label' => 'แนะนำอาชีพ', 'icon' => 'users'],
                 ['href' => 'content-list.php?type=claims', 'label' => 'รีวิวเคลม', 'icon' => 'heart'],
+                ['href' => 'testimonials-list.php', 'label' => 'รีวิวลูกค้า', 'icon' => 'star'],
             ],
         ],
         [

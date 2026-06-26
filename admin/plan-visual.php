@@ -18,6 +18,12 @@ if ($slug === '' || $slug === 'new') {
 $details = json_read('plans-detail.json');
 $detail = $details['items'][$slug] ?? null;
 
+// แผนที่เปลี่ยนมาใช้ Rich Text editor แล้ว ให้เด้งไปหน้า rich text แทน Block Builder
+if (is_array($detail) && ($detail['editor'] ?? '') === 'richtext') {
+    header('Location: plan-richtext.php?slug=' . urlencode($slug));
+    exit;
+}
+
 $plans = json_read('plans.json');
 $card = null;
 foreach ($plans['items'] ?? [] as $item) {

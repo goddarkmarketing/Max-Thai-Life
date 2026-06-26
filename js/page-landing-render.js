@@ -88,7 +88,46 @@
 
 
 
+  function renderRichText() {
+
+    var heroWrap = document.querySelector(".page-hero");
+
+    if (heroWrap) heroWrap.hidden = true;
+
+    var heroInner = document.getElementById("page-hero-inner");
+
+    if (heroInner) heroInner.innerHTML = "";
+
+    var root = document.getElementById("landing-root");
+
+    if (root) {
+
+      root.innerHTML =
+        '<section class="section lp-rich-section"><div class="section-inner reveal visible">' +
+        '<div class="lp-rich ql-content">' + (page.bodyHtml || "") + "</div>" +
+        "</div></section>";
+
+    }
+
+    var ctaRoot = document.getElementById("landing-cta-root");
+
+    if (ctaRoot) ctaRoot.innerHTML = "";
+
+    if (window.LucideIcons) LucideIcons.refresh(root);
+
+    document.dispatchEvent(new CustomEvent("landing:rendered", { detail: { page: pageKey } }));
+
+  }
+
   function renderAll() {
+
+    if (page.editor === "richtext") {
+
+      renderRichText();
+
+      return;
+
+    }
 
     renderHero();
 

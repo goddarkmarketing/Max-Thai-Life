@@ -14,7 +14,7 @@ if (!isset($types[$type])) {
 }
 $cfg = $types[$type];
 $store = json_read($cfg['file']);
-$items = $store[$cfg['itemsKey']] ?? [];
+$items = admin_sort_pinned_map($store[$cfg['itemsKey']] ?? []);
 $previewType = $type === 'claims' ? 'claims' : $type;
 $hasVisual = in_array($type, ['articles', 'news', 'careers', 'claims'], true);
 
@@ -39,8 +39,12 @@ admin_layout_start($cfg['label'], 'content-list.php?type=' . $type);
     <tbody>
       <?php foreach ($items as $slug => $item): ?>
         <?php $visible = admin_is_visible($item); ?>
+        <?php $pinned = admin_is_pinned($item); ?>
         <tr data-search-text="<?= admin_h(strtolower(($item['title'] ?? $slug) . ' ' . $slug . ' ' . ($item['category'] ?? ''))) ?>">
-          <td><strong><?= admin_h($item['title'] ?? $slug) ?></strong></td>
+          <td>
+            <?php if ($pinned): ?><span class="admin-pin-flag" title="ปักหมุด" aria-label="ปักหมุด">📌</span> <?php endif; ?>
+            <strong><?= admin_h($item['title'] ?? $slug) ?></strong>
+          </td>
           <td><code><?= admin_h($slug) ?></code></td>
           <td>
             <?php if ($visible): ?>
@@ -58,6 +62,13 @@ admin_layout_start($cfg['label'], 'content-list.php?type=' . $type);
               <?php if ($hasVisual): ?>
                 <a href="content-visual.php?type=<?= admin_h($type) ?>&id=<?= admin_h($slug) ?>" class="admin-btn admin-btn--primary admin-btn--sm">แก้ไขหน้า</a>
               <?php endif; ?>
+              <form method="post" action="pin-toggle.php" class="admin-inline-form">
+                <input type="hidden" name="csrf" value="<?= admin_h(admin_csrf_token()) ?>">
+                <input type="hidden" name="kind" value="<?= admin_h($type) ?>">
+                <input type="hidden" name="slug" value="<?= admin_h($slug) ?>">
+                <input type="hidden" name="back" value="content-list.php?type=<?= admin_h($type) ?>">
+                <button type="submit" class="admin-btn admin-btn--sm <?= $pinned ? 'admin-btn--secondary' : 'admin-btn--ghost' ?>"><?= $pinned ? 'เลิกปัก' : 'ปักหมุด' ?></button>
+              </form>
               <form method="post" action="toggle-visible.php" class="admin-inline-form">
                 <input type="hidden" name="csrf" value="<?= admin_h(admin_csrf_token()) ?>">
                 <input type="hidden" name="kind" value="<?= admin_h($type) ?>">

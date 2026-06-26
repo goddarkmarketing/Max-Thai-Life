@@ -473,6 +473,110 @@ function admin_plan_legacy_to_sections(array $detail, string $cardImage = ''): a
     return $sections;
 }
 
+/**
+ * Convert a plan detail (structured fields) into a single Rich Text HTML body.
+ * Output uses only Quill-supported tags (h2/h3, p, ul/li, blockquote, strong/em)
+ * so it survives loading into the editor without distortion.
+ */
+function admin_plan_detail_to_richtext_html(array $detail): string
+{
+    $html = '';
+
+    $overview = trim((string) ($detail['overview'] ?? ''));
+    $highlight = trim((string) ($detail['highlight'] ?? ''));
+    if ($overview !== '' || $highlight !== '') {
+        $html .= '<h2>ภาพรวมแผน</h2>';
+        if ($overview !== '') {
+            $html .= '<p>' . $overview . '</p>';
+        }
+        if ($highlight !== '') {
+            $html .= '<blockquote><strong>จุดขายหลัก:</strong> ' . $highlight . '</blockquote>';
+        }
+    }
+
+    $benefits = $detail['benefits'] ?? [];
+    if (is_array($benefits) && $benefits !== []) {
+        $html .= '<h2>จุดเด่นและผลประโยชน์</h2><ul>';
+        foreach ($benefits as $b) {
+            $b = trim((string) $b);
+            if ($b === '') {
+                continue;
+            }
+            $html .= '<li>' . $b . '</li>';
+        }
+        $html .= '</ul>';
+    }
+
+    $specs = $detail['specs'] ?? [];
+    if (is_array($specs) && $specs !== []) {
+        $html .= '<h2>ข้อมูลแผน (ภาพรวม)</h2><ul>';
+        foreach ($specs as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $label = trim((string) ($row[0] ?? ''));
+            $value = trim((string) ($row[1] ?? ''));
+            if ($label === '' && $value === '') {
+                continue;
+            }
+            $html .= '<li><strong>' . $label . ':</strong> ' . $value . '</li>';
+        }
+        $html .= '</ul>';
+    }
+
+    $whoBlocks = $detail['whoBlocks'] ?? [];
+    $whoText = trim((string) ($detail['whoText'] ?? ''));
+    if ((is_array($whoBlocks) && $whoBlocks !== []) || $whoText !== '') {
+        $html .= '<h2>เหมาะกับใคร</h2>';
+        if (is_array($whoBlocks) && $whoBlocks !== []) {
+            foreach ($whoBlocks as $blk) {
+                if (!is_array($blk)) {
+                    continue;
+                }
+                $t = trim((string) ($blk['title'] ?? ''));
+                $x = trim((string) ($blk['text'] ?? $blk['description'] ?? ''));
+                if ($t !== '') {
+                    $html .= '<h3>' . $t . '</h3>';
+                }
+                if ($x !== '') {
+                    $html .= '<p>' . $x . '</p>';
+                }
+            }
+        } else {
+            $html .= '<p>' . $whoText . '</p>';
+        }
+    }
+
+    $faq = $detail['faq'] ?? [];
+    if (is_array($faq) && $faq !== []) {
+        $html .= '<h2>คำถามที่พบบ่อย</h2>';
+        foreach ($faq as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+            $q = trim((string) ($item['q'] ?? $item['title'] ?? ''));
+            $a = trim((string) ($item['a'] ?? $item['description'] ?? ''));
+            if ($q !== '') {
+                $html .= '<h3>' . $q . '</h3>';
+            }
+            if ($a !== '') {
+                $html .= '<p>' . $a . '</p>';
+            }
+        }
+    }
+
+    $disclaimer = trim((string) ($detail['disclaimer'] ?? ''));
+    if ($disclaimer !== '') {
+        $html .= '<p><em>' . $disclaimer . '</em></p>';
+    }
+
+    if (trim($html) === '') {
+        $html = '<p></p>';
+    }
+
+    return $html;
+}
+
 function admin_plan_visual_boot(string $slug, array $detail, ?array $card, string $csrf): array
 {
     $pageData = admin_plan_detail_to_page_data($detail, $card, $slug);

@@ -241,6 +241,224 @@ function admin_filter_slug_list(array $slugs, array $itemsMap): array
     }));
 }
 
+/**
+ * ปักหมุด (pin): รายการที่ปักหมุดจะถูกจัดขึ้นก่อนเสมอ เรียงตามเวลาที่ปักหมุด (ปักก่อน = ขึ้นก่อน)
+ */
+function admin_is_pinned(array $item): bool
+{
+    return ($item['pinned'] ?? false) === true;
+}
+
+function admin_pin_sort_value(array $item): string
+{
+    $v = $item['pinnedAt'] ?? '';
+    return is_string($v) ? $v : '';
+}
+
+/**
+ * แยกรายการ pinned (เรียงตาม pinnedAt จากเก่าไปใหม่) ไว้ก่อน แล้วต่อด้วยที่เหลือตามลำดับเดิม
+ * รับเข้าเป็น list ของ pair ['key' => mixed, 'item' => array] เพื่อใช้ได้ทั้ง map/list/slug
+ */
+function admin_pin_partition_pairs(array $pairs): array
+{
+    $pinned = [];
+    $rest = [];
+    foreach (array_values($pairs) as $i => $pair) {
+        if (admin_is_pinned($pair['item'])) {
+            $pinned[] = ['i' => $i, 'pair' => $pair];
+        } else {
+            $rest[] = $pair;
+        }
+    }
+    usort($pinned, static function (array $a, array $b): int {
+        $av = admin_pin_sort_value($a['pair']['item']);
+        $bv = admin_pin_sort_value($b['pair']['item']);
+        if ($av === $bv) {
+            return $a['i'] <=> $b['i'];
+        }
+        if ($av === '') {
+            return 1;
+        }
+        if ($bv === '') {
+            return -1;
+        }
+        return strcmp($av, $bv);
+    });
+
+    $out = [];
+    foreach ($pinned as $p) {
+        $out[] = $p['pair'];
+    }
+    foreach ($rest as $r) {
+        $out[] = $r;
+    }
+    return $out;
+}
+
+/** เรียง map (slug => item) ให้รายการที่ปักหมุดขึ้นก่อน โดยคงคีย์ slug ไว้ */
+function admin_sort_pinned_map(array $map): array
+{
+    $pairs = [];
+    foreach ($map as $key => $item) {
+        $pairs[] = ['key' => $key, 'item' => $item];
+    }
+    $sorted = admin_pin_partition_pairs($pairs);
+    $out = [];
+    foreach ($sorted as $pair) {
+        $out[$pair['key']] = $pair['item'];
+    }
+    return $out;
+}
+
+/** เรียง list (array ของ item) ให้รายการที่ปักหมุดขึ้นก่อน */
+function admin_sort_pinned_list(array $items): array
+{
+    $pairs = [];
+    foreach (array_values($items) as $i => $item) {
+        $pairs[] = ['key' => $i, 'item' => $item];
+    }
+    $sorted = admin_pin_partition_pairs($pairs);
+    return array_map(static fn(array $pair) => $pair['item'], $sorted);
+}
+
+/** สร้างรหัสไม่ซ้ำสำหรับรายการรีวิว */
+function admin_testimonial_uid(): string
+{
+    return 'rv' . bin2hex(random_bytes(6));
+}
+
+/** อ่าน testimonialsSection พร้อม normalize ให้มี items (migrate จาก slides เดิมถ้าจำเป็น) */
+function admin_testimonials_normalize(array $section): array
+{
+    $items = $section['items'] ?? null;
+
+    if (!is_array($items) || $items === []) {
+        $items = [];
+        foreach ($section['slides'] ?? [] as $slide) {
+            foreach ((array) $slide as $card) {
+                if (!is_array($card)) {
+                    continue;
+                }
+                $quote = trim((string) ($card['quote'] ?? ''));
+                if ($quote === '') {
+                    continue;
+                }
+                $items[] = [
+                    'id' => admin_testimonial_uid(),
+                    'quote' => $quote,
+                    'author' => trim((string) ($card['author'] ?? '')),
+                    'visible' => true,
+                ];
+            }
+        }
+    } else {
+        $items = array_values(array_map(static function ($it): array {
+            if (!is_array($it)) {
+                $it = [];
+            }
+            if (empty($it['id'])) {
+                $it['id'] = admin_testimonial_uid();
+            }
+            return $it;
+        }, $items));
+    }
+
+    $section['items'] = $items;
+    return $section;
+}
+
+/** สร้าง slides (กลุ่มละ 3) จาก items ที่มองเห็น เรียงปักหมุดขึ้นก่อน — สำหรับ render หน้าแรก */
+function admin_testimonials_rebuild_slides(array $items): array
+{
+    $visible = array_values(array_filter(
+        $items,
+        static fn($it) => is_array($it) && ($it['visible'] ?? true) !== false
+    ));
+    $visible = admin_sort_pinned_list($visible);
+
+    $slides = [];
+    $chunk = [];
+    foreach ($visible as $it) {
+        $chunk[] = [
+            'quote' => (string) ($it['quote'] ?? ''),
+            'author' => (string) ($it['author'] ?? ''),
+        ];
+        if (count($chunk) === 3) {
+            $slides[] = $chunk;
+            $chunk = [];
+        }
+    }
+    if ($chunk !== []) {
+        $slides[] = $chunk;
+    }
+
+    return $slides;
+}
+
+/** บันทึก testimonialsSection กลับ home.json (พร้อม rebuild slides) แล้ว regenerate JS */
+function admin_testimonials_persist(array $section): void
+{
+    $home = json_read('home.json');
+    $section['items'] = array_values($section['items'] ?? []);
+    $section['slides'] = admin_testimonials_rebuild_slides($section['items']);
+    $home['testimonialsSection'] = $section;
+    json_write('home.json', $home);
+
+    require_once __DIR__ . '/generate-js.php';
+    generate_all_js();
+}
+
+/** เรียง list ของ slug ให้รายการที่ปักหมุดขึ้นก่อน (อ้างอิงสถานะ pin จาก $itemsMap) */
+function admin_sort_pinned_slugs(array $slugs, array $itemsMap): array
+{
+    $pairs = [];
+    foreach ($slugs as $slug) {
+        $pairs[] = ['key' => $slug, 'item' => $itemsMap[$slug] ?? []];
+    }
+    $sorted = admin_pin_partition_pairs($pairs);
+    return array_map(static fn(array $pair) => $pair['key'], $sorted);
+}
+
+/**
+ * สร้างรายการสำหรับหน้าแรก: รายการที่ปักหมุดขึ้นก่อน (เรียงตาม pinnedAt) แล้วเติมจาก $fallback
+ * จนครบอย่างน้อย $min รายการ (ไม่ซ้ำกัน) — ถ้าไม่มีการปักหมุดเลยจะได้ $fallback เดิม
+ */
+function admin_home_feed_slugs(array $allSlugs, array $itemsMap, array $fallback, int $min = 3): array
+{
+    $pinned = [];
+    foreach ($allSlugs as $slug) {
+        if (isset($itemsMap[$slug]) && admin_is_pinned($itemsMap[$slug])) {
+            $pinned[] = $slug;
+        }
+    }
+    $pinned = admin_sort_pinned_slugs($pinned, $itemsMap);
+
+    $out = $pinned;
+    $seen = array_fill_keys($pinned, true);
+    foreach (array_merge($fallback, $allSlugs) as $slug) {
+        if (count($out) >= $min) {
+            break;
+        }
+        if (!isset($seen[$slug]) && isset($itemsMap[$slug])) {
+            $out[] = $slug;
+            $seen[$slug] = true;
+        }
+    }
+    return $out;
+}
+
+/** คงค่า pinned/pinnedAt จาก item เดิมไว้บน item ใหม่ (ใช้ตอนแก้ไขการ์ด) */
+function admin_preserve_pin(array $entry, array $prev): array
+{
+    if (array_key_exists('pinned', $prev)) {
+        $entry['pinned'] = $prev['pinned'];
+    }
+    if (array_key_exists('pinnedAt', $prev)) {
+        $entry['pinnedAt'] = $prev['pinnedAt'];
+    }
+    return $entry;
+}
+
 function admin_format_bytes(int $bytes): string
 {
     if ($bytes < 1024) {

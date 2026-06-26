@@ -66,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_verify_csrf($_POST['csrf'] ??
         if (array_key_exists('visible', $existingPlan)) {
             $card['visible'] = $existingPlan['visible'];
         }
+        $card = admin_preserve_pin($card, $existingPlan);
         if ($oldSlug !== '' && $oldSlug !== $newSlug) {
             array_splice($items, $planIndex, 1);
             $items[] = $card;
@@ -145,8 +146,14 @@ function admin_plan_card_preview_markup(array $plan, string $slug): string
 }
 ?>
 
+<?php $planIsRichtext = !$isNew && ($detailItems[$slug]['editor'] ?? '') === 'richtext'; ?>
 <div class="admin-tabs">
-  <a href="plan-visual.php?slug=<?= admin_h($isNew ? 'new' : $slug) ?>" class="admin-tab<?= $isNew ? ' is-disabled' : '' ?>"<?= $isNew ? ' aria-disabled="true" tabindex="-1"' : '' ?>>แก้ไขหน้า (Visual)</a>
+  <?php if ($planIsRichtext): ?>
+    <a href="plan-richtext.php?slug=<?= admin_h($slug) ?>" class="admin-tab">แก้ไขเนื้อหา (Rich Text)</a>
+  <?php else: ?>
+    <a href="plan-visual.php?slug=<?= admin_h($isNew ? 'new' : $slug) ?>" class="admin-tab<?= $isNew ? ' is-disabled' : '' ?>"<?= $isNew ? ' aria-disabled="true" tabindex="-1"' : '' ?>>แก้ไขหน้า (Visual)</a>
+    <a href="plan-richtext.php?slug=<?= admin_h($isNew ? 'new' : $slug) ?>" class="admin-tab<?= $isNew ? ' is-disabled' : '' ?>"<?= $isNew ? ' aria-disabled="true" tabindex="-1"' : '' ?>>Rich Text</a>
+  <?php endif; ?>
   <a href="plan-edit.php?slug=<?= admin_h($isNew ? 'new' : $slug) ?>" class="admin-tab is-active">การ์ดแผน</a>
 </div>
 

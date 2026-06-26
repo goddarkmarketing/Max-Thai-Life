@@ -8,7 +8,7 @@ require_once __DIR__ . '/includes/layout.php';
 admin_require_login();
 
 $plans = json_read('plans.json');
-$items = $plans['items'] ?? [];
+$items = admin_sort_pinned_list($plans['items'] ?? []);
 
 admin_layout_start('แผนประกัน', 'plans-list.php');
 ?>
@@ -34,9 +34,13 @@ admin_layout_start('แผนประกัน', 'plans-list.php');
           $href = $plan['href'] ?? '';
           $slug = preg_replace('#^plans/|\.html$#', '', $href);
           $visible = admin_is_visible($plan);
+          $pinned = admin_is_pinned($plan);
         ?>
         <tr data-search-text="<?= admin_h(strtolower(($plan['title'] ?? '') . ' ' . ($plan['category'] ?? '') . ' ' . ($plan['tag'] ?? ''))) ?>">
-          <td><strong><?= admin_h($plan['title'] ?? '') ?></strong><br><small><?= admin_h($plan['tag'] ?? '') ?></small></td>
+          <td>
+            <?php if ($pinned): ?><span class="admin-pin-flag" title="ปักหมุด" aria-label="ปักหมุด">📌</span> <?php endif; ?>
+            <strong><?= admin_h($plan['title'] ?? '') ?></strong><br><small><?= admin_h($plan['tag'] ?? '') ?></small>
+          </td>
           <td><?= admin_h($plan['category'] ?? '') ?></td>
           <td>
             <?php if ($visible): ?>
@@ -50,6 +54,13 @@ admin_layout_start('แผนประกัน', 'plans-list.php');
               <a href="<?= admin_h(admin_content_preview_url('plans', $slug)) ?>" target="_blank" rel="noopener" class="admin-btn admin-btn--ghost admin-btn--sm">ดูหน้า</a>
               <a href="plan-edit.php?slug=<?= admin_h($slug) ?>" class="admin-btn admin-btn--secondary admin-btn--sm">การ์ด</a>
               <a href="plan-visual.php?slug=<?= admin_h($slug) ?>" class="admin-btn admin-btn--primary admin-btn--sm">แก้ไขหน้า</a>
+              <form method="post" action="pin-toggle.php" class="admin-inline-form">
+                <input type="hidden" name="csrf" value="<?= admin_h(admin_csrf_token()) ?>">
+                <input type="hidden" name="kind" value="plan">
+                <input type="hidden" name="slug" value="<?= admin_h($slug) ?>">
+                <input type="hidden" name="back" value="plans-list.php">
+                <button type="submit" class="admin-btn admin-btn--sm <?= $pinned ? 'admin-btn--secondary' : 'admin-btn--ghost' ?>"><?= $pinned ? 'เลิกปัก' : 'ปักหมุด' ?></button>
+              </form>
               <form method="post" action="toggle-visible.php" class="admin-inline-form">
                 <input type="hidden" name="csrf" value="<?= admin_h(admin_csrf_token()) ?>">
                 <input type="hidden" name="kind" value="plan">

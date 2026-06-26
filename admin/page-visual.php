@@ -15,6 +15,12 @@ if (!in_array($pageKey, admin_landing_page_keys(), true)) {
     exit;
 }
 
+// หน้าที่ใช้ Text Editor (Rich Text) ไม่ใช้ Block Builder — ส่งต่อไปยังเอดิเตอร์ที่ถูกต้อง
+if ((admin_landing_page_meta()[$pageKey]['editor'] ?? '') === 'richtext') {
+    header('Location: page-richtext.php?page=' . urlencode($pageKey));
+    exit;
+}
+
 $data = json_read('pages.json');
 $data = admin_normalize_pages_data($data);
 json_write('pages.json', $data);

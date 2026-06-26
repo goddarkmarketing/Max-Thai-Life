@@ -16,19 +16,35 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !admin_verify_csrf($_POST['csrf'] ?
 $kind = admin_post('kind');
 $back = admin_post('back', 'dashboard.php');
 
+$applyPin = static function (array $item): array {
+    if (admin_is_pinned($item)) {
+        $item['pinned'] = false;
+        unset($item['pinnedAt']);
+    } else {
+        $item['pinned'] = true;
+        $item['pinnedAt'] = date('c');
+    }
+    return $item;
+};
+
 try {
     if ($kind === 'plan') {
         $slug = admin_post('slug');
         $plans = json_read('plans.json');
         $planItems = $plans['items'] ?? [];
+        $found = false;
         foreach ($planItems as &$plan) {
             $href = $plan['href'] ?? '';
             if (preg_replace('#^plans/|\.html$#', '', $href) === $slug) {
-                $plan['visible'] = !admin_is_visible($plan);
+                $plan = $applyPin($plan);
+                $found = true;
                 break;
             }
         }
         unset($plan);
+        if (!$found) {
+            throw new RuntimeException('ไม่พบรายการ');
+        }
         $plans['items'] = $planItems;
         json_write('plans.json', $plans);
     } elseif (in_array($kind, ['articles', 'news', 'careers', 'claims'], true)) {
@@ -40,13 +56,13 @@ try {
         if (!isset($store[$key][$slug])) {
             throw new RuntimeException('ไม่พบรายการ');
         }
-        $store[$key][$slug]['visible'] = !admin_is_visible($store[$key][$slug]);
+        $store[$key][$slug] = $applyPin($store[$key][$slug]);
         json_write($types[$type]['file'], $store);
     } else {
         throw new InvalidArgumentException('ประเภทไม่ถูกต้อง');
     }
     generate_all_js();
-    admin_flash('success', 'อัปเดตสถานะการแสดงผลแล้ว — กดเผยแพร่อีกครั้งถ้าจำเป็น');
+    admin_flash('success', 'อัปเดตการปักหมุดแล้ว');
 } catch (Throwable $e) {
     admin_flash('error', $e->getMessage());
 }

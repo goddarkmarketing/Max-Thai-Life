@@ -253,7 +253,9 @@
       "</div>" +
       "</header>" +
       '<div class="article-prose" itemprop="articleBody">' +
-      renderSections(article.sections) +
+      (article.editor === "richtext" && typeof article.bodyHtml === "string"
+        ? '<div class="lp-rich ql-content">' + article.bodyHtml + "</div>"
+        : renderSections(article.sections)) +
       "</div>" +
       relatedHtml +
       '<footer class="article-detail-footer">' +

@@ -3,6 +3,8 @@
   var plan = window.PLANS_DETAIL && window.PLANS_DETAIL[id];
   if (!plan) return;
 
+  var isRich = plan.editor === "richtext" && typeof plan.bodyHtml === "string";
+
   var cardImage = "";
 
   (window.PLANS_DATA || []).forEach(function (card) {
@@ -53,13 +55,13 @@
       "</p>";
   }
 
-  var benefitsListHtml = plan.benefits
+  var benefitsListHtml = (plan.benefits || [])
     .map(function (b) {
       return "<li>" + b + "</li>";
     })
     .join("");
 
-  var specsListHtml = plan.specs
+  var specsListHtml = (plan.specs || [])
     .map(function (row) {
       return "<tr><th>" + row[0] + "</th><td>" + row[1] + "</td></tr>";
     })
@@ -72,7 +74,7 @@
       : '<i data-lucide="chevron-down" aria-hidden="true"></i>') +
     "</span>";
 
-  var faqListHtml = plan.faq
+  var faqListHtml = (plan.faq || [])
     .map(function (item) {
       return (
         '<details class="faq-item">' +
@@ -319,23 +321,31 @@
 
   var root = document.getElementById("plan-detail-root");
   if (root) {
-    root.innerHTML =
-      '<div class="plan-detail-layout">' +
-      '<aside class="plan-sidebar">' +
-      '<nav aria-label="สารบัญ">' +
-      navLinks +
-      "</nav>" +
-      '<p style="margin-top:1.5rem;font-size:0.875rem"><a href="../plans.html">← กลับรายการแผน</a></p>' +
-      "</aside>" +
-      '<div class="plan-content">' +
-      contentHtml +
-      '<div class="plan-disclaimer">' +
-      plan.disclaimer +
-      "</div>" +
-      "</div></div>";
+    if (isRich) {
+      root.innerHTML =
+        '<div class="lp-rich ql-content plan-rich-detail">' +
+        plan.bodyHtml +
+        "</div>";
+      if (window.LucideIcons) LucideIcons.refresh(root);
+    } else {
+      root.innerHTML =
+        '<div class="plan-detail-layout">' +
+        '<aside class="plan-sidebar">' +
+        '<nav aria-label="สารบัญ">' +
+        navLinks +
+        "</nav>" +
+        '<p style="margin-top:1.5rem;font-size:0.875rem"><a href="../plans.html">← กลับรายการแผน</a></p>' +
+        "</aside>" +
+        '<div class="plan-content">' +
+        contentHtml +
+        '<div class="plan-disclaimer">' +
+        plan.disclaimer +
+        "</div>" +
+        "</div></div>";
 
-    initPlanSidebarNav(root);
-    if (window.LucideIcons) LucideIcons.refresh(root);
+      initPlanSidebarNav(root);
+      if (window.LucideIcons) LucideIcons.refresh(root);
+    }
   }
 
   function initPlanSidebarNav(layoutRoot) {

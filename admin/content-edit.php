@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_verify_csrf($_POST['csrf'] ??
     } elseif (isset($prev['visible'])) {
         $entry['visible'] = $prev['visible'];
     }
+    $entry = admin_preserve_pin($entry, $prev);
 
     if ($type === 'articles') {
         $entry['views'] = (int) admin_post('views');
@@ -123,9 +124,20 @@ admin_layout_start(($isNew ? 'เพิ่ม' : 'แก้ไขการ์ด
 ]);
 ?>
 
+<?php
+$hasRichtext = in_array($type, ['articles', 'news', 'careers'], true);
+$itemIsRichtext = !$isNew && ($item['editor'] ?? '') === 'richtext';
+?>
 <?php if (!$isNew && $hasVisual): ?>
 <div class="admin-tabs">
-  <a href="content-visual.php?type=<?= admin_h($type) ?>&id=<?= admin_h($id) ?>" class="admin-tab">แก้ไขหน้า</a>
+  <?php if ($itemIsRichtext): ?>
+    <a href="content-richtext.php?type=<?= admin_h($type) ?>&id=<?= admin_h($id) ?>" class="admin-tab">แก้ไขเนื้อหา (Rich Text)</a>
+  <?php else: ?>
+    <a href="content-visual.php?type=<?= admin_h($type) ?>&id=<?= admin_h($id) ?>" class="admin-tab">แก้ไขหน้า</a>
+    <?php if ($hasRichtext): ?>
+      <a href="content-richtext.php?type=<?= admin_h($type) ?>&id=<?= admin_h($id) ?>" class="admin-tab">Rich Text</a>
+    <?php endif; ?>
+  <?php endif; ?>
   <a href="content-edit.php?type=<?= admin_h($type) ?>&id=<?= admin_h($id) ?>" class="admin-tab is-active">การ์ด</a>
 </div>
 <?php endif; ?>

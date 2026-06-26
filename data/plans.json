@@ -12,7 +12,8 @@
             ],
             "href": "plans/tax-saving.html",
             "image": "images/plan-cards/card-savings.png",
-            "theme": "tax"
+            "theme": "tax",
+            "pinned": false
         },
         {
             "category": "protect",
@@ -26,7 +27,8 @@
             ],
             "href": "plans/life-wealth-fit-99-99.html",
             "image": "images/plan-cards/card-protect.png",
-            "theme": "protect"
+            "theme": "protect",
+            "pinned": false
         },
         {
             "category": "health",
@@ -40,7 +42,8 @@
             ],
             "href": "plans/health-working.html",
             "image": "images/plan-cards/card-health.png",
-            "theme": "health"
+            "theme": "health",
+            "pinned": false
         },
         {
             "category": "rider",
@@ -67,7 +70,9 @@
             ],
             "href": "plans/legacy-fit-retire.html",
             "image": "images/plan-cards/card-pension.png",
-            "theme": "retire"
+            "theme": "retire",
+            "pinned": true,
+            "pinnedAt": "2026-06-26T10:24:06+07:00"
         },
         {
             "category": "invest",
@@ -81,7 +86,9 @@
             ],
             "href": "plans/universal-life.html",
             "image": "images/plan-cards/card-invest.png",
-            "theme": "universal"
+            "theme": "universal",
+            "pinned": true,
+            "pinnedAt": "2026-06-26T10:24:03+07:00"
         }
     ]
 }

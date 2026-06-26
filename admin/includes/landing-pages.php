@@ -15,6 +15,7 @@ function admin_landing_page_meta(): array
             'label' => 'เกี่ยวกับเรา',
             'file' => 'about.html',
             'breadcrumb' => 'เกี่ยวกับเรา',
+            'editor' => 'richtext',
         ],
         'products' => [
             'label' => 'บทความ',

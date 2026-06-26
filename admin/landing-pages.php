@@ -35,7 +35,11 @@ admin_layout_start('หน้าเว็บ', 'landing-pages.php');
           <td><code><?= admin_h($m['file']) ?></code></td>
           <td>
             <div class="admin-table-actions">
-              <a href="page-visual.php?page=<?= admin_h($key) ?>" class="admin-btn admin-btn--primary admin-btn--sm">แก้ไขหน้า</a>
+              <?php if (($m['editor'] ?? '') === 'richtext'): ?>
+                <a href="page-richtext.php?page=<?= admin_h($key) ?>" class="admin-btn admin-btn--primary admin-btn--sm">แก้ไขหน้า (Text Editor)</a>
+              <?php else: ?>
+                <a href="page-visual.php?page=<?= admin_h($key) ?>" class="admin-btn admin-btn--primary admin-btn--sm">แก้ไขหน้า</a>
+              <?php endif; ?>
               <a href="../<?= admin_h($m['file']) ?>" target="_blank" rel="noopener" class="admin-btn admin-btn--ghost admin-btn--sm">ดูหน้า</a>
             </div>
           </td>

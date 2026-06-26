@@ -10,6 +10,12 @@ admin_require_login();
 $data = json_read('home.json');
 $tab = $_GET['tab'] ?? 'hero';
 
+// ย้ายการจัดการรีวิวไปหน้ารายการแยกต่างหาก
+if ($tab === 'testimonials' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: testimonials-list.php');
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_verify_csrf($_POST['csrf'] ?? null)) {
     $tab = admin_post('tab', 'hero');
 
@@ -118,7 +124,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_verify_csrf($_POST['csrf'] ??
     }
 
     json_write('home.json', $data);
-    admin_flash('success', 'บันทึกหน้าแรกแล้ว');
+    require_once __DIR__ . '/includes/generate-js.php';
+    generate_all_js();
+    admin_flash('success', 'บันทึกและเผยแพร่หน้าแรกแล้ว');
     header('Location: home.php?tab=' . urlencode($tab));
     exit;
 }
@@ -168,7 +176,7 @@ admin_layout_start('หน้าแรก', 'home.php');
   <a href="home.php?tab=hero" class="admin-tab<?= $tab === 'hero' ? ' is-active' : '' ?>">Hero</a>
   <a href="home.php?tab=profile" class="admin-tab<?= $tab === 'profile' ? ' is-active' : '' ?>">โปรไฟล์</a>
   <a href="home.php?tab=sections" class="admin-tab<?= $tab === 'sections' ? ' is-active' : '' ?>">ส่วนเนื้อหา</a>
-  <a href="home.php?tab=testimonials" class="admin-tab<?= $tab === 'testimonials' ? ' is-active' : '' ?>">รีวิว</a>
+  <a href="testimonials-list.php" class="admin-tab">รีวิว</a>
   <a href="home.php?tab=inquiry" class="admin-tab<?= $tab === 'inquiry' ? ' is-active' : '' ?>">ฟอร์ม</a>
   <a href="home.php?tab=cta" class="admin-tab<?= $tab === 'cta' ? ' is-active' : '' ?>">CTA</a>
 </div>

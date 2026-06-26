@@ -103,14 +103,16 @@ function generate_plans_detail_js(): void
 function generate_all_js(): void
 {
     $articles = json_read('articles.json');
-    $items = admin_filter_visible_map($articles['items'] ?? []);
+    $items = admin_sort_pinned_map(admin_filter_visible_map($articles['items'] ?? []));
+    $articlesHome = admin_home_feed_slugs(array_keys($items), $items, array_keys($items), 3);
     js_write_file(
         JS_PATH . '/articles-data.js',
-        "window.ARTICLES_DETAIL = " . js_encode($items) . ";\n"
+        "window.ARTICLES_DETAIL = " . js_encode($items) . ";\n\n" .
+        "window.ARTICLES_HOME = " . js_encode($articlesHome) . ";\n"
     );
 
     $plans = json_read('plans.json');
-    $planItems = admin_filter_visible_list($plans['items'] ?? []);
+    $planItems = admin_sort_pinned_list(admin_filter_visible_list($plans['items'] ?? []));
     js_write_file(
         JS_PATH . '/plans-data.js',
         "var PLAN_COVER = \"images/cover แผนประกัน/\";\n\nwindow.PLANS_DATA = " . js_encode($planItems) . ";\n"
@@ -120,8 +122,12 @@ function generate_all_js(): void
 
     $news = json_read('news.json');
     $newsItems = admin_filter_visible_map($news['items'] ?? []);
-    $newsList = admin_filter_slug_list($news['list'] ?? array_keys($newsItems), $news['items'] ?? []);
-    $newsHome = admin_filter_slug_list($news['home'] ?? $newsList, $news['items'] ?? []);
+    $newsList = admin_sort_pinned_slugs(
+        admin_filter_slug_list($news['list'] ?? array_keys($newsItems), $news['items'] ?? []),
+        $newsItems
+    );
+    $newsHomeBase = admin_filter_slug_list($news['home'] ?? $newsList, $news['items'] ?? []);
+    $newsHome = admin_home_feed_slugs($newsList, $newsItems, $newsHomeBase, 3);
     $newsCover = "var NEWS_COVER = \"images/cover%20cart/\";\n\n";
     js_write_file(
         JS_PATH . '/news-data.js',
@@ -133,7 +139,10 @@ function generate_all_js(): void
 
     $careers = json_read('careers.json');
     $careerItems = admin_filter_visible_map($careers['items'] ?? []);
-    $careerList = admin_filter_slug_list($careers['list'] ?? array_keys($careerItems), $careers['items'] ?? []);
+    $careerList = admin_sort_pinned_slugs(
+        admin_filter_slug_list($careers['list'] ?? array_keys($careerItems), $careers['items'] ?? []),
+        $careerItems
+    );
     js_write_file(
         JS_PATH . '/careers-data.js',
         'window.CAREERS_DETAIL = ' . js_encode($careerItems) . ";\n\n" .
@@ -142,7 +151,10 @@ function generate_all_js(): void
 
     $claims = json_read('claim-reviews.json');
     $claimItems = admin_filter_visible_map($claims['items'] ?? []);
-    $claimList = admin_filter_slug_list($claims['list'] ?? array_keys($claimItems), $claims['items'] ?? []);
+    $claimList = admin_sort_pinned_slugs(
+        admin_filter_slug_list($claims['list'] ?? array_keys($claimItems), $claims['items'] ?? []),
+        $claimItems
+    );
     $claimCover = "var CLAIM_COVER = \"images/cover%20cart/\";\n\n";
     js_write_file(
         JS_PATH . '/claim-reviews-data.js',
