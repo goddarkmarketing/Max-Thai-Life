@@ -65,6 +65,36 @@
       : '<i data-lucide="chevron-down" aria-hidden="true"></i>') +
     "</span>";
 
+  var planCategoryIcons = {
+    savings: "piggy-bank",
+    protect: "shield-check",
+    health: "heart-pulse",
+    rider: "file-plus-2",
+    pension: "armchair",
+    invest: "trending-up",
+  };
+
+  function navSubmenuIcon(child) {
+    var icon =
+      child.icon ||
+      planCategoryIcons[child.category || ""] ||
+      (child.href && /plans\.html/.test(child.href) && !/[?&]category=/.test(child.href)
+        ? "layout-grid"
+        : "circle");
+    if (window.LucideIcons) {
+      return (
+        '<span class="nav-submenu-icon" aria-hidden="true">' +
+        LucideIcons.icon(icon, { size: 16, strokeWidth: 2 }) +
+        "</span>"
+      );
+    }
+    return (
+      '<span class="nav-submenu-icon" aria-hidden="true"><i data-lucide="' +
+      icon +
+      '" aria-hidden="true"></i></span>'
+    );
+  }
+
   function renderNavItem(item, base) {
     var href = base + (item.href || "#");
     var children = (item.children || []).filter(function (child) {
@@ -108,8 +138,10 @@
           '"' +
           (childCat ? ' data-plan-category="' + childCat + '"' : "") +
           ">" +
+          navSubmenuIcon(child) +
+          '<span class="nav-submenu-label">' +
           (child.label || "") +
-          "</a>"
+          "</span></a>"
         );
       })
       .join("");
@@ -233,6 +265,7 @@
     nav.innerHTML = html;
     bindNavToggle();
     bindNavSubmenus();
+    if (window.LucideIcons) LucideIcons.refresh(nav);
   }
 
   function upsertMeta(attr, key, value) {

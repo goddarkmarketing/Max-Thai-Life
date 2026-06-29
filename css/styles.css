@@ -293,7 +293,9 @@ a:hover {
 }
 
 .nav-submenu-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
   padding: 0.6rem 0.85rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -303,10 +305,35 @@ a:hover {
   transition: background 0.2s, color 0.2s;
 }
 
+.nav-submenu-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--tl-blue);
+  opacity: 0.82;
+}
+
+.nav-submenu-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.nav-submenu-label {
+  min-width: 0;
+}
+
 .nav-submenu-link:hover,
 .nav-submenu-link.active {
   color: var(--tl-blue);
   background: rgba(var(--tl-blue-rgb), 0.08);
+}
+
+.nav-submenu-link:hover .nav-submenu-icon,
+.nav-submenu-link.active .nav-submenu-icon {
+  opacity: 1;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -328,7 +355,7 @@ a:hover {
 /* Page hero (inner pages) */
 .page-hero {
   margin-top: var(--header-h);
-  padding: 4rem 1.5rem 3rem;
+  padding: 2.25rem 1.5rem 1.75rem;
   background: linear-gradient(135deg, var(--tl-blue-dark) 0%, var(--tl-blue) 50%, var(--tl-blue-light) 100%);
   color: var(--white);
   position: relative;
@@ -352,14 +379,14 @@ a:hover {
 }
 
 .page-hero h1 {
-  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-size: clamp(1.75rem, 4.5vw, 2.35rem);
   font-weight: 700;
   letter-spacing: -0.03em;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 
 .page-hero p {
-  font-size: 1.125rem;
+  font-size: 1rem;
   opacity: 0.9;
   max-width: 36rem;
   margin-left: auto;
@@ -372,7 +399,7 @@ a:hover {
 }
 
 .page-hero--plan {
-  padding: 2.25rem 1.5rem 2.5rem;
+  padding: 1.35rem 1.5rem 1.5rem;
 }
 
 .page-hero--plan::after {
@@ -389,7 +416,7 @@ a:hover {
 
 .page-hero--plan .page-hero-inner {
   display: grid;
-  gap: 0.65rem;
+  gap: 0.4rem;
   justify-items: center;
   text-align: center;
 }
@@ -400,8 +427,8 @@ a:hover {
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
-  padding: 0.32rem 0.8rem;
-  font-size: 0.6875rem;
+  padding: 0.22rem 0.65rem;
+  font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -412,14 +439,14 @@ a:hover {
 }
 
 .page-hero--plan h1 {
-  font-size: clamp(1.75rem, 4.2vw, 2.45rem);
+  font-size: clamp(1.5rem, 3.8vw, 2.05rem);
   line-height: 1.2;
   margin-bottom: 0;
   letter-spacing: -0.025em;
 }
 
 .page-hero--plan .page-hero-lead {
-  font-size: 1.0625rem;
+  font-size: 0.975rem;
   opacity: 0.92;
   margin: 0;
 }
@@ -431,7 +458,11 @@ a:hover {
   justify-content: center;
   gap: 0.15rem;
   margin-bottom: 0;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
+}
+
+.page-hero .breadcrumb {
+  margin-bottom: 0.45rem;
 }
 
 .breadcrumb {
@@ -3089,11 +3120,6 @@ button.product-card-link:hover {
   display: none !important;
 }
 
-.plan-grid--category {
-  grid-template-columns: minmax(280px, 420px);
-  justify-content: start;
-}
-
 .plan-card {
   border-radius: 16px;
   background: var(--white);
@@ -3141,14 +3167,17 @@ button.product-card-link:hover {
   right: 0.85rem;
   left: auto;
   z-index: 2;
-  font-size: 0.6875rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.65rem;
+  padding: 0.42rem 0.85rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
   color: var(--white);
   background: rgba(var(--tl-blue-dark-rgb), 0.82);
   backdrop-filter: blur(6px);
-  padding: 0.35rem 0.75rem;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -4262,7 +4291,7 @@ button.product-card-link:hover {
   }
 
   .page-hero {
-    padding: 2.5rem 1rem 2rem;
+    padding: 1.75rem 1rem 1.5rem;
   }
 
   .page-hero p {
@@ -4760,7 +4789,7 @@ button.product-card-link:hover {
   }
 
   .page-hero {
-    padding: 2rem 0.85rem 1.75rem;
+    padding: 1.5rem 0.85rem 1.35rem;
   }
 
   .section-header {

@@ -367,6 +367,11 @@ window.SITE_DATA = {
           label: "ลงทุน/Life Verse",
           href: "plans.html?category=invest#invest",
           category: "invest"
+        },
+        {
+          label: "ลอง",
+          href: "plans/money-fit.html",
+          category: "savings"
         }
       ]
     },

@@ -203,16 +203,22 @@
     saveBtn.disabled = true;
     setStatus("กำลังบันทึก…", "");
 
+    var payload = {
+      page: data.page,
+      slug: data.slug,
+      csrf: data.csrf,
+      bodyHtml: html,
+      publish: true,
+    };
+    var ctaTitleEl = document.querySelector("[data-plan-cta-title]");
+    var ctaLeadEl = document.querySelector("[data-plan-cta-lead]");
+    if (ctaTitleEl) payload.ctaTitle = ctaTitleEl.value.trim();
+    if (ctaLeadEl) payload.ctaLead = ctaLeadEl.value.trim();
+
     fetch(data.saveUrl || "api/page-richtext-save.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        page: data.page,
-        slug: data.slug,
-        csrf: data.csrf,
-        bodyHtml: html,
-        publish: true,
-      }),
+      body: JSON.stringify(payload),
     })
       .then(function (r) {
         return r.json();

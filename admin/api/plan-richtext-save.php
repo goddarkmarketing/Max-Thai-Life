@@ -48,6 +48,12 @@ $bodyHtml = (string) ($payload['bodyHtml'] ?? '');
 
 $details['items'][$slug]['editor'] = 'richtext';
 $details['items'][$slug]['bodyHtml'] = $bodyHtml;
+if (array_key_exists('ctaTitle', $payload)) {
+    $details['items'][$slug]['ctaTitle'] = trim((string) $payload['ctaTitle']);
+}
+if (array_key_exists('ctaLead', $payload)) {
+    $details['items'][$slug]['ctaLead'] = trim((string) $payload['ctaLead']);
+}
 json_write('plans-detail.json', $details);
 
 if (!empty($payload['publish'])) {

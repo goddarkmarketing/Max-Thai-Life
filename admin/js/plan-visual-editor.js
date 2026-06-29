@@ -272,7 +272,7 @@
     document.getElementById("plan-hero-inner").innerHTML =
       '<div class="breadcrumb"><a href="../plans.html">แผนประกัน</a> / ' +
       inlineField(p.breadcrumb || "", "Breadcrumb") +
-      '</div><span class="page-hero-eyebrow">แผนประกันไทยประกันชีวิต</span>' +
+      '</div>' +
       fieldWrap(
         editableInner(p.title || "", "หัวข้อแผน", "pe-rich", 'data-pe="title" data-layer-id="hero-title"', "h1")
       ) +

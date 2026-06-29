@@ -78,6 +78,15 @@
     var template = repeater.querySelector('[data-repeater-template]');
     var addBtn = repeater.querySelector('[data-repeater-add]');
     var min = parseInt(repeater.getAttribute('data-repeater-min') || '0', 10);
+    var max = parseInt(repeater.getAttribute('data-repeater-max') || '0', 10);
+
+    function updateAddButton() {
+      if (!addBtn) return;
+      var count = list.querySelectorAll('[data-repeater-item]').length;
+      var atMax = max > 0 && count >= max;
+      addBtn.disabled = atMax;
+      addBtn.hidden = atMax;
+    }
 
     function reindex() {
       list.querySelectorAll('[data-repeater-item]').forEach(function (item, index) {
@@ -102,6 +111,7 @@
 
     if (addBtn && template) {
       addBtn.addEventListener('click', function () {
+        if (max > 0 && list.querySelectorAll('[data-repeater-item]').length >= max) return;
         var html = template.innerHTML.replace(/__INDEX__/g, String(list.children.length));
         var wrap = document.createElement('div');
         wrap.innerHTML = html.trim();
@@ -109,6 +119,7 @@
         list.appendChild(node);
         reindex();
         initImageFields(node);
+        updateAddButton();
       });
     }
 
@@ -119,8 +130,11 @@
       if (item && list.children.length > min) {
         item.remove();
         reindex();
+        updateAddButton();
       }
     });
+
+    updateAddButton();
   });
 
   initImageFields(document);

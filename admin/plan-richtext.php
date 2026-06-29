@@ -54,7 +54,11 @@ $boot = [
     'previewUrl' => '../' . $previewFile,
 ];
 
-admin_layout_start('แก้ไขเนื้อหาแผน: ' . $label, 'plans-list.php', [
+$planCategory = (string) ($card['category'] ?? '');
+$listUrl = admin_plans_list_url($planCategory !== '' ? $planCategory : null);
+$activeNav = admin_plans_active_nav($planCategory !== '' ? $planCategory : null);
+
+admin_layout_start('แก้ไขเนื้อหาแผน: ' . $label, $activeNav, [
     'stylesheets' => ['vendor/quill/quill.snow.css'],
 ]);
 ?>
@@ -74,12 +78,29 @@ admin_layout_start('แก้ไขเนื้อหาแผน: ' . $label, '
   <div id="pe-rich-editor"></div>
 </div>
 
-<div class="admin-form-actions">
-  <button type="button" class="admin-btn admin-btn--primary" data-richtext-save>บันทึกและเผยแพร่</button>
-  <a href="plans-list.php" class="admin-btn admin-btn--ghost">กลับ</a>
-</div>
-<p class="admin-hint">หมายเหตุ: เนื้อหานี้บันทึกเป็น HTML และแสดงบนหน้าเว็บโดยตรง ควรกรอกเฉพาะเนื้อหาที่เชื่อถือได้</p>
 <?php admin_card_end(); ?>
+
+<?php
+  $ctaTitle = (string) ($detail['ctaTitle'] ?? ('สนใจ ' . $label . '?'));
+  $ctaLead = (string) ($detail['ctaLead'] ?? 'ขอใบเสนอเบี้ยและปรึกษาฟรี');
+?>
+<?php admin_card_start('ปุ่มท้ายหน้า (CTA)', 'แถบสีแดงด้านล่างหน้ารายละเอียดแผน — ปุ่มโทรดึงจาก ตั้งค่าเว็บไซต์'); ?>
+<div class="admin-field">
+  <label class="admin-label" for="plan-cta-title">หัวข้อ CTA</label>
+  <input class="admin-input" type="text" id="plan-cta-title" data-plan-cta-title value="<?= admin_h($ctaTitle) ?>">
+  <p class="admin-hint">เช่น สนใจแผนนี้?</p>
+</div>
+<div class="admin-field">
+  <label class="admin-label" for="plan-cta-lead">คำอธิบายสั้น</label>
+  <input class="admin-input" type="text" id="plan-cta-lead" data-plan-cta-lead value="<?= admin_h($ctaLead) ?>">
+  <p class="admin-hint">ข้อความใต้หัวข้อ เช่น ขอใบเสนอเบี้ยและปรึกษาฟรี</p>
+</div>
+<?php admin_card_end(); ?>
+
+<div class="admin-form-actions admin-form-actions--standalone">
+  <button type="button" class="admin-btn admin-btn--primary" data-richtext-save>บันทึกและเผยแพร่</button>
+  <a href="<?= admin_h($listUrl) ?>" class="admin-btn admin-btn--ghost">กลับ</a>
+</div>
 
 <style>
   /* ปลด overflow:hidden เพื่อให้ทูลบาร์ sticky ยึดกับขอบจอได้ (เฉพาะหน้านี้) */

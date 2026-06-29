@@ -265,7 +265,6 @@
     return (
       '<header class="page-hero page-hero--plan"><div class="page-hero-inner">' +
       '<div class="breadcrumb"><a href="../plans.html">แผนประกัน</a> / ' + R.esc(bc) + "</div>" +
-      '<span class="page-hero-eyebrow">แผนประกันไทยประกันชีวิต</span>' +
       "<h1>" + R.esc(hero.title || "") + "</h1>" +
       '<p class="page-hero-lead">' + R.esc(hero.lead || hero.description || "") + "</p></div></header>"
     );

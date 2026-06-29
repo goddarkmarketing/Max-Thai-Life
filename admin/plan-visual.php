@@ -57,7 +57,10 @@ $csrf = admin_csrf_token();
 $payload = admin_plan_visual_boot($slug, $detail, $card, $csrf);
 
 $pageTitle = 'แก้ไขแผน · ' . ($payload['meta']['label'] ?? $slug);
-admin_visual_layout_start($pageTitle, 'plans-list.php');
+$planCategory = (string) ($card['category'] ?? '');
+$listUrl = admin_plans_list_url($planCategory !== '' ? $planCategory : null);
+$activeNav = admin_plans_active_nav($planCategory !== '' ? $planCategory : null);
+admin_visual_layout_start($pageTitle, $activeNav);
 ?>
 
 <div class="pe-admin-bar">
@@ -67,7 +70,7 @@ admin_visual_layout_start($pageTitle, 'plans-list.php');
   <div class="pe-admin-bar-actions">
     <span class="pe-status" id="pe-status"></span>
     <a href="plan-edit.php?slug=<?= admin_h($slug) ?>" class="pe-btn pe-btn--ghost">การ์ดแผน</a>
-    <a href="plans-list.php" class="pe-btn pe-btn--ghost">กลับรายการ</a>
+    <a href="<?= admin_h($listUrl) ?>" class="pe-btn pe-btn--ghost">กลับรายการ</a>
     <a href="<?= admin_h($payload['previewUrl']) ?>" target="_blank" rel="noopener" class="pe-btn pe-btn--ghost" id="pe-view-page">ดูหน้า</a>
     <button type="button" class="pe-btn pe-btn--ghost" id="pe-save">บันทึก</button>
     <button type="button" class="pe-btn pe-btn--primary" id="pe-publish">บันทึก + เผยแพร่</button>

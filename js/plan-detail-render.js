@@ -48,7 +48,7 @@
     heroInner.innerHTML =
       '<div class="breadcrumb"><a href="../plans.html">แผนประกัน</a> / ' +
       plan.breadcrumb +
-      '</div><span class="page-hero-eyebrow">แผนประกันไทยประกันชีวิต</span><h1>' +
+      '</div><h1>' +
       plan.title +
       '</h1><p class="page-hero-lead">' +
       plan.heroLead +
@@ -438,7 +438,7 @@
     }
     cta.innerHTML =
       "<h2>" +
-      plan.ctaTitle +
+      (plan.ctaTitle || "สนใจแผนนี้?") +
       "</h2>" +
       (plan.ctaLead ? "<p>" + plan.ctaLead + "</p>" : "") +
       '<div class="cta-actions">' +

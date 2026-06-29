@@ -36,7 +36,12 @@ function admin_nav_groups(): array
         [
             'label' => 'เนื้อหา',
             'items' => [
-                ['href' => 'plans-list.php', 'label' => 'แผนประกัน', 'icon' => 'shield'],
+                [
+                    'href' => 'plans-list.php',
+                    'label' => 'แผนประกัน',
+                    'icon' => 'shield',
+                    'children' => admin_plan_nav_children(),
+                ],
                 ['href' => 'content-list.php?type=articles', 'label' => 'บทความ', 'icon' => 'article'],
                 ['href' => 'content-list.php?type=news', 'label' => 'ข่าว/กิจกรรม', 'icon' => 'news'],
                 ['href' => 'content-list.php?type=careers', 'label' => 'แนะนำอาชีพ', 'icon' => 'users'],
@@ -72,12 +77,25 @@ function admin_nav_is_active(string $active, array $item): bool
     if ($active === '') {
         return false;
     }
-    $href = $item['href'];
-    if ($active === $href || str_starts_with($href, $active)) {
+    $href = (string) ($item['href'] ?? '');
+    if ($active === $href) {
         return true;
     }
     if ($active === 'plans' && str_contains($href, 'plans')) {
         return true;
+    }
+    return false;
+}
+
+function admin_nav_item_is_open(string $active, array $item): bool
+{
+    if (admin_nav_is_active($active, $item)) {
+        return true;
+    }
+    foreach ($item['children'] ?? [] as $child) {
+        if (admin_nav_is_active($active, $child)) {
+            return true;
+        }
     }
     return false;
 }
@@ -100,13 +118,30 @@ function admin_render_sidebar(string $active = ''): void
           <div class="admin-nav-group-label"><?= admin_h($group['label']) ?></div>
         <?php endif; ?>
         <?php foreach ($group['items'] as $item): ?>
-          <a href="<?= admin_h($item['href']) ?>" class="admin-nav-link<?= admin_nav_is_active($active, $item) ? ' is-active' : '' ?>">
-            <span class="admin-nav-icon"><?= admin_nav_icon_svg($item['icon'] ?? 'file') ?></span>
-            <span class="admin-nav-label"><?= admin_h($item['label']) ?></span>
-            <?php if (!empty($item['badge'])): ?>
-              <span class="admin-nav-badge"><?= admin_h($item['badge']) ?></span>
+          <?php
+            $children = $item['children'] ?? [];
+            $hasChildren = $children !== [];
+            $itemActive = admin_nav_is_active($active, $item);
+            $groupOpen = $hasChildren && admin_nav_item_is_open($active, $item);
+          ?>
+          <div class="admin-nav-group<?= $hasChildren ? ' has-children' : '' ?><?= $groupOpen ? ' is-open' : '' ?>">
+            <a href="<?= admin_h($item['href']) ?>" class="admin-nav-link<?= $itemActive ? ' is-active' : '' ?>">
+              <span class="admin-nav-icon"><?= admin_nav_icon_svg($item['icon'] ?? 'file') ?></span>
+              <span class="admin-nav-label"><?= admin_h($item['label']) ?></span>
+              <?php if (!empty($item['badge'])): ?>
+                <span class="admin-nav-badge"><?= admin_h($item['badge']) ?></span>
+              <?php endif; ?>
+            </a>
+            <?php if ($hasChildren): ?>
+              <div class="admin-nav-sub">
+                <?php foreach ($children as $child): ?>
+                  <a href="<?= admin_h($child['href']) ?>" class="admin-nav-sublink<?= admin_nav_is_active($active, $child) ? ' is-active' : '' ?>">
+                    <?= admin_h($child['label']) ?>
+                  </a>
+                <?php endforeach; ?>
+              </div>
             <?php endif; ?>
-          </a>
+          </div>
         <?php endforeach; ?>
       <?php endforeach; ?>
     </nav>
@@ -638,11 +673,15 @@ function admin_render_simple_repeater(string $title, string $prefix, array $item
     $labelPrefix = $opts['label'] ?? 'รายการ';
     $rows = (int) ($opts['rows'] ?? 2);
     $min = (int) ($opts['min'] ?? 0);
+    $max = (int) ($opts['max'] ?? 0);
     if ($items === []) {
         $items = [''];
     }
+    if ($max > 0) {
+        $items = array_slice(array_values($items), 0, $max);
+    }
     ?>
-    <div class="admin-repeater" data-repeater="<?= admin_h($prefix) ?>" data-repeater-min="<?= $min ?>">
+    <div class="admin-repeater" data-repeater="<?= admin_h($prefix) ?>" data-repeater-min="<?= $min ?>"<?= $max > 0 ? ' data-repeater-max="' . $max . '"' : '' ?>>
       <div class="admin-repeater-head">
         <?php if ($title !== ''): ?><h3 class="admin-repeater-title"><?= admin_h($title) ?></h3><?php endif; ?>
         <button type="button" class="admin-btn admin-btn--secondary admin-btn--sm" data-repeater-add>+ เพิ่ม</button>

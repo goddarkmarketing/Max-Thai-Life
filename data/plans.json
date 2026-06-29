@@ -3,7 +3,7 @@
         {
             "category": "savings",
             "tag": "ออมทรัพย์",
-            "title": "ประกันลดหย่อนภาษี แบบสั้น",
+            "title": "วางแผนการเงินที่ดี เริ่มจากประกันออมทรัพย์",
             "desc": "แบบประกันออมทรัพย์ ลดหย่อนภาษี มีเงินเก็บ พร้อมคุ้มครองรายได้ตลอดสัญญา",
             "features": [
                 "ลดหย่อนภาษีได้",
@@ -13,7 +13,8 @@
             "href": "plans/tax-saving.html",
             "image": "images/plan-cards/card-savings.png",
             "theme": "tax",
-            "pinned": false
+            "pinned": true,
+            "pinnedAt": "2026-06-26T20:44:22+07:00"
         },
         {
             "category": "protect",
@@ -71,8 +72,7 @@
             "href": "plans/legacy-fit-retire.html",
             "image": "images/plan-cards/card-pension.png",
             "theme": "retire",
-            "pinned": true,
-            "pinnedAt": "2026-06-26T10:24:06+07:00"
+            "pinned": false
         },
         {
             "category": "invest",
@@ -87,8 +87,96 @@
             "href": "plans/universal-life.html",
             "image": "images/plan-cards/card-invest.png",
             "theme": "universal",
+            "pinned": false
+        },
+        {
+            "category": "health",
+            "tag": "ประกันเด็ก",
+            "title": "ประกันสุขภาพเหมาจ่าย เด็ก",
+            "desc": "ประกันสุขภาพเหมาจ่ายสำหรับเด็กเล็กที่คุ้มครองค่ารักษาตั้งแต่บาทแรก",
+            "features": [],
+            "href": "plans/health.html",
+            "image": "images/cover แผนประกัน/20260629-063235-ff8659ed.png",
+            "theme": "health",
+            "visible": true
+        },
+        {
+            "category": "health",
+            "tag": "ประกันเหมาจ่ายเด็ก",
+            "title": "ประกันเหมาจ่ายเด็ก",
+            "desc": "คุ้มครองค่ารักษาเหมาจ่ายตั่งแต่บาทแรก",
+            "features": [],
+            "href": "plans/health.html",
+            "image": "images/cover แผนประกัน/20260629-091223-7dd985b3.png",
+            "theme": "health",
+            "visible": true,
             "pinned": true,
-            "pinnedAt": "2026-06-26T10:24:03+07:00"
+            "pinnedAt": "2026-06-29T06:41:41+07:00"
+        },
+        {
+            "category": "protect",
+            "tag": "คุ้มครองทรัพย์",
+            "title": "คุ้มทรัพย์19/19",
+            "desc": "🛡️ คุ้มครองชีวิต 1 ล้านบาท\r\n💙 เบี้ยเริ่มต้นเพียง 499 บาท/เดือน (เฉลี่ย)*",
+            "features": [
+                "✔ เบี้ยประกันไม่สูง",
+                "✔ เบี้ยประกันไม่สูง",
+                "✔ เหมาะสำหรับผู้เริ่มต้นทำประกันชีวิต"
+            ],
+            "href": "plans/protect.html",
+            "image": "images/cover แผนประกัน/20260629-092800-12d7d4d8.png",
+            "theme": "protect",
+            "visible": true
+        },
+        {
+            "category": "rider",
+            "tag": "คุ้มครอง108โรคร้ายแรง",
+            "title": "คุ้มครอง108โรคร้ายแรง",
+            "desc": "",
+            "features": [],
+            "href": "plans/rider.html",
+            "image": "images/cover แผนประกัน/20260629-101349-ccd4a3bd.png",
+            "theme": "infinite",
+            "visible": true
+        },
+        {
+            "category": "savings",
+            "tag": "ทีแอลแพลน 15/5",
+            "title": "ทีแอลแพลน 15/5",
+            "desc": "ออมเพียง 5 ปี...สร้างเงินก้อนใน 15 ปี\r\nเริ่มต้นวางแผนวันนี้ เพื่ออนาคตที่มั่นคงของคนที่คุณรัก",
+            "features": [
+                "ครบสัญญา รับเงิน 150% ของทุนประกัน"
+            ],
+            "href": "plans/savings.html",
+            "image": "images/cover แผนประกัน/20260629-104632-e73abe62.png",
+            "theme": "tax",
+            "visible": true
+        },
+        {
+            "category": "savings",
+            "tag": "ออมทรัพย์",
+            "title": "ที่แอลแพลน 15/10",
+            "desc": "ออมสั้น ลดหย่อนภาษี คุ้มครองชีวิต",
+            "features": [
+                "💙 ครบสัญญารับเงิน 150%"
+            ],
+            "href": "plans/money-fit.html",
+            "image": "images/cover แผนประกัน/20260629-121200-f30c0548.png",
+            "theme": "tax",
+            "visible": true
+        },
+        {
+            "category": "savings",
+            "tag": "ออมทรัพย์",
+            "title": "ทีแอลแพลน 20/10",
+            "desc": "💙 จ่ายเบี้ยเพียง 10 ปี\r\n🛡️ คุ้มครองชีวิต 20 ปี\r\n💰 ครบสัญญา รับเงิน 150% ของทุนประกัน",
+            "features": [
+                "เบี้ยประกันลดหย่อนภาษีได้"
+            ],
+            "href": "plans/money-fit.html",
+            "image": "images/cover แผนประกัน/20260629-124422-9b2cb801.png",
+            "theme": "tax",
+            "visible": true
         }
     ]
 }

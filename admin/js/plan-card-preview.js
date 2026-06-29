@@ -53,15 +53,24 @@
     );
   }
 
+  var CATEGORY_TAGS = {
+    savings: 'ออมทรัพย์',
+    protect: 'คุ้มครองชีวิต',
+    health: 'ประกันสุขภาพ',
+    rider: 'สัญญาเพิ่มเติม',
+    pension: 'บำนาญ/เกษียณ',
+    invest: 'ลงทุน/Life Verse',
+  };
+
   function slugFromForm() {
-    var slugInput = field('plan_slug');
-    var slug = slugInput && slugInput.value ? slugInput.value.trim() : '';
-    if (slug) return slug;
+    var oldSlug = field('old_slug');
+    if (oldSlug && oldSlug.value.trim()) return oldSlug.value.trim();
     var title = field('title');
-    return (title && title.value ? title.value : 'example')
+    var slug = (title && title.value ? title.value : 'example')
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
+    return slug || 'plan';
   }
 
   function renderFeatures() {
@@ -87,14 +96,13 @@
   function syncPreview() {
     var titleInput = field('title');
     var descInput = field('desc');
-    var tagInput = field('tag');
     var categoryInput = field('category');
     var imageInput = field('image');
 
     var title = titleInput && titleInput.value ? titleInput.value.trim() : 'ชื่อแผนประกัน';
     var desc = descInput && descInput.value ? descInput.value.trim() : 'คำอธิบายสั้นของแผนประกัน';
-    var tag = tagInput && tagInput.value ? tagInput.value.trim() : 'Tag';
     var category = categoryInput && categoryInput.value ? categoryInput.value.trim() : 'savings';
+    var tag = CATEGORY_TAGS[category] || category;
 
     preview.setAttribute('data-category', category);
 

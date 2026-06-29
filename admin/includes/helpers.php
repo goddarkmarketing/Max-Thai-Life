@@ -998,15 +998,18 @@ function admin_delete_content_shell(string $type, string $slug): void
 
 function admin_default_plan_nav_children(): array
 {
-    return [
-        ['label' => 'แผนประกันทั้งหมด', 'href' => 'plans.html'],
-        ['label' => 'ออมทรัพย์', 'href' => 'plans.html?category=savings#savings', 'category' => 'savings'],
-        ['label' => 'คุ้มครองชีวิต', 'href' => 'plans.html?category=protect#protect', 'category' => 'protect'],
-        ['label' => 'ประกันสุขภาพ', 'href' => 'plans.html?category=health#health', 'category' => 'health'],
-        ['label' => 'สัญญาเพิ่มเติม', 'href' => 'plans.html?category=rider#rider', 'category' => 'rider'],
-        ['label' => 'บำนาญ/เกษียณ', 'href' => 'plans.html?category=pension#pension', 'category' => 'pension'],
-        ['label' => 'ลงทุน/Life Verse', 'href' => 'plans.html?category=invest#invest', 'category' => 'invest'],
+    $children = [
+        ['label' => 'แผนประกันทั้งหมด', 'href' => 'plans.html', 'icon' => 'layout-grid'],
     ];
+    foreach (admin_plan_categories() as $cat) {
+        $children[] = [
+            'label' => $cat['label'],
+            'href' => 'plans.html?category=' . $cat['id'] . '#' . $cat['id'],
+            'category' => $cat['id'],
+            'icon' => $cat['icon'],
+        ];
+    }
+    return $children;
 }
 
 function admin_default_navigation(): array
@@ -1841,6 +1844,107 @@ function admin_normalize_meta(array $meta, array $brand = []): array
     }
 
     return $meta;
+}
+
+function admin_plan_categories(): array
+{
+    return [
+        ['id' => 'savings', 'label' => 'ออมทรัพย์', 'icon' => 'piggy-bank'],
+        ['id' => 'protect', 'label' => 'คุ้มครองชีวิต', 'icon' => 'shield-check'],
+        ['id' => 'health', 'label' => 'ประกันสุขภาพ', 'icon' => 'heart-pulse'],
+        ['id' => 'rider', 'label' => 'สัญญาเพิ่มเติม', 'icon' => 'file-plus-2'],
+        ['id' => 'pension', 'label' => 'บำนาญ/เกษียณ', 'icon' => 'armchair'],
+        ['id' => 'invest', 'label' => 'ลงทุน/Life Verse', 'icon' => 'trending-up'],
+    ];
+}
+
+function admin_plan_category_icon(?string $categoryId = null): string
+{
+    if ($categoryId === null || $categoryId === '') {
+        return 'layout-grid';
+    }
+    foreach (admin_plan_categories() as $cat) {
+        if ($cat['id'] === $categoryId) {
+            return (string) ($cat['icon'] ?? 'circle');
+        }
+    }
+    return 'circle';
+}
+
+function admin_plan_category_label(string $categoryId): string
+{
+    foreach (admin_plan_categories() as $cat) {
+        if ($cat['id'] === $categoryId) {
+            return $cat['label'];
+        }
+    }
+    return $categoryId;
+}
+
+function admin_plans_list_url(?string $category = null): string
+{
+    $category = trim((string) $category);
+    return $category !== '' ? 'plans-list.php?category=' . rawurlencode($category) : 'plans-list.php';
+}
+
+function admin_plans_active_nav(?string $category = null): string
+{
+    return admin_plans_list_url($category);
+}
+
+function admin_plan_nav_children(): array
+{
+    $children = [];
+    foreach (admin_plan_categories() as $cat) {
+        $children[] = [
+            'href' => admin_plans_list_url($cat['id']),
+            'label' => $cat['label'],
+        ];
+    }
+    return $children;
+}
+
+function admin_plan_detail_for_slug(string $slug): ?array
+{
+    $details = json_read('plans-detail.json');
+    $detail = $details['items'][$slug] ?? null;
+    return is_array($detail) ? $detail : null;
+}
+
+function admin_plan_uses_richtext(string $slug): bool
+{
+    $detail = admin_plan_detail_for_slug($slug);
+    return is_array($detail) && ($detail['editor'] ?? '') === 'richtext';
+}
+
+function admin_plan_edit_content_url(string $slug): string
+{
+    return admin_plan_uses_richtext($slug)
+        ? 'plan-richtext.php?slug=' . rawurlencode($slug)
+        : 'plan-visual.php?slug=' . rawurlencode($slug);
+}
+
+function admin_plan_init_richtext_detail(string $slug, array $card): void
+{
+    $details = json_read('plans-detail.json');
+    if (!isset($details['items']) || !is_array($details['items'])) {
+        $details['items'] = [];
+    }
+
+    $title = (string) ($card['title'] ?? $slug);
+    $details['items'][$slug] = array_merge($details['items'][$slug] ?? [], [
+        'editor' => 'richtext',
+        'bodyHtml' => (string) ($details['items'][$slug]['bodyHtml'] ?? ''),
+        'title' => $title,
+        'breadcrumb' => $title,
+        'description' => (string) ($card['desc'] ?? ''),
+        'heroLead' => (string) ($card['desc'] ?? ''),
+        'image' => (string) ($card['image'] ?? ''),
+        'ctaTitle' => (string) ($details['items'][$slug]['ctaTitle'] ?? ('สนใจ' . ($title !== '' ? ' ' . $title : 'แผนนี้') . '?')),
+        'ctaLead' => (string) ($details['items'][$slug]['ctaLead'] ?? 'ขอใบเสนอเบี้ยและปรึกษาฟรี'),
+        'visible' => ($details['items'][$slug]['visible'] ?? true) !== false,
+    ]);
+    json_write('plans-detail.json', $details);
 }
 
 function admin_plan_default_theme_for_category(string $category): string

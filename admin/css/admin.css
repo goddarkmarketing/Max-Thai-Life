@@ -269,6 +269,39 @@ body {
   box-shadow: 0 2px 8px rgba(0, 84, 166, 0.35);
 }
 
+.admin-nav-group.has-children .admin-nav-sub {
+  margin: 0.1rem 0 0.35rem 0.35rem;
+  padding: 0.15rem 0 0.15rem 0.85rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.admin-nav-sublink {
+  display: block;
+  padding: 0.42rem 0.75rem;
+  margin-bottom: 0.06rem;
+  border-radius: 7px;
+  color: rgba(255, 255, 255, 0.58);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.35;
+  transition: background var(--admin-transition), color var(--admin-transition);
+}
+
+.admin-nav-sublink:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.admin-nav-sublink.is-active {
+  background: rgba(0, 84, 166, 0.42);
+  color: #fff;
+}
+
+.admin-nav-group.is-open > .admin-nav-link:not(.is-active) {
+  color: rgba(255, 255, 255, 0.92);
+}
+
 .admin-sidebar-foot {
   padding: 1rem 0.75rem 1.15rem;
   border-top: 1px solid rgba(255, 255, 255, 0.07);
