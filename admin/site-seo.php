@@ -43,6 +43,14 @@ admin_layout_start('SEO', 'site-seo.php');
       'hint' => 'เช่น https://www.maxthailife.com — จำเป็นสำหรับ sitemap และ canonical',
       'placeholder' => 'https://www.example.com',
   ]); ?>
+  <?php admin_field('URL สำรองสำหรับรูปแชร์ (GitHub Pages)', 'meta_share_asset_fallback_url', $meta['shareAssetFallbackUrl'] ?? '', [
+      'hint' => 'ใช้เมื่อรูปบนโดเมนหลักยังไม่พร้อม — เช่น https://goddarkmarketing.github.io/Max-Thai-Life',
+      'placeholder' => 'https://username.github.io/repo',
+  ]); ?>
+  <?php admin_field('URL โฮสต์รูปแชร์หลัก (ถ้าแยกจากโดเมน)', 'meta_share_asset_base_url', $meta['shareAssetBaseUrl'] ?? '', [
+      'hint' => 'เว้นว่าง = ใช้ URL เว็บไซต์ด้านบน',
+      'placeholder' => 'https://www.example.com',
+  ]); ?>
   <?php admin_field('คำอธิบายเริ่มต้น (Meta Description)', 'meta_description', $meta['description'] ?? '', [
       'type' => 'textarea',
       'rows' => 3,

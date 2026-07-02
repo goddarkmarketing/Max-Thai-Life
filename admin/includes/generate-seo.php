@@ -8,6 +8,20 @@ function admin_seo_base_url(array $meta): string
     return rtrim(trim($meta['siteUrl'] ?? ''), '/');
 }
 
+function admin_seo_share_asset_base_url(array $meta): string
+{
+    $base = rtrim(trim($meta['shareAssetBaseUrl'] ?? ''), '/');
+    if ($base !== '') {
+        return $base;
+    }
+    return admin_seo_base_url($meta);
+}
+
+function admin_seo_share_asset_fallback_url(array $meta): string
+{
+    return rtrim(trim($meta['shareAssetFallbackUrl'] ?? ''), '/');
+}
+
 function admin_seo_url(string $base, string $path): string
 {
     $path = ltrim(str_replace('\\', '/', $path), '/');

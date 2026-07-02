@@ -1962,6 +1962,8 @@ function admin_normalize_meta(array $meta, array $brand = []): array
         'ogTitle' => ($brand['name'] ?? 'Max Thai Life') . ' | ' . ($brand['sub'] ?? 'สำนักงานตัวแทนแม็ก ไทยประกันชีวิต'),
         'ogDescription' => '',
         'siteUrl' => '',
+        'shareAssetBaseUrl' => '',
+        'shareAssetFallbackUrl' => 'https://goddarkmarketing.github.io/Max-Thai-Life',
         'titleSuffix' => '| Max Thai Life',
         'analyticsId' => '',
         'googleSiteVerification' => '',
@@ -2263,6 +2265,8 @@ function admin_apply_site_seo_post(array $data): array
     $meta = admin_normalize_meta($data['meta'] ?? [], $brand);
 
     $meta['siteUrl'] = rtrim(trim(admin_post('meta_site_url')), '/');
+    $meta['shareAssetBaseUrl'] = rtrim(trim(admin_post('meta_share_asset_base_url')), '/');
+    $meta['shareAssetFallbackUrl'] = rtrim(trim(admin_post('meta_share_asset_fallback_url')), '/');
     $meta['titleSuffix'] = trim(admin_post('meta_title_suffix', '| Max Thai Life'));
     $meta['description'] = trim(admin_post('meta_description'));
     $meta['ogTitle'] = trim(admin_post('meta_og_title'));

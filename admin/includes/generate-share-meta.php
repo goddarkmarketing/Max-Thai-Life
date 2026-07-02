@@ -50,6 +50,109 @@ function admin_share_absolute_asset(string $baseUrl, string $assetPath): string
     return '/' . $encoded;
 }
 
+function admin_share_normalize_asset_path(string $assetPath): string
+{
+    $assetPath = ltrim(str_replace('\\', '/', $assetPath), '/');
+    if ($assetPath === '') {
+        return '';
+    }
+
+    $candidates = [$assetPath];
+    if (preg_match('#^images/cover[\s_%]?(?:แผนประกัน|cart)/#u', $assetPath)) {
+        $basename = basename($assetPath);
+        $candidates[] = 'images/plan-covers/' . $basename;
+        if (preg_match('#^images/cover[\s_%]?(?:แผนประกัน|cart)/(.+)$#u', $assetPath, $m)) {
+            $candidates[] = 'images/plan-covers/' . $m[1];
+        }
+    }
+
+    foreach ($candidates as $candidate) {
+        $full = ROOT_PATH . '/' . $candidate;
+        if (is_file($full)) {
+            return $candidate;
+        }
+    }
+
+    return $assetPath;
+}
+
+function admin_share_url_is_reachable(string $url): bool
+{
+    static $cache = [];
+
+    if ($url === '') {
+        return false;
+    }
+    if (isset($cache[$url])) {
+        return $cache[$url];
+    }
+
+    $ok = false;
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        if ($ch !== false) {
+            curl_setopt_array($ch, [
+                CURLOPT_NOBODY => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_MAXREDIRS => 3,
+                CURLOPT_TIMEOUT => 4,
+                CURLOPT_CONNECTTIMEOUT => 3,
+                CURLOPT_USERAGENT => 'MaxThaiLifeShareMeta/1.0',
+            ]);
+            curl_exec($ch);
+            $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            $ok = $code >= 200 && $code < 400;
+        }
+    } else {
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'HEAD',
+                'timeout' => 4,
+                'follow_location' => 1,
+                'max_redirects' => 3,
+                'user_agent' => 'MaxThaiLifeShareMeta/1.0',
+            ],
+        ]);
+        $headers = @get_headers($url, true, $context);
+        if (is_array($headers)) {
+            $status = (string) ($headers[0] ?? '');
+            $ok = str_contains($status, '200') || str_contains($status, '301') || str_contains($status, '302');
+        }
+    }
+
+    $cache[$url] = $ok;
+    return $ok;
+}
+
+function admin_share_resolve_asset_url(array $meta, string $assetPath): string
+{
+    $assetPath = admin_share_normalize_asset_path($assetPath);
+    if ($assetPath === '') {
+        return '';
+    }
+
+    $bases = [];
+    $primary = admin_seo_share_asset_base_url($meta);
+    $fallback = admin_seo_share_asset_fallback_url($meta);
+    if ($primary !== '') {
+        $bases[] = $primary;
+    }
+    if ($fallback !== '' && $fallback !== $primary) {
+        $bases[] = $fallback;
+    }
+
+    foreach ($bases as $base) {
+        $url = admin_share_absolute_asset($base, $assetPath);
+        if (admin_share_url_is_reachable($url)) {
+            return $url;
+        }
+    }
+
+    $base = $primary !== '' ? $primary : $fallback;
+    return $base !== '' ? admin_share_absolute_asset($base, $assetPath) : '';
+}
+
 function admin_share_meta_html(array $opts): string
 {
     $title = htmlspecialchars((string) ($opts['title'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8');
@@ -171,11 +274,11 @@ function admin_share_plan_description(array $detail): string
 
 function admin_share_plan_image(string $slug, array $detail, array $imageMap, string $fallback): string
 {
-    if (!empty($detail['image'])) {
-        return (string) $detail['image'];
-    }
     if (!empty($imageMap[$slug])) {
         return (string) $imageMap[$slug];
+    }
+    if (!empty($detail['image'])) {
+        return (string) $detail['image'];
     }
     return $fallback;
 }
@@ -203,7 +306,7 @@ function generate_share_meta_all(): array
             'ogTitle' => $title,
             'ogDescription' => $description,
             'ogType' => 'website',
-            'ogImage' => admin_share_absolute_asset($baseUrl, $defaultImage),
+            'ogImage' => admin_share_resolve_asset_url($meta, $defaultImage),
             'ogUrl' => $baseUrl !== '' ? admin_seo_url($baseUrl, $path) : '',
             'siteName' => $siteName,
             'indexable' => ($page['indexable'] ?? true) !== false,
@@ -248,7 +351,7 @@ function generate_share_meta_all(): array
             'ogTitle' => $title,
             'ogDescription' => $description,
             'ogType' => 'website',
-            'ogImage' => admin_share_absolute_asset($baseUrl, $image),
+            'ogImage' => admin_share_resolve_asset_url($meta, $image),
             'ogUrl' => $baseUrl !== '' ? admin_seo_url($baseUrl, $href) : '',
             'siteName' => $siteName,
             'indexable' => true,
@@ -280,7 +383,7 @@ function generate_share_meta_all(): array
                 'ogTitle' => $title,
                 'ogDescription' => $description,
                 'ogType' => $set['ogType'],
-                'ogImage' => admin_share_absolute_asset($baseUrl, $image),
+                'ogImage' => admin_share_resolve_asset_url($meta, $image),
                 'ogUrl' => $baseUrl !== '' ? admin_seo_url($baseUrl, $path) : '',
                 'siteName' => $siteName,
                 'indexable' => true,

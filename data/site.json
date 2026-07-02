@@ -271,6 +271,7 @@
         "ogTitle": "Max Thai Life | สำนักงานตัวแทนแม็ก",
         "ogDescription": "Max Thai Life — ผู้บริหารศูนย์ ไทยประกันชีวิต สาขานครปฐม ที่ปรึกษาทางการเงินและประกันชีวิต",
         "siteUrl": "https://maxthailife.com",
+        "shareAssetFallbackUrl": "https://goddarkmarketing.github.io/Max-Thai-Life",
         "titleSuffix": "| Max Thai Life",
         "analyticsId": "",
         "googleSiteVerification": "",
