@@ -2071,6 +2071,35 @@ function admin_plan_edit_content_url(string $slug): string
         : 'plan-visual.php?slug=' . rawurlencode($slug);
 }
 
+function admin_plan_card_bootstrap_body_html(array $card): string
+{
+    $html = '';
+    $desc = trim(str_replace(["\r\n", "\r"], "\n", (string) ($card['desc'] ?? '')));
+    if ($desc !== '') {
+        $html .= '<h2>ภาพรวมแผน</h2>';
+        foreach (preg_split('/\n+/', $desc) as $line) {
+            $line = trim($line);
+            if ($line !== '') {
+                $html .= '<p>' . $line . '</p>';
+            }
+        }
+    }
+
+    $features = $card['features'] ?? [];
+    if (is_array($features) && $features !== []) {
+        $html .= '<h2>จุดเด่นและผลประโยชน์</h2><ul>';
+        foreach ($features as $feature) {
+            $feature = trim((string) $feature);
+            if ($feature !== '') {
+                $html .= '<li>' . $feature . '</li>';
+            }
+        }
+        $html .= '</ul>';
+    }
+
+    return trim($html) !== '' ? $html : '<p></p>';
+}
+
 function admin_plan_init_richtext_detail(string $slug, array $card): void
 {
     $details = json_read('plans-detail.json');
@@ -2079,9 +2108,11 @@ function admin_plan_init_richtext_detail(string $slug, array $card): void
     }
 
     $title = (string) ($card['title'] ?? $slug);
+    $existingBody = (string) ($details['items'][$slug]['bodyHtml'] ?? '');
+    $bodyHtml = trim($existingBody) !== '' ? $existingBody : admin_plan_card_bootstrap_body_html($card);
     $details['items'][$slug] = array_merge($details['items'][$slug] ?? [], [
         'editor' => 'richtext',
-        'bodyHtml' => (string) ($details['items'][$slug]['bodyHtml'] ?? ''),
+        'bodyHtml' => $bodyHtml,
         'title' => $title,
         'breadcrumb' => $title,
         'description' => (string) ($card['desc'] ?? ''),
@@ -2092,6 +2123,37 @@ function admin_plan_init_richtext_detail(string $slug, array $card): void
         'visible' => ($details['items'][$slug]['visible'] ?? true) !== false,
     ]);
     json_write('plans-detail.json', $details);
+}
+
+function admin_plan_sync_missing_details(): int
+{
+    $plans = json_read('plans.json');
+    $details = json_read('plans-detail.json');
+    $items = $details['items'] ?? [];
+    if (!is_array($items)) {
+        $items = [];
+    }
+
+    $created = 0;
+    $seen = [];
+    foreach ($plans['items'] ?? [] as $card) {
+        if (!is_array($card)) {
+            continue;
+        }
+        $href = (string) ($card['href'] ?? '');
+        $slug = preg_replace('#^plans/|\.html$#', '', $href);
+        if ($slug === '' || isset($seen[$slug])) {
+            continue;
+        }
+        $seen[$slug] = true;
+        if (isset($items[$slug])) {
+            continue;
+        }
+        admin_plan_init_richtext_detail($slug, $card);
+        $created++;
+    }
+
+    return $created;
 }
 
 function admin_plan_default_theme_for_category(string $category): string
