@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/generate-seo.php';
+require_once __DIR__ . '/generate-share-meta.php';
 require_once __DIR__ . '/plan-blocks.php';
 
 function js_encode($data, int $indent = 0): string
@@ -115,7 +116,7 @@ function generate_all_js(): void
     $planItems = admin_sort_pinned_list(admin_filter_visible_list($plans['items'] ?? []));
     js_write_file(
         JS_PATH . '/plans-data.js',
-        "var PLAN_COVER = \"images/cover แผนประกัน/\";\n\nwindow.PLANS_DATA = " . js_encode($planItems) . ";\n"
+        "var PLAN_COVER = \"images/plan-covers/\";\n\nwindow.PLANS_DATA = " . js_encode($planItems) . ";\n"
     );
 
     generate_plans_detail_js();
@@ -174,6 +175,7 @@ function generate_all_js(): void
     js_write_file(JS_PATH . '/pages-data.js', 'window.PAGES_DATA = ' . js_encode($pages) . ";\n");
 
     generate_seo_files();
+    generate_share_meta_all();
 }
 
 function admin_run_import(): bool

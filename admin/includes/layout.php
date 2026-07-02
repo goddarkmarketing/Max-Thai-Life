@@ -668,6 +668,67 @@ function admin_render_goal_chip_repeater(array $chips): void
     <?php
 }
 
+function admin_render_hero_slides_repeater(array $slides, int $max = 6): void
+{
+    global $IMAGE_SPECS;
+    $spec = $IMAGE_SPECS['hero_banner'] ?? null;
+    $hint = $spec['hint'] ?? '1920 × 800 px · JPG/PNG';
+    if ($slides === []) {
+        $slides = [['image' => '', 'alt' => '']];
+    }
+    $slides = array_slice(array_values($slides), 0, $max);
+    ?>
+    <div class="admin-repeater" data-repeater="heroSlides" data-repeater-min="1" data-repeater-max="<?= (int) $max ?>">
+      <div class="admin-repeater-head">
+        <h3 class="admin-repeater-title">สไลด์แบนเนอร์ (สูงสุด <?= (int) $max ?> ภาพ)</h3>
+        <button type="button" class="admin-btn admin-btn--secondary admin-btn--sm" data-repeater-add>+ เพิ่มสไลด์</button>
+      </div>
+      <p class="admin-hint admin-hint--tight">ภาพแรกจะแสดงก่อน · ขนาดแนะนำ <?= admin_h($hint) ?></p>
+      <div class="admin-repeater-list" data-repeater-list>
+        <?php foreach ($slides as $i => $slide): ?>
+          <article class="admin-repeater-item" data-repeater-item>
+            <header class="admin-repeater-item-head">
+              <strong data-repeater-label data-label-prefix="สไลด์">สไลด์ <?= (int) $i + 1 ?></strong>
+              <button type="button" class="admin-btn admin-btn--ghost admin-btn--sm" data-repeater-remove>ลบ</button>
+            </header>
+            <?php admin_image_field('ภาพแบนเนอร์', "hero_slide[{$i}][image]", $slide['image'] ?? '', 'hero_banner'); ?>
+            <?php admin_field('Alt text', "hero_slide[{$i}][alt]", $slide['alt'] ?? ''); ?>
+          </article>
+        <?php endforeach; ?>
+      </div>
+      <template data-repeater-template>
+        <article class="admin-repeater-item" data-repeater-item>
+          <header class="admin-repeater-item-head">
+            <strong data-repeater-label data-label-prefix="สไลด์">สไลด์</strong>
+            <button type="button" class="admin-btn admin-btn--ghost admin-btn--sm" data-repeater-remove>ลบ</button>
+          </header>
+          <div class="admin-field admin-field--image" data-image-field>
+            <label class="admin-label">ภาพแบนเนอร์</label>
+            <div class="admin-image-box">
+              <div class="admin-image-preview" data-image-preview>
+                <span class="admin-image-empty">ยังไม่มีรูป</span>
+              </div>
+              <div class="admin-image-controls">
+                <input type="hidden" name="hero_slide[__INDEX__][image]" value="" data-image-input>
+                <input type="file" accept="image/*" data-image-upload data-spec="hero_banner" hidden>
+                <button type="button" class="admin-btn admin-btn--secondary admin-btn--sm" data-image-trigger>เลือกรูป</button>
+                <button type="button" class="admin-btn admin-btn--ghost admin-btn--sm" data-image-clear>ลบรูป</button>
+                <p class="admin-hint admin-hint--spec">
+                  <strong>ขนาดแนะนำ:</strong> <?= admin_h($hint) ?>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="admin-field">
+            <label class="admin-label">Alt text</label>
+            <input class="admin-input" type="text" name="hero_slide[__INDEX__][alt]" value="">
+          </div>
+        </article>
+      </template>
+    </div>
+    <?php
+}
+
 function admin_render_simple_repeater(string $title, string $prefix, array $items, string $fieldType = 'text', array $opts = []): void
 {
     $labelPrefix = $opts['label'] ?? 'รายการ';

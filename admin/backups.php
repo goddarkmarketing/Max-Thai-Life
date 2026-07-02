@@ -56,6 +56,7 @@ admin_layout_start('สำรอง / กู้คืน', 'backups.php');
   <input type="hidden" name="action" value="create">
   <button type="submit" class="admin-btn admin-btn--primary">+ สร้างไฟล์สำรองตอนนี้</button>
   <p class="admin-hint admin-hint--tight">รวม JSON · JS หน้าบ้าน · รูป/วิดีโอ — ชุดที่เกิน <?= (int) $maxBackups ?> จะถูกลบอัตโนมัติ</p>
+  <p class="admin-hint admin-hint--tight">ถ้าดาวน์โหลด ZIP ไม่ได้ ลองปุ่ม「JSON」 (เฉพาะข้อมูล) หรือดาวน์โหลดโฟลเดอร์ <code>data/backups/</code> ผ่าน cPanel/FTP</p>
 </form>
 <?php admin_card_end(); ?>
 
@@ -111,7 +112,8 @@ admin_layout_start('สำรอง / กู้คืน', 'backups.php');
           <td><?= admin_h(admin_format_bytes((int) ($b['totalBytes'] ?? 0))) ?></td>
           <td>
             <div class="admin-table-actions admin-table-actions--tight">
-              <a href="backup-download.php?id=<?= urlencode($b['id']) ?>&file=all.zip" class="admin-btn admin-btn--secondary admin-btn--sm" title="ดาวน์โหลด">ZIP</a>
+              <a href="backup-download.php?id=<?= urlencode($b['id']) ?>&file=all.zip" class="admin-btn admin-btn--secondary admin-btn--sm" title="ดาวน์โหลดทั้งหมด">ZIP</a>
+              <a href="backup-download.php?id=<?= urlencode($b['id']) ?>&file=data-only.zip" class="admin-btn admin-btn--ghost admin-btn--sm" title="เฉพาะ JSON + JS">JSON</a>
               <form method="post" class="admin-inline-form" onsubmit="return confirm('กู้คืนข้อมูลจากชุดนี้? ข้อมูลปัจจุบันจะถูกแทนที่');">
                 <input type="hidden" name="csrf" value="<?= admin_h(admin_csrf_token()) ?>">
                 <input type="hidden" name="action" value="restore_all">

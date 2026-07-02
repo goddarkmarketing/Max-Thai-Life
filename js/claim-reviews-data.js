@@ -126,10 +126,50 @@ window.CLAIM_REVIEWS_DETAIL = {
         ]
       }
     ]
+  },
+  "item-1782744209": {
+    slug: "item-1782744209",
+    title: "เคลมค่ารักษา",
+    description: "",
+    category: "",
+    datePublished: "2026-06-29",
+    dateModified: "2026-06-29",
+    image: "images/cover cart/20260629-214321-0ae17554.jpeg",
+    sections: [
+      {
+        title: "",
+        subtitle: "",
+        description: "เนื้อหาข้อความ",
+        image: {
+          src: "",
+          alt: ""
+        },
+        buttonText: "",
+        buttonLink: "",
+        isVisible: true,
+        sortOrder: 0,
+        id: "082d7544f5c799a0",
+        type: "text",
+        alt: false,
+        icon: "shield-check",
+        showIcon: true,
+        items: [],
+        videoUrl: "",
+        videoSrc: "",
+        customHtml: "",
+        columns: 3,
+        visible: true
+      }
+    ],
+    visible: true,
+    quote: "",
+    author: "ตัวแทน",
+    result: ""
   }
 };
 
 window.CLAIM_REVIEWS_LIST = [
+  "item-1782744209",
   "hospital-ipd-claim",
   "medicare-hotclaim",
   "outpatient-claim",

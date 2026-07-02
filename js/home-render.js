@@ -32,11 +32,7 @@
   function heroSlides(data) {
     if (data.slides && data.slides.length) return data.slides;
     if (!data.image) return [];
-    return [
-      { image: data.image, alt: data.alt || "" },
-      { image: data.image, alt: data.alt || "" },
-      { image: data.image, alt: data.alt || "" }
-    ];
+    return [{ image: data.image, alt: data.alt || "" }];
   }
 
   var heroTrack = document.querySelector("[data-hero-track]");

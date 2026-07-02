@@ -3,7 +3,25 @@ Thumbs.db
 desktop.ini
 *.log
 .cursor/
+
+# Backups & archives (never commit)
 data/backups/
+data/source.zip
+*.zip
+*.rar
+*.7z
+*.bak
+*.tar
+*.tar.gz
+*.tzst
+
+# Temp admin / import tools
+admin/tools/_test-path.php
+admin/tools/_migrate-plan-covers.php
+admin/tools/_replace-plan-cover-paths.php
+data/backups/_plesk-import/
+data/backups/_plesk-inspect/
+
 admin/includes/config.local.php
 _page_visual.html
 pdf24_converted/

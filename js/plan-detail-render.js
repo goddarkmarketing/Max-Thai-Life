@@ -40,6 +40,46 @@
   var meta = document.querySelector('meta[name="description"]');
   if (meta) meta.setAttribute("content", plainText(plan.description || plan.heroLead));
 
+  var pageUrl = window.location.href.split("#")[0].split("?")[0];
+  var shareImage = plan.image || cardImage || "images/logo/LOGO-THAILIFE.png";
+  var imageUrl = new URL("../" + shareImage.replace(/^\.\.\//, ""), pageUrl).href;
+  var shareTitle = plainText(plan.title);
+  var shareDesc = plainText(plan.description || plan.heroLead);
+
+  function upsertMeta(attr, key, value) {
+    if (!value) return;
+    var sel = "meta[" + attr + '="' + key + '"]';
+    var el = document.querySelector(sel);
+    if (!el) {
+      el = document.createElement("meta");
+      el.setAttribute(attr, key);
+      document.head.appendChild(el);
+    }
+    el.setAttribute("content", value);
+  }
+
+  function upsertLink(rel, href) {
+    if (!href) return;
+    var el = document.querySelector('link[rel="' + rel + '"]');
+    if (!el) {
+      el = document.createElement("link");
+      el.setAttribute("rel", rel);
+      document.head.appendChild(el);
+    }
+    el.setAttribute("href", href);
+  }
+
+  upsertLink("canonical", pageUrl);
+  upsertMeta("property", "og:type", "website");
+  upsertMeta("property", "og:title", shareTitle);
+  upsertMeta("property", "og:description", shareDesc);
+  upsertMeta("property", "og:image", imageUrl);
+  upsertMeta("property", "og:url", pageUrl);
+  upsertMeta("name", "twitter:card", "summary_large_image");
+  upsertMeta("name", "twitter:title", shareTitle);
+  upsertMeta("name", "twitter:description", shareDesc);
+  upsertMeta("name", "twitter:image", imageUrl);
+
   var hero = document.querySelector("header.page-hero");
   if (hero) hero.classList.add("page-hero--plan");
 

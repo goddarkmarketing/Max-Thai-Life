@@ -94,6 +94,29 @@ function admin_post_array(string $key): array
     return is_array($_POST[$key] ?? null) ? $_POST[$key] : [];
 }
 
+/** @return list<array{image:string,alt:string}> */
+function admin_parse_hero_slides_from_post(array $raw, int $max = 6): array
+{
+    $slides = [];
+    foreach ($raw as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        $image = trim((string) ($item['image'] ?? ''));
+        if ($image === '') {
+            continue;
+        }
+        $slides[] = [
+            'image' => $image,
+            'alt' => trim((string) ($item['alt'] ?? '')),
+        ];
+        if (count($slides) >= $max) {
+            break;
+        }
+    }
+    return $slides;
+}
+
 function admin_content_type_config(string $type): ?array
 {
     $map = [
@@ -773,9 +796,133 @@ function admin_create_manual_backup(): string
         LOCK_EX
     );
 
+    try {
+        admin_build_backup_zip($id);
+    } catch (Throwable $e) {
+        // โฟลเดอร์สำรองยังใช้ได้ — ดาวน์โหลดจะลองสร้าง zip อีกครั้ง
+    }
+
     admin_prune_backups();
 
     return $id;
+}
+
+function admin_backup_prepare_download(): void
+{
+    @set_time_limit(0);
+    @ini_set('memory_limit', '512M');
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+}
+
+function admin_send_file_download(string $path, string $downloadName, string $mime = 'application/octet-stream'): void
+{
+    admin_backup_prepare_download();
+    if (!is_file($path)) {
+        throw new RuntimeException('ไม่พบไฟล์');
+    }
+    $size = filesize($path);
+    if ($size === false) {
+        throw new RuntimeException('อ่านขนาดไฟล์ไม่สำเร็จ');
+    }
+    header('Content-Type: ' . $mime);
+    header('Content-Disposition: attachment; filename="' . str_replace('"', '', $downloadName) . '"');
+    header('Content-Length: ' . (string) $size);
+    header('Cache-Control: no-store, no-cache, must-revalidate');
+    header('Pragma: no-cache');
+    $fp = fopen($path, 'rb');
+    if ($fp === false) {
+        throw new RuntimeException('เปิดไฟล์ไม่สำเร็จ');
+    }
+    while (!feof($fp)) {
+        $chunk = fread($fp, 1024 * 1024);
+        if ($chunk === false) {
+            fclose($fp);
+            throw new RuntimeException('อ่านไฟล์ไม่สำเร็จ');
+        }
+        echo $chunk;
+        flush();
+    }
+    fclose($fp);
+    exit;
+}
+
+function admin_backup_zip_skip(string $basename): bool
+{
+    return in_array($basename, ['all.zip', 'data-only.zip'], true);
+}
+
+/** @return list<string> */
+function admin_backup_zip_sources(string $dir, bool $dataOnly = false): array
+{
+    $out = [];
+    foreach (admin_backup_iter_files($dir) as $path) {
+        $basename = basename($path);
+        if (admin_backup_zip_skip($basename)) {
+            continue;
+        }
+        $rel = str_replace('\\', '/', substr($path, strlen($dir) + 1));
+        if ($dataOnly && !str_starts_with($rel, 'data/') && !str_starts_with($rel, 'js/')) {
+            continue;
+        }
+        $out[] = $path;
+    }
+    return $out;
+}
+
+function admin_build_backup_zip(string $backupId, bool $dataOnly = false): string
+{
+    $backupId = basename($backupId);
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$/', $backupId)) {
+        throw new InvalidArgumentException('รหัสสำรองไม่ถูกต้อง');
+    }
+    $dir = BACKUP_PATH . '/' . $backupId;
+    if (!is_dir($dir)) {
+        throw new RuntimeException('ไม่พบไฟล์สำรอง');
+    }
+    if (!class_exists('ZipArchive')) {
+        throw new RuntimeException('เซิร์ฟเวอร์ไม่รองรับ Zip — ติดต่อโฮสต์ให้เปิด php-zip');
+    }
+
+    admin_backup_prepare_download();
+
+    $zipName = $dataOnly ? 'data-only.zip' : 'all.zip';
+    $zipPath = $dir . '/' . $zipName;
+    if (is_file($zipPath)) {
+        unlink($zipPath);
+    }
+
+    $sources = admin_backup_zip_sources($dir, $dataOnly);
+    if ($sources === []) {
+        throw new RuntimeException('ไม่มีไฟล์ให้บีบอัด');
+    }
+
+    $zip = new ZipArchive();
+    if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+        throw new RuntimeException('สร้างไฟล์ zip ไม่สำเร็จ');
+    }
+    foreach ($sources as $path) {
+        $rel = str_replace('\\', '/', substr($path, strlen($dir) + 1));
+        if (!$zip->addFile($path, $rel)) {
+            $zip->close();
+            if (is_file($zipPath)) {
+                unlink($zipPath);
+            }
+            throw new RuntimeException('บีบอัดไฟล์ไม่สำเร็จ: ' . $rel);
+        }
+    }
+    if (!$zip->close()) {
+        if (is_file($zipPath)) {
+            unlink($zipPath);
+        }
+        throw new RuntimeException('ปิดไฟล์ zip ไม่สำเร็จ');
+    }
+    if (!is_file($zipPath) || filesize($zipPath) === 0) {
+        throw new RuntimeException('สร้างไฟล์ zip ไม่สำเร็จ');
+    }
+
+    return $zipPath;
 }
 
 function admin_delete_backup(string $backupId): void
@@ -843,7 +990,7 @@ function admin_media_allowed_roots(): array
     return [
         'images/uploads',
         'videos/uploads',
-        'images/cover แผนประกัน',
+        'images/plan-covers',
         'images/cover cart',
         'images/แนะนำอาชีพ',
         'images/cta',
@@ -926,7 +1073,7 @@ function admin_scan_media_files(): array
     $roots = [
         'images/uploads' => 'อัปโหลด',
         'videos/uploads' => 'วิดีโอ',
-        'images/cover แผนประกัน' => 'แผนประกัน',
+        'images/plan-covers' => 'แผนประกัน',
         'images/cover cart' => 'ปกบทความ',
         'images/แนะนำอาชีพ' => 'แนะนำอาชีพ',
         'images/cta' => 'CTA',
