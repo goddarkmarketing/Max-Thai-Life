@@ -20,9 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_verify_csrf($_POST['csrf'] ??
     $tab = admin_post('tab', 'hero');
 
     if ($tab === 'hero') {
+        $slides = admin_parse_hero_slides_from_post(admin_post_array('hero_slide'), 6);
+        $first = $slides[0] ?? ['image' => '', 'alt' => ''];
         $data['hero'] = [
-            'image' => admin_post('hero_image'),
-            'alt' => admin_post('hero_alt'),
+            'image' => $first['image'],
+            'alt' => $first['alt'],
+            'slides' => $slides,
             'avatar' => admin_post('hero_avatar'),
             'lead' => admin_post('hero_lead'),
             'ctaPrimary' => ['label' => admin_post('cta_primary_label'), 'href' => admin_post('cta_primary_href')],
@@ -150,6 +153,12 @@ function admin_parse_testimonials_from_post(array $raw): array
 }
 
 $hero = $data['hero'] ?? [];
+$heroSlides = $hero['slides'] ?? [];
+if ($heroSlides === [] && ($hero['image'] ?? '') !== '') {
+    $heroSlides = [
+        ['image' => $hero['image'], 'alt' => $hero['alt'] ?? ''],
+    ];
+}
 $profile = $data['profile'] ?? [];
 $plansSec = $data['plansSection'] ?? [];
 $articlesSec = $data['articlesSection'] ?? [];
@@ -187,8 +196,7 @@ admin_layout_start('หน้าแรก', 'home.php');
 
   <?php if ($tab === 'hero'): ?>
     <?php admin_card_start('Hero แบนเนอร์'); ?>
-    <?php admin_image_field('ภาพแบนเนอร์', 'hero_image', $hero['image'] ?? '', 'hero_banner'); ?>
-    <?php admin_field('Alt text', 'hero_alt', $hero['alt'] ?? ''); ?>
+    <?php admin_render_hero_slides_repeater($heroSlides, 6); ?>
     <?php admin_image_field('รูปโปรไฟล์ (Hero)', 'hero_avatar', $hero['avatar'] ?? '', 'agent_profile'); ?>
     <?php admin_field('ข้อความแนะนำ', 'hero_lead', $hero['lead'] ?? '', ['type' => 'textarea', 'rows' => 2]); ?>
     <div class="admin-grid admin-grid--3">

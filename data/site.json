@@ -178,35 +178,35 @@
                     {
                         "label": "สิทธิพิเศษ",
                         "href": "https://www.thailife.com/th/service/customer",
-                        "visible": true,
+                        "visible": false,
                         "external": true
                     },
                     {
                         "label": "ไทยประกันชีวิต iService",
                         "href": "https://www.thailife.com",
-                        "visible": true,
+                        "visible": false,
                         "external": true
                     },
                     {
                         "label": "แคร์เซ็นเตอร์ (CSC)",
                         "href": "https://www.thailife.com",
-                        "visible": true,
+                        "visible": false,
                         "external": true
                     },
                     {
                         "label": "ฮอตไลน์ 1124",
                         "href": "tel:1124",
-                        "visible": true
+                        "visible": false
                     },
                     {
                         "label": "เมดิแคร์ / ฮอตเคลม",
                         "href": "https://www.thailife.com",
-                        "visible": true,
+                        "visible": false,
                         "external": true
                     },
                     {
                         "label": "โรงพยาบาลคู่สัญญา",
-                        "href": "https://www.thailife.com",
+                        "href": "https://www.thailife.com/%E0%B8%AA%E0%B8%96%E0%B8%B2%E0%B8%99%E0%B8%9E%E0%B8%A2%E0%B8%B2%E0%B8%9A%E0%B8%B2%E0%B8%A5%E0%B8%84%E0%B8%B9%E0%B9%88%E0%B8%AA%E0%B8%B1%E0%B8%8D%E0%B8%8D%E0%B8%B2",
                         "visible": true,
                         "external": true
                     }
@@ -219,7 +219,7 @@
                     {
                         "label": "นักขายดิจิทัล (Digital Agent)",
                         "href": "https://www.thailife.com",
-                        "visible": true,
+                        "visible": false,
                         "external": true
                     },
                     {
@@ -247,19 +247,19 @@
                 {
                     "label": "นโยบายส่วนบุคคล",
                     "href": "https://www.thailife.com/th/privacy",
-                    "visible": true,
+                    "visible": false,
                     "external": true
                 },
                 {
                     "label": "thailife.com",
                     "href": "https://www.thailife.com",
-                    "visible": true,
+                    "visible": false,
                     "external": true
                 },
                 {
                     "label": "Digital Office",
                     "href": "https://digitaloffices.thailife.com/worachat.tot",
-                    "visible": true,
+                    "visible": false,
                     "external": true
                 }
             ]
@@ -270,7 +270,7 @@
         "ogImage": "images/logo/LOGO-THAILIFE.png",
         "ogTitle": "Max Thai Life | สำนักงานตัวแทนแม็ก",
         "ogDescription": "Max Thai Life — ผู้บริหารศูนย์ ไทยประกันชีวิต สาขานครปฐม ที่ปรึกษาทางการเงินและประกันชีวิต",
-        "siteUrl": "",
+        "siteUrl": "https://maxthailife.com",
         "titleSuffix": "| Max Thai Life",
         "analyticsId": "",
         "googleSiteVerification": "",
@@ -364,14 +364,9 @@
                     "category": "pension"
                 },
                 {
-                    "label": "ลงทุน/Life Verse",
+                    "label": "ประกันชีวิต/กึ่งลงทุน/Life Verse",
                     "href": "plans.html?category=invest#invest",
                     "category": "invest"
-                },
-                {
-                    "label": "ลอง",
-                    "href": "plans/money-fit.html",
-                    "category": "savings"
                 }
             ]
         },
