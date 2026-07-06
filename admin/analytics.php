@@ -166,7 +166,12 @@ admin_layout_start('สถิติการเข้าชม', 'analytics.php'
           <?php foreach ($rows as $row): ?>
           <tr>
             <td>
-              <a href="<?= admin_h($row['href']) ?>" target="_blank" rel="noopener"><?= admin_h($row['title']) ?></a>
+              <?php if (!empty($row['exists'])): ?>
+                <a href="<?= admin_h($row['href']) ?>" target="_blank" rel="noopener"><?= admin_h($row['title']) ?></a>
+              <?php else: ?>
+                <span><?= admin_h($row['title']) ?></span>
+                <div class="admin-hint">ไม่พบไฟล์บน server — ลิงก์: <?= admin_h($row['href']) ?></div>
+              <?php endif; ?>
               <div class="admin-hint"><?= admin_h($row['id']) ?></div>
             </td>
             <td style="text-align: right; font-variant-numeric: tabular-nums;"><?= admin_h(admin_analytics_format_number($row['views'])) ?></td>

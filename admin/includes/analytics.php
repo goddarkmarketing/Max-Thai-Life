@@ -2,6 +2,54 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/helpers.php';
+require_once __DIR__ . '/generate-seo.php';
+
+function admin_analytics_page_path(string $type, string $id): string
+{
+    return match ($type) {
+        'articles' => 'articles/' . $id . '.html',
+        'news' => 'news/' . $id . '.html',
+        'careers' => 'careers/' . $id . '.html',
+        'plans' => 'plans/' . $id . '.html',
+        'site' => $id === 'index.html' ? 'index.html' : $id,
+        default => '',
+    };
+}
+
+function admin_analytics_page_exists(string $type, string $id): bool
+{
+    $path = admin_analytics_page_path($type, $id);
+    if ($path === '') {
+        return false;
+    }
+    return is_file(ROOT_PATH . '/' . $path);
+}
+
+function admin_analytics_page_url(string $type, string $id): string
+{
+    $path = admin_analytics_page_path($type, $id);
+    if ($path === '') {
+        return '#';
+    }
+
+    $site = json_read('site.json');
+    $meta = admin_normalize_meta($site['meta'] ?? [], $site['brand'] ?? []);
+    $base = admin_seo_base_url($meta);
+    $webPath = $path === 'index.html' ? '' : $path;
+
+    if ($base !== '') {
+        return admin_seo_url($base, $webPath);
+    }
+
+    return match ($type) {
+        'articles' => '../articles/' . $id . '.html',
+        'news' => '../news/' . $id . '.html',
+        'careers' => '../careers/' . $id . '.html',
+        'plans' => '../plans/' . $id . '.html',
+        'site' => '../' . $path,
+        default => '#',
+    };
+}
 
 function admin_analytics_default(): array
 {
@@ -400,19 +448,13 @@ function admin_analytics_rows(string $type, ?array $data = null): array
             continue;
         }
         $title = $labels[$id] ?? $id;
-        $href = match ($type) {
-            'articles' => '../articles/' . $id . '.html',
-            'news' => '../news/' . $id . '.html',
-            'careers' => '../careers/' . $id . '.html',
-            'plans' => '../plans/' . $id . '.html',
-            'site' => '../' . ($id === 'index.html' ? '' : $id),
-            default => '#',
-        };
+        $slug = (string) $id;
         $rows[] = [
-            'id' => (string) $id,
+            'id' => $slug,
             'title' => $title,
             'views' => $views,
-            'href' => $href,
+            'href' => admin_analytics_page_url($type, $slug),
+            'exists' => admin_analytics_page_exists($type, $slug),
         ];
     }
 
