@@ -1271,6 +1271,17 @@ a:hover {
   gap: 1.25rem;
   padding: 0;
   margin: 0;
+  align-items: stretch;
+}
+
+.product-card-grid > li {
+  display: flex;
+  min-height: 100%;
+}
+
+.product-card-grid > li > .product-card {
+  flex: 1;
+  width: 100%;
 }
 
 .product-card-grid--3 {
@@ -1428,8 +1439,23 @@ a:hover {
   margin: 0 0 0.65rem;
 }
 
+.product-card-body .card-view-count,
+.plan-card-body .card-view-count {
+  display: flex;
+  align-items: center;
+  flex: 0 0 1.65rem;
+  min-height: 1.65rem;
+  margin: 0 0 0.5rem;
+}
+
+.product-card-body .card-view-count:not(.has-analytics-views),
+.plan-card-body .card-view-count:not(.has-analytics-views) {
+  visibility: hidden;
+}
+
 .card-view-count.has-analytics-views {
-  display: block;
+  display: flex;
+  align-items: center;
 }
 
 .card-view-count [data-analytics-views] {
@@ -1469,7 +1495,7 @@ a:hover {
 }
 
 .plan-card-body .card-view-count {
-  margin-top: 0.15rem;
+  margin-top: 0;
 }
 
 .news-card-body .card-view-count {
@@ -3165,6 +3191,11 @@ button.product-card-link:hover {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.75rem;
+  align-items: stretch;
+}
+
+.plan-grid > .plan-card {
+  height: 100%;
 }
 
 .plan-grid-4 {
@@ -3287,13 +3318,14 @@ button.product-card-link:hover {
 
 .plan-card-features {
   list-style: none;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0;
   font-size: 0.6875rem;
   font-weight: 500;
   line-height: 1.3;
   display: flex;
+  flex: 1 1 auto;
   flex-wrap: nowrap;
-  align-items: center;
+  align-items: flex-end;
   gap: 0;
   overflow: hidden;
   min-height: 1.25rem;
@@ -3328,6 +3360,8 @@ button.product-card-link:hover {
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin-top: 0.65rem;
+  flex-shrink: 0;
   padding: 0.75rem 1.25rem;
   font-size: 0.9375rem;
   font-weight: 600;
