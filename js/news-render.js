@@ -100,7 +100,7 @@
       var aSame = a.category === item.category ? 1 : 0;
       var bSame = b.category === item.category ? 1 : 0;
       if (bSame !== aSame) return bSame - aSame;
-      return (b.views || 0) - (a.views || 0);
+      return String(b.datePublished || "").localeCompare(String(a.datePublished || ""));
     });
 
     return pool.slice(0, limit);
@@ -246,13 +246,9 @@
       '" itemprop="datePublished">' +
       formatDate(item.datePublished) +
       "</time>" +
-      (item.views
-        ? '<span class="article-detail-stats">' +
-          item.views.toLocaleString("th-TH") +
-          " views" +
-          (item.shares ? " · " + item.shares + " shares" : "") +
-          "</span>"
-        : "") +
+      '<span class="article-detail-stats" data-analytics-views data-content-type="news" data-content-id="' +
+      id +
+      '" hidden></span>' +
       "</div>" +
       "</header>" +
       '<div class="article-prose" itemprop="articleBody">' +

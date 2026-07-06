@@ -12,15 +12,11 @@
     }
 
     function cardHtml(item, linkLabel) {
-      var stats = "";
-      if (item.views) {
-        stats =
-          '<p class="product-card-stats">' +
-          item.views.toLocaleString("th-TH") +
-          " views";
-        if (item.shares) stats += " · " + item.shares + " shares";
-        stats += "</p>";
-      }
+      var stats =
+        '<p class="product-card-stats">' +
+        '<span data-analytics-views data-content-type="careers" data-content-id="' +
+        item.slug +
+        '" hidden></span></p>';
 
       return (
         "<li>" +

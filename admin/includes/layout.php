@@ -18,6 +18,7 @@ function admin_nav_groups(): array
             'label' => '',
             'items' => [
                 ['href' => 'dashboard.php', 'label' => 'ภาพรวม', 'icon' => 'grid'],
+                ['href' => 'analytics.php', 'label' => 'สถิติการเข้าชม', 'icon' => 'eye'],
             ],
         ],
         [

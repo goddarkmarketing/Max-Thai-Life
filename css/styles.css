@@ -1420,6 +1420,9 @@ a:hover {
 }
 
 .product-card-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.75rem;
   color: var(--muted);
   margin: 0 0 0.5rem;
@@ -3564,6 +3567,12 @@ button.product-card-link:hover {
 
 .article-detail-date {
   font-weight: 500;
+}
+
+.article-detail-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .article-prose {

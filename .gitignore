@@ -4,6 +4,10 @@ desktop.ini
 *.log
 .cursor/
 
+# Runtime analytics (production-only counters)
+data/analytics.json
+data/analytics-dedup.json
+
 # Backups & archives (never commit)
 data/backups/
 data/source.zip

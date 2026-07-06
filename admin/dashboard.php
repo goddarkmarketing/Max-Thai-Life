@@ -44,6 +44,7 @@ admin_layout_start('ภาพรวม', 'dashboard.php');
 <?php admin_card_start('ทางลัด', 'เลือกส่วนที่ต้องการแก้ไข'); ?>
 <div class="admin-quick-links">
   <?php
+  admin_render_quick_link('analytics.php', 'eye', 'สถิติการเข้าชม', 'ยอดวิวจริง แยกตามบทความ แผน ข่าว อาชีพ');
   admin_render_quick_link('site.php', 'settings', 'ตั้งค่าเว็บไซต์', 'ชื่อแบรนด์ ตัวแทน โทรศัพท์ โซเชียล');
   admin_render_quick_link('home.php', 'home', 'หน้าแรก', 'แบนเนอร์ โปรไฟล์ รีวิวลูกค้า');
   admin_render_quick_link('plans-list.php', 'shield', 'แผนประกัน', 'การ์ดแผน + รายละเอียดครบ');

@@ -5,6 +5,7 @@ function admin_lucide_name(string $key): string
 {
     static $map = [
         'grid' => 'layout-grid',
+        'eye' => 'eye',
         'settings' => 'settings',
         'home' => 'house',
         'file' => 'file-text',

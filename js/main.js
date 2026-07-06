@@ -674,4 +674,11 @@
   }
 
   if (window.LucideIcons) LucideIcons.refresh();
+
+  (function loadAnalytics() {
+    var s = document.createElement("script");
+    s.src = siteBase() + "js/analytics.js";
+    s.async = true;
+    document.body.appendChild(s);
+  })();
 })();

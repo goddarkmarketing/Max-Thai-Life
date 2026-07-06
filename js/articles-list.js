@@ -15,21 +15,11 @@
   function homeCardHtml(entry) {
     var b = base();
     var href = b + "articles/" + entry.slug + ".html";
-    var stats = "";
-    if (entry.views) {
-      stats =
-        '<div class="article-stats">' +
-        '<span class="article-stat"><i data-lucide="eye" class="article-stat-icon" aria-hidden="true"></i> ' +
-        Number(entry.views).toLocaleString("th-TH") +
-        " views</span>";
-      if (entry.shares) {
-        stats +=
-          '<span class="article-stat"><i data-lucide="share-2" class="article-stat-icon" aria-hidden="true"></i> ' +
-          Number(entry.shares).toLocaleString("th-TH") +
-          " shares</span>";
-      }
-      stats += "</div>";
-    }
+    var stats =
+      '<div class="article-stats">' +
+      '<span class="article-stat" data-analytics-views data-content-type="articles" data-content-id="' +
+      entry.slug +
+      '" hidden></span></div>';
     return (
       '<li class="article-item">' +
       '<a href="' + href + '" class="article-thumb" tabindex="-1" aria-hidden="true">' +
@@ -80,12 +70,11 @@
     }
 
     function cardHtml(entry) {
-      var stats = "";
-      if (entry.views) {
-        stats = '<p class="product-card-stats">' + entry.views.toLocaleString("th-TH") + " views";
-        if (entry.shares) stats += " · " + entry.shares + " shares";
-        stats += "</p>";
-      }
+      var stats =
+        '<p class="product-card-stats">' +
+        '<span data-analytics-views data-content-type="articles" data-content-id="' +
+        entry.slug +
+        '" hidden></span></p>';
       return (
         "<li><article class=\"product-card\">" +
         '<a href="' + base + "articles/" + entry.slug + '.html" class="product-card-media" tabindex="-1" aria-hidden="true">' +

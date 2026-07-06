@@ -54,8 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_verify_csrf($_POST['csrf'] ??
     $entry = admin_preserve_pin($entry, $prev);
 
     if ($type === 'articles') {
-        $entry['views'] = (int) admin_post('views');
-        $entry['shares'] = (int) admin_post('shares');
         $rp = admin_post('related_plan');
         if ($rp !== '') {
             $entry['relatedPlan'] = $rp;
@@ -63,16 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_verify_csrf($_POST['csrf'] ??
         } else {
             unset($entry['relatedPlan'], $entry['relatedPlanLabel']);
         }
-    } elseif ($type === 'news') {
-        $entry['views'] = (int) admin_post('views');
-        $entry['shares'] = (int) admin_post('shares');
     } elseif ($type === 'claims') {
         $entry['quote'] = admin_post('quote');
         $entry['author'] = admin_post('author');
         $entry['result'] = admin_post('result');
-    } elseif ($type === 'careers') {
-        $entry['views'] = (int) admin_post('views');
-        $entry['shares'] = (int) admin_post('shares');
+    }
+
+    if (in_array($type, ['articles', 'news', 'careers'], true)) {
+        unset($entry['views'], $entry['shares']);
     }
 
     if ($oldSlug !== '' && $oldSlug !== $slug && isset($items[$oldSlug])) {
@@ -172,10 +168,6 @@ $itemIsRichtext = !$isNew && ($item['editor'] ?? '') === 'richtext';
         <?php admin_field('ผลลัพธ์', 'result', $item['result'] ?? ''); ?>
       </div>
       <?php else: ?>
-      <div class="admin-grid admin-grid--2">
-        <?php admin_field('Views', 'views', (string) ($item['views'] ?? 0), ['type' => 'number']); ?>
-        <?php admin_field('Shares', 'shares', (string) ($item['shares'] ?? 0), ['type' => 'number']); ?>
-      </div>
       <?php if ($type === 'articles'): ?>
       <div class="admin-grid admin-grid--2">
         <?php admin_field('แผนที่เกี่ยวข้อง (URL)', 'related_plan', $item['relatedPlan'] ?? ''); ?>

@@ -100,7 +100,7 @@
       var aSame = a.category === career.category ? 1 : 0;
       var bSame = b.category === career.category ? 1 : 0;
       if (bSame !== aSame) return bSame - aSame;
-      return (b.views || 0) - (a.views || 0);
+      return String(b.datePublished || "").localeCompare(String(a.datePublished || ""));
     });
 
     return pool.slice(0, limit);
@@ -239,13 +239,9 @@
       '" itemprop="datePublished">' +
       formatDate(career.datePublished) +
       "</time>" +
-      (career.views
-        ? '<span class="article-detail-stats">' +
-          career.views.toLocaleString("th-TH") +
-          " views" +
-          (career.shares ? " · " + career.shares + " shares" : "") +
-          "</span>"
-        : "") +
+      '<span class="article-detail-stats" data-analytics-views data-content-type="careers" data-content-id="' +
+      id +
+      '" hidden></span>' +
       "</div>" +
       "</header>" +
       '<div class="article-prose" itemprop="articleBody">' +
