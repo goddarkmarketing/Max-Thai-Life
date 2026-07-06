@@ -1,3 +1,23 @@
+window.mtlViewCountBadge = function (type, id) {
+  if (!type || !id) return "";
+  var t = String(type).replace(/"/g, "&quot;");
+  var s = String(id).replace(/"/g, "&quot;");
+  return (
+    '<div class="card-view-count product-card-stats">' +
+    '<span data-analytics-views data-content-type="' + t + '" data-content-id="' + s + '" hidden></span>' +
+    "</div>"
+  );
+};
+
+window.mtlPlanSlugFromHref = function (href) {
+  return String(href || "")
+    .split("?")[0]
+    .split("#")[0]
+    .replace(/^\.?\//, "")
+    .replace(/^plans\//i, "")
+    .replace(/\.html$/i, "");
+};
+
 (function () {
   const header = document.querySelector(".site-header");
   const toggle = document.querySelector(".nav-toggle");

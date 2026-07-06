@@ -12,11 +12,7 @@
     }
 
     function cardHtml(item, linkLabel) {
-      var stats =
-        '<p class="product-card-stats">' +
-        '<span data-analytics-views data-content-type="careers" data-content-id="' +
-        item.slug +
-        '" hidden></span></p>';
+      var stats = window.mtlViewCountBadge ? window.mtlViewCountBadge("careers", item.slug) : "";
 
       return (
         "<li>" +
@@ -66,6 +62,7 @@
         var tpl = document.getElementById("career-featured-bullets");
         var bulletsHtml = tpl ? tpl.innerHTML : "";
         if (feat) {
+          var featStats = window.mtlViewCountBadge ? window.mtlViewCountBadge("careers", feat.slug) : "";
           featured.innerHTML =
             '<div class="career-featured-layout">' +
             '<a href="' + base + "careers/" + feat.slug + '.html" class="career-featured-media">' +
@@ -73,6 +70,7 @@
             '<div class="career-featured-body"><p class="product-card-meta">' + feat.category + "</p>" +
             "<h2><a href=\"" + base + "careers/" + feat.slug + '.html">' + feat.title + "</a></h2><p>" + feat.description + "</p>" +
             '<ul class="career-featured-list">' + bulletsHtml + "</ul>" +
+            featStats +
             '<a href="' + base + "careers/" + feat.slug + '.html" class="btn btn-primary">อ่านรายละเอียด →</a></div></div>';
         }
       }

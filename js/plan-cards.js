@@ -23,6 +23,8 @@
         return "<li>" + f + "</li>";
       })
       .join("");
+    var slug = window.mtlPlanSlugFromHref ? window.mtlPlanSlugFromHref(plan.href) : "";
+    var stats = window.mtlViewCountBadge && slug ? window.mtlViewCountBadge("plans", slug) : "";
 
     return (
       '<article class="plan-card" data-category="' +
@@ -50,6 +52,7 @@
       '<ul class="plan-card-features">' +
       features +
       "</ul>" +
+      stats +
       '<a href="' +
       u(plan.href) +
       '" class="btn btn-plan-detail">ดูรายละเอียด</a>' +
@@ -81,6 +84,8 @@
         !!(categoryFilter && categoryFilter !== "all")
       );
     });
+
+    document.dispatchEvent(new CustomEvent("plans:rendered"));
   };
 
   var categoryFilter = null;

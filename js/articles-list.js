@@ -15,11 +15,9 @@
   function homeCardHtml(entry) {
     var b = base();
     var href = b + "articles/" + entry.slug + ".html";
-    var stats =
-      '<div class="article-stats">' +
-      '<span class="article-stat" data-analytics-views data-content-type="articles" data-content-id="' +
-      entry.slug +
-      '" hidden></span></div>';
+    var stats = window.mtlViewCountBadge
+      ? window.mtlViewCountBadge("articles", entry.slug)
+      : "";
     return (
       '<li class="article-item">' +
       '<a href="' + href + '" class="article-thumb" tabindex="-1" aria-hidden="true">' +
@@ -28,10 +26,9 @@
       '<p class="article-meta">' + esc(entry.category) + "</p>" +
       '<h3><a href="' + href + '">' + esc(entry.title) + "</a></h3>" +
       '<p class="article-excerpt">' + esc(entry.description) + "</p>" +
-      '<a href="' + href + '" class="article-read-more">อ่านต่อ</a>' +
-      "</div>" +
       stats +
-      "</li>"
+      '<a href="' + href + '" class="article-read-more">อ่านต่อ</a>' +
+      "</div></li>"
     );
   }
 
@@ -70,11 +67,7 @@
     }
 
     function cardHtml(entry) {
-      var stats =
-        '<p class="product-card-stats">' +
-        '<span data-analytics-views data-content-type="articles" data-content-id="' +
-        entry.slug +
-        '" hidden></span></p>';
+      var stats = window.mtlViewCountBadge ? window.mtlViewCountBadge("articles", entry.slug) : "";
       return (
         "<li><article class=\"product-card\">" +
         '<a href="' + base + "articles/" + entry.slug + '.html" class="product-card-media" tabindex="-1" aria-hidden="true">' +

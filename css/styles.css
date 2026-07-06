@@ -1420,12 +1420,68 @@ a:hover {
 }
 
 .product-card-stats {
+  margin: 0;
+}
+
+.card-view-count {
+  display: none;
+  margin: 0 0 0.65rem;
+}
+
+.card-view-count.has-analytics-views {
+  display: block;
+}
+
+.card-view-count [data-analytics-views] {
+  display: inline-flex;
+  align-items: center;
+}
+
+.card-view-count__pill,
+.article-detail-stats:not(:empty) {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.75rem;
-  color: var(--muted);
-  margin: 0 0 0.5rem;
+  padding: 0.22rem 0.6rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--tl-blue);
+  background: rgba(var(--tl-blue-rgb), 0.07);
+  border: 1px solid rgba(var(--tl-blue-rgb), 0.12);
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.card-view-count__icon,
+.article-detail-stats .card-view-count__icon,
+.article-stat-icon {
+  width: 0.8rem;
+  height: 0.8rem;
+  flex-shrink: 0;
+  color: var(--tl-blue);
+  opacity: 0.72;
+}
+
+.card-view-count__num {
+  white-space: nowrap;
+}
+
+.plan-card-body .card-view-count {
+  margin-top: 0.15rem;
+}
+
+.news-card-body .card-view-count {
+  margin: 0.35rem 0 0.5rem;
+}
+
+.article-body .card-view-count {
+  margin: 0.35rem 0 0.5rem;
+}
+
+.career-featured-body .card-view-count {
+  margin: 0.75rem 0 1rem;
 }
 
 .product-card-link {
@@ -3569,10 +3625,13 @@ button.product-card-link:hover {
   font-weight: 500;
 }
 
+.article-detail-stats:empty {
+  display: none;
+}
+
 .article-detail-stats {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
 }
 
 .article-prose {

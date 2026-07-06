@@ -12,11 +12,7 @@
     }
 
     function cardHtml(entry) {
-      var stats =
-        '<p class="product-card-stats">' +
-        '<span data-analytics-views data-content-type="news" data-content-id="' +
-        entry.slug +
-        '" hidden></span></p>';
+      var stats = window.mtlViewCountBadge ? window.mtlViewCountBadge("news", entry.slug) : "";
 
       return (
         "<li>" +
@@ -57,6 +53,7 @@
     }
 
     function homeCardHtml(entry) {
+      var stats = window.mtlViewCountBadge ? window.mtlViewCountBadge("news", entry.slug) : "";
       return (
         "<li>" +
         '<a href="' +
@@ -81,6 +78,7 @@
         "<p>" +
         entry.description +
         "</p>" +
+        stats +
         '<span class="news-card-link">อ่านต่อ →</span>' +
         "</div></a></li>"
       );
