@@ -88,6 +88,7 @@
     el.innerHTML = renderViewHtml(views);
     el.hidden = false;
     el.removeAttribute("hidden");
+    el.setAttribute("data-views-filled", "1");
     var wrap = viewWrap(el);
     if (wrap) wrap.classList.add("has-analytics-views");
     if (window.LucideIcons) LucideIcons.refresh(el);
@@ -113,6 +114,38 @@
     });
   }
 
+  /** Static fallback (GitHub Pages / no PHP): use views embedded in content data JS. */
+  function staticViewsMap(type) {
+    var map = null;
+    if (type === "careers" && window.CAREERS_DETAIL) map = window.CAREERS_DETAIL;
+    else if (type === "articles" && window.ARTICLES_DETAIL) map = window.ARTICLES_DETAIL;
+    else if (type === "news" && window.NEWS_DETAIL) map = window.NEWS_DETAIL;
+    else if (type === "plans" && window.PLANS_DETAIL) map = window.PLANS_DETAIL;
+    return map;
+  }
+
+  function staticViewCount(type, id) {
+    var map = staticViewsMap(type);
+    if (!map || !id) return 0;
+    var item = map[id];
+    if (!item) return 0;
+    var n = parseInt(item.views, 10);
+    return isNaN(n) ? 0 : n;
+  }
+
+  function applyStaticFallbackViews(type) {
+    var map = staticViewsMap(type);
+    if (!map) return;
+    document.querySelectorAll('[data-analytics-views][data-content-type="' + type + '"]').forEach(function (el) {
+      if (el.getAttribute("data-views-filled") === "1") return;
+      var elId = el.getAttribute("data-content-id");
+      var count = staticViewCount(type, elId);
+      if (!count) return;
+      applyViewElement(el, count);
+      cacheViewCount(type, elId, count);
+    });
+  }
+
   function fetchSingleViewCount(type, id, opts) {
     opts = opts || {};
     if (!type || !id) return Promise.resolve();
@@ -125,14 +158,20 @@
       keepalive: !!opts.keepalive,
     })
       .then(function (res) {
+        if (!res.ok) throw new Error("api");
         return res.json();
       })
       .then(function (data) {
         if (data && data.ok && typeof data.views === "number") {
           updateViewElements(type, id, data.views);
+          return;
         }
+        throw new Error("api");
       })
-      .catch(function () {});
+      .catch(function () {
+        var fallback = staticViewCount(type, id);
+        if (fallback > 0) updateViewElements(type, id, fallback);
+      });
   }
 
   function trackView(page) {
@@ -186,11 +225,12 @@
         cache: "no-store",
       })
         .then(function (res) {
+          if (!res.ok) throw new Error("api");
           return res.json();
         })
         .then(function (data) {
           if (gen !== fillGen) return;
-          if (!data || !data.ok || !data.views) return;
+          if (!data || !data.ok || !data.views) throw new Error("api");
           document.querySelectorAll('[data-analytics-views][data-content-type="' + type + '"]').forEach(function (el) {
             var elId = el.getAttribute("data-content-id");
             var count = data.views[elId];
@@ -199,7 +239,10 @@
             cacheViewCount(type, elId, count);
           });
         })
-        .catch(function () {});
+        .catch(function () {
+          if (gen !== fillGen) return;
+          applyStaticFallbackViews(type);
+        });
     });
   }
 
