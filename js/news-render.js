@@ -13,7 +13,7 @@
 
   var imageUrl = resolveImageUrl(item.image);
 
-  document.title = item.title + " | ข่าว/กิจกรรม | Max Thai Life";
+  document.title = item.title + " | ข่าว/กิจกรรม | Wealth Agent TL";
 
   var metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) metaDesc.setAttribute("content", item.description);
@@ -57,10 +57,10 @@
     image: [imageUrl],
     datePublished: item.datePublished,
     dateModified: item.dateModified || item.datePublished,
-    author: { "@type": "Organization", name: "Max Thai Life" },
+    author: { "@type": "Organization", name: "Wealth Agent TL" },
     publisher: {
       "@type": "Organization",
-      name: "Max Thai Life",
+      name: "Wealth Agent TL",
       logo: {
         "@type": "ImageObject",
         url: new URL(base + "images/logo/LOGO-THAILIFE.png", pageUrl).href

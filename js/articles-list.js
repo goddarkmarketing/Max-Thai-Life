@@ -16,17 +16,17 @@
     var b = base();
     var href = b + "articles/" + entry.slug + ".html";
     var stats = window.mtlViewCountBadge
-      ? window.mtlViewCountBadge("articles", entry.slug)
+      ? window.mtlViewCountBadge("articles", entry.slug, "overlay")
       : "";
     return (
       '<li class="article-item">' +
       '<a href="' + href + '" class="article-thumb" tabindex="-1" aria-hidden="true">' +
+      stats +
       '<img src="' + imgSrc(entry.image) + '" alt="" width="88" height="88" loading="lazy" decoding="async"></a>' +
       '<div class="article-body">' +
       '<p class="article-meta">' + esc(entry.category) + "</p>" +
       '<h3><a href="' + href + '">' + esc(entry.title) + "</a></h3>" +
       '<p class="article-excerpt">' + esc(entry.description) + "</p>" +
-      stats +
       '<a href="' + href + '" class="article-read-more">อ่านต่อ</a>' +
       "</div></li>"
     );
@@ -47,6 +47,7 @@
     if (window.LucideIcons && window.LucideIcons.refresh) {
       window.LucideIcons.refresh(track);
     }
+    if (window.mtlScheduleFillViewCounts) window.mtlScheduleFillViewCounts();
   }
 
   function mount() {
@@ -67,23 +68,35 @@
     }
 
     function cardHtml(entry) {
-      var stats = window.mtlViewCountBadge ? window.mtlViewCountBadge("articles", entry.slug) : "";
+      var pageHref = base + "articles/" + entry.slug + ".html";
+      var footer = window.mtlCardFooter
+        ? window.mtlCardFooter(
+            "articles",
+            entry.slug,
+            '<a href="' + pageHref + '" class="product-card-link">อ่านต่อ →</a>'
+          )
+        : '<a href="' + pageHref + '" class="product-card-link">อ่านต่อ →</a>';
       return (
         "<li><article class=\"product-card\">" +
-        '<a href="' + base + "articles/" + entry.slug + '.html" class="product-card-media" tabindex="-1" aria-hidden="true">' +
+        '<a href="' + pageHref + '" class="product-card-media" tabindex="-1" aria-hidden="true">' +
         '<img src="' + imgSrc(entry.image) + '" alt="' + entry.title.replace(/"/g, "&quot;") + '" loading="lazy" decoding="async"></a>' +
         '<div class="product-card-body"><p class="product-card-meta">' + entry.category + "</p>" +
-        "<h3><a href=\"" + base + "articles/" + entry.slug + '.html">' + entry.title + "</a></h3>" +
-        '<p class="product-card-excerpt">' + entry.description + "</p>" + stats +
-        '<a href="' + base + "articles/" + entry.slug + '.html" class="product-card-link">อ่านต่อ →</a></div></article></li>'
+        "<h3><a href=\"" + pageHref + '">' + entry.title + "</a></h3>" +
+        '<p class="product-card-excerpt">' + entry.description + "</p>" +
+        footer +
+        "</div></article></li>"
       );
     }
 
     grid.innerHTML = slugs.map(function (slug) {
       return cardHtml(window.ARTICLES_DETAIL[slug]);
     }).join("");
+
+    if (window.mtlScheduleFillViewCounts) window.mtlScheduleFillViewCounts();
+    document.dispatchEvent(new CustomEvent("articles:updated"));
   }
 
   mount();
   document.addEventListener("landing:rendered", mount);
+  document.addEventListener("mtl:helpers-ready", mount);
 })();

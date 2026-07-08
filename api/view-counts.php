@@ -5,7 +5,7 @@ require_once __DIR__ . '/../admin/includes/config.php';
 require_once __DIR__ . '/../admin/includes/analytics.php';
 
 header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: public, max-age=60');
+header('Cache-Control: no-store, no-cache, must-revalidate');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);

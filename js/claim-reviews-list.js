@@ -106,15 +106,12 @@
   }
 
   function cardHtml(entry, index) {
-    var stats = "";
-    if (entry.views) {
-      stats =
-        '<p class="product-card-stats">' +
-        entry.views.toLocaleString("th-TH") +
-        " views";
-      if (entry.shares) stats += " · " + entry.shares + " shares";
-      stats += "</p>";
-    }
+    var linkBtn =
+      '<button type="button" class="product-card-link" data-claim-open="' +
+      index +
+      '">อ่านต่อ →</button>';
+    var footer =
+      '<div class="product-card-footer">' + linkBtn + "</div>";
 
     return (
       "<li>" +
@@ -142,10 +139,7 @@
       '<p class="product-card-excerpt">' +
       entry.description +
       "</p>" +
-      stats +
-      '<button type="button" class="product-card-link" data-claim-open="' +
-      index +
-      '">อ่านต่อ →</button>' +
+      footer +
       "</div></article></li>"
     );
   }

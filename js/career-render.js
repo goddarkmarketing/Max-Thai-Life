@@ -13,7 +13,7 @@
 
   var imageUrl = resolveImageUrl(career.image);
 
-  document.title = career.title + " | แนะนำอาชีพ | Max Thai Life";
+  document.title = career.title + " | แนะนำอาชีพ | Wealth Agent TL";
 
   var metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) metaDesc.setAttribute("content", career.description);
@@ -57,10 +57,10 @@
     image: [imageUrl],
     datePublished: career.datePublished,
     dateModified: career.dateModified || career.datePublished,
-    author: { "@type": "Organization", name: "Max Thai Life" },
+    author: { "@type": "Organization", name: "Wealth Agent TL" },
     publisher: {
       "@type": "Organization",
-      name: "Max Thai Life",
+      name: "Wealth Agent TL",
       logo: {
         "@type": "ImageObject",
         url: new URL(base + "images/logo/LOGO-THAILIFE.png", pageUrl).href
@@ -251,7 +251,7 @@
       "</div>" +
       '<aside class="article-related-plan">' +
       "<h2>สนใจสมัครเป็นตัวแทน?</h2>" +
-      "<p>ติดต่อทีม Max Thai Life เพื่อสอบถามรายละเอียด เอกสาร และตารางอบรมล่าสุด</p>" +
+      "<p>ติดต่อทีม Wealth Agent TL เพื่อสอบถามรายละเอียด เอกสาร และตารางอบรมล่าสุด</p>" +
       '<a href="' +
       base +
       'contact.html?topic=agent" class="btn btn-primary">สนใจสมัครตัวแทน</a>' +

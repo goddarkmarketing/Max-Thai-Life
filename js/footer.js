@@ -20,12 +20,12 @@
     var social = site.social || {};
     var footer = site.footer || {};
 
-    var brandName = brand.name || "Max Thai Life";
+    var brandName = brand.name || "Wealth Agent TL";
     var brandSub = brand.sub || "สำนักงานตัวแทนแม็ก · ไทยประกันชีวิต";
-    var tagline = footer.tagline || "ที่ปรึกษาทางการเงินและประกันชีวิต · สาขานครปฐม";
-    var agentName = agent.name || "วรชาติ โตเต็ม";
-    var agentTitle = agent.title || "ผู้บริหารศูนย์";
-    var agentBranch = agent.branch || "นครปฐม";
+    var tagline = footer.tagline || "ที่ปรึกษาทางการเงินและประกันชีวิต · สาขาบ้านโป่ง";
+    var agentName = agent.name || "บมจ.ไทยประกันชีวิต";
+    var agentTitle = agent.title || "สาขาบ้านโป่ง";
+    var agentBranch = agent.branch || "บ้านโป่ง";
     var phoneDisplay = agent.phoneDisplay || "085-292-5320";
     var phoneRaw = agent.phone || "0852925320";
     var license = agent.license || "5701116295";

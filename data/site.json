@@ -1,19 +1,20 @@
 {
     "brand": {
-        "name": "Max Thai Life",
+        "name": "Wealth Agent TL",
         "sub": "สำนักงานตัวแทนแม็ก",
         "logo": "images/logo/LOGO-THAILIFE.png"
     },
     "agent": {
-        "name": "วรชาติ โตเต็ม",
-        "title": "ผู้บริหารศูนย์",
-        "branch": "นครปฐม",
+        "name": "บมจ.ไทยประกันชีวิต",
+        "title": "สาขาบ้านโป่ง",
+        "branch": "บ้านโป่ง",
         "phone": "0852925320",
         "phoneDisplay": "085-292-5320",
         "license": "5701116295",
         "ulRights": "มีสิทธิ์",
-        "tagline": "ที่ปรึกษาประกันชีวิตและการเงิน · สาขานครปฐม · ใบอนุญาต 5701116295",
-        "extraContacts": []
+        "tagline": "ที่ปรึกษาประกันชีวิตและการเงิน · สาขาบ้านโป่ง · จ.ราชบุรี",
+        "extraContacts": [],
+        "address": "162 หมู่ 9 ถนนเขางู-เบิกไพร ตำบลปากแรต อำเภอบ้านโป่ง จังหวัดราชบุรี 70110"
     },
     "social": {
         "links": [
@@ -41,7 +42,7 @@
         ]
     },
     "footer": {
-        "tagline": "ที่ปรึกษาทางการเงินและประกันชีวิต · สาขานครปฐม",
+        "tagline": "ที่ปรึกษาทางการเงินและประกันชีวิต · สาขาบ้านโป่ง",
         "topCta": [
             {
                 "label": "ติดต่อสอบถาม",
@@ -139,8 +140,8 @@
                         "visible": true
                     },
                     {
-                        "label": "ยูนิเวอร์แซลไลฟ์",
-                        "href": "plans/universal-life.html",
+                        "label": "ประกันชีวิต/กึ่งลงทุน/Life Verse",
+                        "href": "plans/life-verse.html",
                         "visible": true
                     }
                 ]
@@ -266,60 +267,60 @@
         }
     },
     "meta": {
-        "description": "Max Thai Life — ผู้บริหารศูนย์ ไทยประกันชีวิต สาขานครปฐม ที่ปรึกษาทางการเงินและประกันชีวิต",
+        "description": "Wealth Agent TL — บมจ.ไทยประกันชีวิต สาขาบ้านโป่ง ที่ปรึกษาทางการเงินและประกันชีวิต",
         "ogImage": "images/logo/LOGO-THAILIFE.png",
-        "ogTitle": "Max Thai Life | สำนักงานตัวแทนแม็ก",
-        "ogDescription": "Max Thai Life — ผู้บริหารศูนย์ ไทยประกันชีวิต สาขานครปฐม ที่ปรึกษาทางการเงินและประกันชีวิต",
-        "siteUrl": "https://maxthailife.com",
-        "shareAssetFallbackUrl": "https://goddarkmarketing.github.io/Max-Thai-Life",
-        "titleSuffix": "| Max Thai Life",
+        "ogTitle": "Wealth Agent TL | สำนักงานตัวแทนแม็ก",
+        "ogDescription": "Wealth Agent TL — บมจ.ไทยประกันชีวิต สาขาบ้านโป่ง ที่ปรึกษาทางการเงินและประกันชีวิต",
+        "siteUrl": "https://wealthagenttl.com",
+        "shareAssetFallbackUrl": "https://wealthagenttl.com",
+        "titleSuffix": "| Wealth Agent TL",
         "analyticsId": "",
         "googleSiteVerification": "",
         "localBusiness": {
             "enabled": true,
-            "address": "จ.นครปฐม",
-            "areaServed": "นครปฐม",
+            "address": "162 หมู่ 9 ถนนเขางู-เบิกไพร ตำบลปากแรต อำเภอบ้านโป่ง จังหวัดราชบุรี 70110",
+            "areaServed": "บ้านโป่ง, ราชบุรี",
             "googleBusinessUrl": ""
         },
         "pages": {
             "index.html": {
-                "title": "Max Thai Life | สำนักงานตัวแทนแม็ก ไทยประกันชีวิต",
-                "description": "Max Thai Life — ผู้บริหารศูนย์ ไทยประกันชีวิต สาขานครปฐม ที่ปรึกษาทางการเงินและประกันชีวิต",
+                "title": "Wealth Agent TL | สำนักงานตัวแทนแม็ก ไทยประกันชีวิต",
+                "description": "Wealth Agent TL — บมจ.ไทยประกันชีวิต สาขาบ้านโป่ง ที่ปรึกษาทางการเงินและประกันชีวิต",
                 "indexable": true
             },
             "about.html": {
-                "title": "เกี่ยวกับเรา | Max Thai Life",
-                "description": "เกี่ยวกับ Max Thai Life — ที่ปรึกษาทางการเงินและประกันชีวิต เกียรติประวัติและผลงาน",
+                "title": "เกี่ยวกับเรา | Wealth Agent TL",
+                "description": "เกี่ยวกับ Wealth Agent TL — ที่ปรึกษาทางการเงินและประกันชีวิต เกียรติประวัติและผลงาน",
                 "indexable": true
             },
             "contact.html": {
-                "title": "ติดต่อ | Max Thai Life",
-                "description": "ติดต่อ Max Thai Life — สนใจทำประกันชีวิต สนใจเป็นตัวแทน ติดต่อสอบถาม",
+                "title": "ติดต่อ | Wealth Agent TL",
+                "description": "ติดต่อ Wealth Agent TL — สนใจทำประกันชีวิต สนใจเป็นตัวแทน ติดต่อสอบถาม",
                 "indexable": true
             },
             "plans.html": {
-                "title": "แผนประกัน | Max Thai Life",
+                "title": "แผนประกัน | Wealth Agent TL",
                 "description": "แผนประกันชีวิตและสุขภาพ ไทยประกันชีวิต — ออม เกษียณ ลดหย่อนภาษี สุขภาพ คุ้มครองชีวิต",
                 "indexable": true
             },
             "products.html": {
-                "title": "ผลิตภัณฑ์และบริการ | Max Thai Life",
-                "description": "ผลิตภัณฑ์และบริการประกันชีวิต ไทยประกันชีวิต — Max Thai Life",
+                "title": "ผลิตภัณฑ์และบริการ | Wealth Agent TL",
+                "description": "ผลิตภัณฑ์และบริการประกันชีวิต ไทยประกันชีวิต — Wealth Agent TL",
                 "indexable": true
             },
             "career.html": {
-                "title": "แนะนำอาชีพ | Max Thai Life",
-                "description": "แนะนำอาชีพตัวแทนประกันชีวิต ไทยประกันชีวิต — Max Thai Life ศูนย์นครปฐม",
+                "title": "แนะนำอาชีพ | Wealth Agent TL",
+                "description": "แนะนำอาชีพตัวแทนประกันชีวิต ไทยประกันชีวิต — Wealth Agent TL สาขาบ้านโป่ง",
                 "indexable": true
             },
             "news.html": {
-                "title": "ข่าว/กิจกรรม | Max Thai Life",
-                "description": "ข่าวสารและกิจกรรม ไทยประกันชีวิต — Max Thai Life ศูนย์นครปฐม",
+                "title": "ข่าว/กิจกรรม | Wealth Agent TL",
+                "description": "ข่าวสารและกิจกรรม ไทยประกันชีวิต — Wealth Agent TL สาขาบ้านโป่ง",
                 "indexable": true
             },
             "claim-reviews.html": {
-                "title": "รีวิวเคลม | Max Thai Life",
-                "description": "รีวิวเคลมประกันชีวิตและสุขภาพจากลูกค้าจริง — Max Thai Life ศูนย์นครปฐม",
+                "title": "รีวิวเคลม | Wealth Agent TL",
+                "description": "รีวิวเคลมประกันชีวิตและสุขภาพจากลูกค้าจริง — Wealth Agent TL สาขาบ้านโป่ง",
                 "indexable": true
             }
         }

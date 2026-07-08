@@ -213,7 +213,7 @@ function admin_default_landing_page(string $key): array
             ],
             'cta' => [
                 'title' => 'ต้องการความช่วยเหลือเรื่องเคลม?',
-                'lead' => 'ติดต่อทีม Max Thai Life เพื่อสอบถามขั้นตอนเคลมและเอกสารที่ต้องใช้ — ไม่มีค่าใช้จ่ายในการสอบถาม',
+                'lead' => 'ติดต่อทีม Wealth Agent TL เพื่อสอบถามขั้นตอนเคลมและเอกสารที่ต้องใช้ — ไม่มีค่าใช้จ่ายในการสอบถาม',
                 'buttons' => [
                     ['label' => 'สอบถามเรื่องเคลม', 'href' => 'contact.html', 'variant' => 'primary'],
                     ['label' => 'โทร 085-292-5320', 'href' => 'tel:0852925320', 'variant' => 'outline'],

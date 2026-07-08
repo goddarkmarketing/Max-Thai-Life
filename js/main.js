@@ -1,13 +1,21 @@
-window.mtlViewCountBadge = function (type, id) {
+window.mtlViewCountBadge = function (type, id, variant) {
   if (!type || !id) return "";
   var t = String(type).replace(/"/g, "&quot;");
   var s = String(id).replace(/"/g, "&quot;");
+  var extra = variant === "overlay" ? " card-view-count--overlay" : "";
   return (
-    '<div class="card-view-count product-card-stats">' +
+    '<div class="card-view-count' + extra + '">' +
     '<span data-analytics-views data-content-type="' + t + '" data-content-id="' + s + '" hidden></span>' +
     "</div>"
   );
 };
+
+window.mtlCardFooter = function (type, id, linkHtml) {
+  var stats = window.mtlViewCountBadge(type, id);
+  return '<div class="product-card-footer">' + stats + linkHtml + "</div>";
+};
+
+document.dispatchEvent(new CustomEvent("mtl:helpers-ready"));
 
 window.mtlPlanSlugFromHref = function (href) {
   return String(href || "")
@@ -392,13 +400,14 @@ window.mtlPlanSlugFromHref = function (href) {
       var schema = {
         "@context": "https://schema.org",
         "@type": "InsuranceAgency",
-        name: brand.name || "Max Thai Life",
+        name: agent.name || brand.name || "Wealth Agent TL",
         description: description,
         url: absoluteUrl(""),
         telephone: agent.phoneDisplay || agent.phone || "",
         address: {
           "@type": "PostalAddress",
-          addressLocality: local.address || agent.branch || "",
+          streetAddress: agent.address || local.address || "",
+          addressLocality: agent.branch || "",
           addressRegion: local.areaServed || "",
           addressCountry: "TH",
         },
@@ -696,9 +705,25 @@ window.mtlPlanSlugFromHref = function (href) {
   if (window.LucideIcons) LucideIcons.refresh();
 
   (function loadAnalytics() {
+    var pendingFill = false;
+    window.mtlScheduleFillViewCounts = function () {
+      pendingFill = true;
+      if (typeof window.mtlFillViewCounts === "function" && window.mtlFlushPendingViewCounts) {
+        window.mtlFlushPendingViewCounts();
+      }
+    };
+    window.mtlFlushPendingViewCounts = function () {
+      if (!pendingFill || typeof window.mtlScheduleFillViewCounts !== "function") return;
+      if (typeof window.mtlFillViewCounts !== "function") return;
+      pendingFill = false;
+      window.mtlScheduleFillViewCounts();
+    };
+
     var s = document.createElement("script");
     s.src = siteBase() + "js/analytics.js";
-    s.async = true;
+    s.onload = function () {
+      if (window.mtlFlushPendingViewCounts) window.mtlFlushPendingViewCounts();
+    };
     document.body.appendChild(s);
   })();
 })();

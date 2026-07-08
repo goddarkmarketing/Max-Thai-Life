@@ -97,7 +97,7 @@ function admin_share_url_is_reachable(string $url): bool
                 CURLOPT_MAXREDIRS => 3,
                 CURLOPT_TIMEOUT => 4,
                 CURLOPT_CONNECTTIMEOUT => 3,
-                CURLOPT_USERAGENT => 'MaxThaiLifeShareMeta/1.0',
+                CURLOPT_USERAGENT => 'WealthAgentTLShareMeta/1.0',
             ]);
             curl_exec($ch);
             $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -111,7 +111,7 @@ function admin_share_url_is_reachable(string $url): bool
                 'timeout' => 4,
                 'follow_location' => 1,
                 'max_redirects' => 3,
-                'user_agent' => 'MaxThaiLifeShareMeta/1.0',
+                'user_agent' => 'WealthAgentTLShareMeta/1.0',
             ],
         ]);
         $headers = @get_headers($url, true, $context);
@@ -170,7 +170,7 @@ function admin_share_meta_html(array $opts): string
     );
     $ogImage = htmlspecialchars((string) ($opts['ogImage'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8');
     $ogUrl = htmlspecialchars((string) ($opts['ogUrl'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-    $siteName = htmlspecialchars((string) ($opts['siteName'] ?? 'Max Thai Life'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $siteName = htmlspecialchars((string) ($opts['siteName'] ?? 'Wealth Agent TL'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
     $indexable = ($opts['indexable'] ?? true) !== false;
     $twitterCard = $ogImage !== '' ? 'summary_large_image' : 'summary';
 
@@ -290,7 +290,7 @@ function generate_share_meta_all(): array
     $meta = admin_normalize_meta($site['meta'] ?? [], $brand);
     $baseUrl = admin_seo_base_url($meta);
     $defaultImage = admin_share_default_image($meta, $brand);
-    $siteName = (string) ($brand['name'] ?? 'Max Thai Life');
+    $siteName = (string) ($brand['name'] ?? 'Wealth Agent TL');
     $updated = 0;
 
     foreach ($meta['pages'] ?? [] as $slug => $page) {
@@ -361,9 +361,9 @@ function generate_share_meta_all(): array
     }
 
     $contentSets = [
-        ['file' => 'articles.json', 'prefix' => 'articles/', 'titleSuffix' => ' | บทความ | Max Thai Life', 'ogType' => 'article'],
-        ['file' => 'news.json', 'prefix' => 'news/', 'titleSuffix' => ' | ข่าว/กิจกรรม | Max Thai Life', 'ogType' => 'article'],
-        ['file' => 'careers.json', 'prefix' => 'careers/', 'titleSuffix' => ' | แนะนำอาชีพ | Max Thai Life', 'ogType' => 'article'],
+        ['file' => 'articles.json', 'prefix' => 'articles/', 'titleSuffix' => ' | บทความ | Wealth Agent TL', 'ogType' => 'article'],
+        ['file' => 'news.json', 'prefix' => 'news/', 'titleSuffix' => ' | ข่าว/กิจกรรม | Wealth Agent TL', 'ogType' => 'article'],
+        ['file' => 'careers.json', 'prefix' => 'careers/', 'titleSuffix' => ' | แนะนำอาชีพ | Wealth Agent TL', 'ogType' => 'article'],
     ];
 
     foreach ($contentSets as $set) {

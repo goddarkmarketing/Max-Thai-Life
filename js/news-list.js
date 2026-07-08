@@ -12,16 +12,19 @@
     }
 
     function cardHtml(entry) {
-      var stats = window.mtlViewCountBadge ? window.mtlViewCountBadge("news", entry.slug) : "";
+      var pageHref = base + "news/" + entry.slug + ".html";
+      var footer = window.mtlCardFooter
+        ? window.mtlCardFooter(
+            "news",
+            entry.slug,
+            '<a href="' + pageHref + '" class="product-card-link">อ่านต่อ →</a>'
+          )
+        : '<a href="' + pageHref + '" class="product-card-link">อ่านต่อ →</a>';
 
       return (
         "<li>" +
         '<article class="product-card">' +
-        '<a href="' +
-        base +
-        "news/" +
-        entry.slug +
-        '.html" class="product-card-media" tabindex="-1" aria-hidden="true">' +
+        '<a href="' + pageHref + '" class="product-card-media" tabindex="-1" aria-hidden="true">' +
         '<img src="' +
         imgSrc(entry.image) +
         '" alt="' +
@@ -32,36 +35,27 @@
         '<p class="product-card-meta">' +
         entry.category +
         "</p>" +
-        "<h3><a href=\"" +
-        base +
-        "news/" +
-        entry.slug +
-        '.html">' +
+        "<h3><a href=\"" + pageHref + '">' +
         entry.title +
         "</a></h3>" +
         '<p class="product-card-excerpt">' +
         entry.description +
         "</p>" +
-        stats +
-        '<a href="' +
-        base +
-        "news/" +
-        entry.slug +
-        '.html" class="product-card-link">อ่านต่อ →</a>' +
+        footer +
         "</div></article></li>"
       );
     }
 
     function homeCardHtml(entry) {
-      var stats = window.mtlViewCountBadge ? window.mtlViewCountBadge("news", entry.slug) : "";
+      var pageHref = base + "news/" + entry.slug + ".html";
+      var stats = window.mtlViewCountBadge
+        ? window.mtlViewCountBadge("news", entry.slug, "overlay")
+        : "";
       return (
         "<li>" +
-        '<a href="' +
-        base +
-        "news/" +
-        entry.slug +
-        '.html" class="news-card">' +
+        '<a href="' + pageHref + '" class="news-card">' +
         '<div class="news-card-media">' +
+        stats +
         '<img src="' +
         imgSrc(entry.image) +
         '" alt="' +
@@ -78,7 +72,6 @@
         "<p>" +
         entry.description +
         "</p>" +
-        stats +
         '<span class="news-card-link">อ่านต่อ →</span>' +
         "</div></a></li>"
       );
@@ -94,10 +87,13 @@
       homeTrack.innerHTML = window.NEWS_HOME.map(function (slug) {
         return homeCardHtml(window.NEWS_DETAIL[slug]);
       }).join("");
-      document.dispatchEvent(new CustomEvent("news:updated"));
     }
+
+    if (window.mtlScheduleFillViewCounts) window.mtlScheduleFillViewCounts();
+    document.dispatchEvent(new CustomEvent("news:updated"));
   }
 
   mount();
   document.addEventListener("landing:rendered", mount);
+  document.addEventListener("mtl:helpers-ready", mount);
 })();

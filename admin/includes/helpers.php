@@ -72,7 +72,7 @@ function admin_brand_meta(): array
     $site = json_read('site.json');
     $brand = is_array($site['brand'] ?? null) ? $site['brand'] : [];
     $cache = [
-        'name' => (string) ($brand['name'] ?? 'Max Thai Life'),
+        'name' => (string) ($brand['name'] ?? 'Wealth Agent TL'),
         'sub' => (string) ($brand['sub'] ?? 'สำนักงานตัวแทนแม็ก'),
         'logo' => (string) ($brand['logo'] ?? 'images/logo/LOGO-THAILIFE.png'),
     ];
@@ -1554,7 +1554,7 @@ function admin_apply_site_footer_post(array $data): array
 function admin_default_footer(): array
 {
     return [
-        'tagline' => 'ที่ปรึกษาทางการเงินและประกันชีวิต · สาขานครปฐม',
+        'tagline' => 'ที่ปรึกษาทางการเงินและประกันชีวิต · สาขาบ้านโป่ง',
         'topCta' => [
             ['label' => 'ติดต่อสอบถาม', 'href' => 'contact.html', 'variant' => 'white', 'visible' => true],
             ['label' => 'โทร 085-292-5320', 'href' => 'tel:0852925320', 'variant' => 'outline', 'visible' => true],
@@ -1913,43 +1913,43 @@ function admin_seo_static_pages(): array
     return [
         'index.html' => [
             'label' => 'หน้าหลัก',
-            'title' => 'Max Thai Life | สำนักงานตัวแทนแม็ก ไทยประกันชีวิต',
-            'description' => 'Max Thai Life — ผู้บริหารศูนย์ ไทยประกันชีวิต สาขานครปฐม ที่ปรึกษาทางการเงินและประกันชีวิต',
+            'title' => 'Wealth Agent TL | สำนักงานตัวแทนแม็ก ไทยประกันชีวิต',
+            'description' => 'Wealth Agent TL — ผู้บริหารศูนย์ ไทยประกันชีวิต สาขาบ้านโป่ง ที่ปรึกษาทางการเงินและประกันชีวิต',
         ],
         'about.html' => [
             'label' => 'เกี่ยวกับเรา',
-            'title' => 'เกี่ยวกับเรา | Max Thai Life',
-            'description' => 'เกี่ยวกับ Max Thai Life — ที่ปรึกษาทางการเงินและประกันชีวิต เกียรติประวัติและผลงาน',
+            'title' => 'เกี่ยวกับเรา | Wealth Agent TL',
+            'description' => 'เกี่ยวกับ Wealth Agent TL — ที่ปรึกษาทางการเงินและประกันชีวิต เกียรติประวัติและผลงาน',
         ],
         'contact.html' => [
             'label' => 'ติดต่อ',
-            'title' => 'ติดต่อ | Max Thai Life',
-            'description' => 'ติดต่อ Max Thai Life — สนใจทำประกันชีวิต สนใจเป็นตัวแทน ติดต่อสอบถาม',
+            'title' => 'ติดต่อ | Wealth Agent TL',
+            'description' => 'ติดต่อ Wealth Agent TL — สนใจทำประกันชีวิต สนใจเป็นตัวแทน ติดต่อสอบถาม',
         ],
         'plans.html' => [
             'label' => 'แผนประกัน',
-            'title' => 'แผนประกัน | Max Thai Life',
+            'title' => 'แผนประกัน | Wealth Agent TL',
             'description' => 'แผนประกันชีวิตและสุขภาพ ไทยประกันชีวิต — ออม เกษียณ ลดหย่อนภาษี สุขภาพ คุ้มครองชีวิต',
         ],
         'products.html' => [
             'label' => 'บทความ',
-            'title' => 'ผลิตภัณฑ์และบริการ | Max Thai Life',
-            'description' => 'ผลิตภัณฑ์และบริการประกันชีวิต ไทยประกันชีวิต — Max Thai Life',
+            'title' => 'ผลิตภัณฑ์และบริการ | Wealth Agent TL',
+            'description' => 'ผลิตภัณฑ์และบริการประกันชีวิต ไทยประกันชีวิต — Wealth Agent TL',
         ],
         'career.html' => [
             'label' => 'แนะนำอาชีพ',
-            'title' => 'แนะนำอาชีพ | Max Thai Life',
-            'description' => 'แนะนำอาชีพตัวแทนประกันชีวิต ไทยประกันชีวิต — Max Thai Life ศูนย์นครปฐม',
+            'title' => 'แนะนำอาชีพ | Wealth Agent TL',
+            'description' => 'แนะนำอาชีพตัวแทนประกันชีวิต ไทยประกันชีวิต — Wealth Agent TL สาขาบ้านโป่ง',
         ],
         'news.html' => [
             'label' => 'ข่าว/กิจกรรม',
-            'title' => 'ข่าว/กิจกรรม | Max Thai Life',
-            'description' => 'ข่าวสารและกิจกรรม ไทยประกันชีวิต — Max Thai Life ศูนย์นครปฐม',
+            'title' => 'ข่าว/กิจกรรม | Wealth Agent TL',
+            'description' => 'ข่าวสารและกิจกรรม ไทยประกันชีวิต — Wealth Agent TL สาขาบ้านโป่ง',
         ],
         'claim-reviews.html' => [
             'label' => 'รีวิวเคลม',
-            'title' => 'รีวิวเคลม | Max Thai Life',
-            'description' => 'รีวิวเคลมประกันชีวิตและสุขภาพจากลูกค้าจริง — Max Thai Life ศูนย์นครปฐม',
+            'title' => 'รีวิวเคลม | Wealth Agent TL',
+            'description' => 'รีวิวเคลมประกันชีวิตและสุขภาพจากลูกค้าจริง — Wealth Agent TL สาขาบ้านโป่ง',
         ],
     ];
 }
@@ -1957,19 +1957,19 @@ function admin_seo_static_pages(): array
 function admin_normalize_meta(array $meta, array $brand = []): array
 {
     $defaults = [
-        'description' => 'Max Thai Life — ผู้บริหารศูนย์ ไทยประกันชีวิต สาขานครปฐม ที่ปรึกษาทางการเงินและประกันชีวิต',
+        'description' => 'Wealth Agent TL — ผู้บริหารศูนย์ ไทยประกันชีวิต สาขาบ้านโป่ง ที่ปรึกษาทางการเงินและประกันชีวิต',
         'ogImage' => $brand['logo'] ?? 'images/logo/LOGO-THAILIFE.png',
-        'ogTitle' => ($brand['name'] ?? 'Max Thai Life') . ' | ' . ($brand['sub'] ?? 'สำนักงานตัวแทนแม็ก ไทยประกันชีวิต'),
+        'ogTitle' => ($brand['name'] ?? 'Wealth Agent TL') . ' | ' . ($brand['sub'] ?? 'สำนักงานตัวแทนแม็ก ไทยประกันชีวิต'),
         'ogDescription' => '',
         'siteUrl' => '',
         'shareAssetBaseUrl' => '',
-        'shareAssetFallbackUrl' => 'https://goddarkmarketing.github.io/Max-Thai-Life',
-        'titleSuffix' => '| Max Thai Life',
+        'shareAssetFallbackUrl' => 'https://wealthagenttl.com',
+        'titleSuffix' => '| Wealth Agent TL',
         'analyticsId' => '',
         'googleSiteVerification' => '',
         'localBusiness' => [
             'enabled' => true,
-            'address' => 'จ.นครปฐม',
+            'address' => 'จ.ราชบุรี',
             'areaServed' => 'นครปฐม',
             'googleBusinessUrl' => '',
         ],
@@ -2267,7 +2267,7 @@ function admin_apply_site_seo_post(array $data): array
     $meta['siteUrl'] = rtrim(trim(admin_post('meta_site_url')), '/');
     $meta['shareAssetBaseUrl'] = rtrim(trim(admin_post('meta_share_asset_base_url')), '/');
     $meta['shareAssetFallbackUrl'] = rtrim(trim(admin_post('meta_share_asset_fallback_url')), '/');
-    $meta['titleSuffix'] = trim(admin_post('meta_title_suffix', '| Max Thai Life'));
+    $meta['titleSuffix'] = trim(admin_post('meta_title_suffix', '| Wealth Agent TL'));
     $meta['description'] = trim(admin_post('meta_description'));
     $meta['ogTitle'] = trim(admin_post('meta_og_title'));
     $meta['ogDescription'] = trim(admin_post('meta_og_description'));

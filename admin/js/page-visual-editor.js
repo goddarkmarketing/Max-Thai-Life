@@ -290,7 +290,7 @@
     var headerHtml =
       '<header class="site-header pe-landing-preview-header" aria-hidden="true"><div class="header-inner"><span class="brand">' +
       '<img src="../' + R.esc(brand.logo || "images/logo/LOGO-THAILIFE.png") + '" alt="" class="brand-logo" width="46" height="46">' +
-      '<span class="brand-text"><span class="brand-name">' + R.esc(brand.name || "Max Thai Life") + '</span>' +
+      '<span class="brand-text"><span class="brand-name">' + R.esc(brand.name || "Wealth Agent TL") + '</span>' +
       '<span class="brand-sub">' + R.esc(brand.sub || "Digital Agent Office") + "</span></span></span></div></header>";
 
     var heroInner = isPlan ? renderPlanHero(data.hero) : R.renderHero(data.hero, ctx);
@@ -369,7 +369,9 @@
           '<p class="product-card-meta">' + R.esc(entry.category || "") + "</p>" +
           "<h3>" + R.esc(entry.title || "") + "</h3>" +
           '<p class="product-card-excerpt">' + R.esc(entry.description || "") + "</p>" +
+          '<div class="product-card-footer">' +
           '<span class="product-card-link">อ่านต่อ →</span>' +
+          "</div>" +
           "</div></article></li>"
         );
       })

@@ -24,7 +24,8 @@
       })
       .join("");
     var slug = window.mtlPlanSlugFromHref ? window.mtlPlanSlugFromHref(plan.href) : "";
-    var stats = window.mtlViewCountBadge && slug ? window.mtlViewCountBadge("plans", slug) : "";
+    var stats =
+      window.mtlViewCountBadge && slug ? window.mtlViewCountBadge("plans", slug, "overlay") : "";
 
     return (
       '<article class="plan-card" data-category="' +
@@ -33,6 +34,7 @@
       '<div class="plan-card-media plan-card-media--' +
       plan.theme +
       '">' +
+      stats +
       '<img src="' +
       u(plan.image) +
       '" alt="' +
@@ -52,7 +54,6 @@
       '<ul class="plan-card-features">' +
       features +
       "</ul>" +
-      stats +
       '<a href="' +
       u(plan.href) +
       '" class="btn btn-plan-detail">ดูรายละเอียด</a>' +
@@ -86,6 +87,7 @@
     });
 
     document.dispatchEvent(new CustomEvent("plans:rendered"));
+    if (window.mtlScheduleFillViewCounts) window.mtlScheduleFillViewCounts();
   };
 
   var categoryFilter = null;

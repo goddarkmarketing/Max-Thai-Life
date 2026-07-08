@@ -1,4 +1,8 @@
 (function () {
+  var fillTimer = null;
+  var fillGen = 0;
+  var pageShowRefetchReady = false;
+
   function siteBase() {
     var p = location.pathname;
     if (/\/(articles|plans|news|careers)\//.test(p)) return "../";
@@ -33,6 +37,10 @@
     return { type: "site", id: currentPageName() };
   }
 
+  function isContentDetailPage(page) {
+    return !!(page && page.type && page.id && page.type !== "site");
+  }
+
   function formatViews(n) {
     return Number(n || 0).toLocaleString("th-TH") + " ครั้ง";
   }
@@ -49,8 +57,30 @@
 
   function viewWrap(el) {
     return el.closest(
-      ".card-view-count, .product-card-stats, .plan-card-stats, .article-stats, .article-detail-meta, .news-card-stats"
+      ".card-view-count, .product-card-footer, .product-card-stats, .plan-card-stats, .article-stats, .article-detail-meta, .news-card-stats"
     );
+  }
+
+  function cacheKey(type, id) {
+    return "mtl_vc_" + type + "_" + id;
+  }
+
+  function cacheViewCount(type, id, views) {
+    if (!type || !id || !views) return;
+    try {
+      sessionStorage.setItem(cacheKey(type, id), String(views));
+    } catch (e) {}
+  }
+
+  function readCachedViewCount(type, id) {
+    try {
+      var raw = sessionStorage.getItem(cacheKey(type, id));
+      if (!raw) return 0;
+      var n = parseInt(raw, 10);
+      return isNaN(n) ? 0 : n;
+    } catch (e) {
+      return 0;
+    }
   }
 
   function applyViewElement(el, views) {
@@ -63,13 +93,61 @@
     if (window.LucideIcons) LucideIcons.refresh(el);
   }
 
+  function updateViewElements(type, id, views) {
+    if (!views) return;
+    cacheViewCount(type, id, views);
+    document.querySelectorAll('[data-analytics-views][data-content-type="' + type + '"]').forEach(function (el) {
+      var elId = el.getAttribute("data-content-id");
+      if (elId && elId !== id) return;
+      applyViewElement(el, views);
+    });
+  }
+
+  function applyCachedViewCounts() {
+    document.querySelectorAll("[data-analytics-views]").forEach(function (el) {
+      var type = el.getAttribute("data-content-type");
+      var id = el.getAttribute("data-content-id");
+      if (!type || !id) return;
+      var cached = readCachedViewCount(type, id);
+      if (cached > 0) applyViewElement(el, cached);
+    });
+  }
+
+  function fetchSingleViewCount(type, id, opts) {
+    opts = opts || {};
+    if (!type || !id) return Promise.resolve();
+
+    var url =
+      apiUrl("view-counts.php?type=" + encodeURIComponent(type) + "&id=" + encodeURIComponent(id) + "&_=" + Date.now());
+
+    return fetch(url, {
+      cache: "no-store",
+      keepalive: !!opts.keepalive,
+    })
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (data) {
+        if (data && data.ok && typeof data.views === "number") {
+          updateViewElements(type, id, data.views);
+        }
+      })
+      .catch(function () {});
+  }
+
   function trackView(page) {
-    if (!page || !page.type || !page.id) return;
+    if (!isContentDetailPage(page)) return;
 
     var storageKey = "mtl_view_" + page.type + "_" + page.id;
+    var alreadyTracked = false;
     try {
-      if (sessionStorage.getItem(storageKey) === "1") return;
+      alreadyTracked = sessionStorage.getItem(storageKey) === "1";
     } catch (e) {}
+
+    if (alreadyTracked) {
+      fetchSingleViewCount(page.type, page.id);
+      return;
+    }
 
     fetch(apiUrl("track-view.php"), {
       method: "POST",
@@ -92,15 +170,6 @@
       .catch(function () {});
   }
 
-  function updateViewElements(type, id, views) {
-    if (!views) return;
-    document.querySelectorAll('[data-analytics-views][data-content-type="' + type + '"]').forEach(function (el) {
-      var elId = el.getAttribute("data-content-id");
-      if (elId && elId !== id) return;
-      applyViewElement(el, views);
-    });
-  }
-
   function fillViewCounts() {
     var types = {};
     document.querySelectorAll("[data-analytics-views]").forEach(function (el) {
@@ -108,31 +177,81 @@
       if (type) types[type] = true;
     });
 
+    if (!Object.keys(types).length) return;
+
+    var gen = ++fillGen;
+
     Object.keys(types).forEach(function (type) {
-      fetch(apiUrl("view-counts.php?type=" + encodeURIComponent(type)))
+      fetch(apiUrl("view-counts.php?type=" + encodeURIComponent(type) + "&_=" + Date.now()), {
+        cache: "no-store",
+      })
         .then(function (res) {
           return res.json();
         })
         .then(function (data) {
+          if (gen !== fillGen) return;
           if (!data || !data.ok || !data.views) return;
           document.querySelectorAll('[data-analytics-views][data-content-type="' + type + '"]').forEach(function (el) {
             var elId = el.getAttribute("data-content-id");
             var count = data.views[elId];
             if (!count) return;
             applyViewElement(el, count);
+            cacheViewCount(type, elId, count);
           });
         })
         .catch(function () {});
     });
   }
 
+  function scheduleFillViewCounts() {
+    if (fillTimer) clearTimeout(fillTimer);
+    fillTimer = setTimeout(function () {
+      fillTimer = null;
+      applyCachedViewCounts();
+      fillViewCounts();
+    }, 0);
+  }
+
+  function cacheLatestDetailViewBeforeLeave() {
+    var page = detectPage();
+    if (!isContentDetailPage(page)) return;
+    fetchSingleViewCount(page.type, page.id, { keepalive: true });
+  }
+
   window.mtlFillViewCounts = fillViewCounts;
+  window.mtlScheduleFillViewCounts = scheduleFillViewCounts;
+  if (window.mtlFlushPendingViewCounts) window.mtlFlushPendingViewCounts();
 
   var page = detectPage();
   trackView(page);
-  fillViewCounts();
+  scheduleFillViewCounts();
 
-  document.addEventListener("landing:rendered", fillViewCounts);
-  document.addEventListener("news:updated", fillViewCounts);
-  document.addEventListener("plans:rendered", fillViewCounts);
+  document.addEventListener("landing:rendered", scheduleFillViewCounts);
+  document.addEventListener("news:updated", scheduleFillViewCounts);
+  document.addEventListener("articles:updated", scheduleFillViewCounts);
+  document.addEventListener("careers:updated", scheduleFillViewCounts);
+  document.addEventListener("plans:rendered", scheduleFillViewCounts);
+
+  window.addEventListener("pagehide", cacheLatestDetailViewBeforeLeave);
+
+  window.addEventListener("pageshow", function () {
+    if (!pageShowRefetchReady) return;
+    applyCachedViewCounts();
+    scheduleFillViewCounts();
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") {
+      applyCachedViewCounts();
+      scheduleFillViewCounts();
+    }
+  });
+
+  window.addEventListener("focus", scheduleFillViewCounts);
+
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      pageShowRefetchReady = true;
+    });
+  });
 })();

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://maxthailife.com/sitemap.xml
+Sitemap: https://wealthagenttl.com/sitemap.xml

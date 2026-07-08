@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * ชุดทดสอบระบบหลังบ้าน Max Thai Life
+ * ชุดทดสอบระบบหลังบ้าน Wealth Agent TL
  *
  * รัน: C:\xampp\php\php.exe admin\tests\run.php
  *      C:\xampp\php\php.exe admin\tests\run.php --base=http://localhost/1496
@@ -33,7 +33,7 @@ $runner = new TestRunner();
 $http = new HttpClient($baseUrl);
 
 echo "══════════════════════════════════════\n";
-echo " Max Thai Life — ชุดทดสอบระบบหลังบ้าน\n";
+echo " Wealth Agent TL — ชุดทดสอบระบบหลังบ้าน\n";
 echo " Base URL: {$baseUrl}\n";
 echo "══════════════════════════════════════\n";
 

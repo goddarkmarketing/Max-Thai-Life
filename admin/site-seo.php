@@ -40,7 +40,7 @@ admin_layout_start('SEO', 'site-seo.php');
 
   <?php admin_card_start('ข้อมูลพื้นฐาน SEO', 'ใช้เป็นค่าเริ่มต้นทั้งเว็บ'); ?>
   <?php admin_field('URL เว็บไซต์ (โดเมนจริง)', 'meta_site_url', $meta['siteUrl'] ?? '', [
-      'hint' => 'เช่น https://www.maxthailife.com — จำเป็นสำหรับ sitemap และ canonical',
+      'hint' => 'เช่น https://www.wealthagenttl.com — จำเป็นสำหรับ sitemap และ canonical',
       'placeholder' => 'https://www.example.com',
   ]); ?>
   <?php admin_field('URL สำรองสำหรับรูปแชร์ (GitHub Pages)', 'meta_share_asset_fallback_url', $meta['shareAssetFallbackUrl'] ?? '', [

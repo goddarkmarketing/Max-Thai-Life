@@ -164,7 +164,7 @@ function admin_layout_start(string $title, string $active = '', array $opts = []
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= admin_h($title) ?> | Max Thai Life Admin</title>
+  <title><?= admin_h($title) ?> | Wealth Agent TL Admin</title>
   <link rel="stylesheet" href="css/admin.css">
   <?php foreach ($opts['stylesheets'] ?? [] as $cssHref): ?>
   <link rel="stylesheet" href="<?= admin_h($cssHref) ?>">
@@ -212,7 +212,7 @@ function admin_visual_layout_start(string $title, string $active = 'plans-list.p
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= admin_h($title) ?> | Max Thai Life Admin</title>
+  <title><?= admin_h($title) ?> | Wealth Agent TL Admin</title>
   <link rel="stylesheet" href="css/admin.css">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="css/plan-visual.css">

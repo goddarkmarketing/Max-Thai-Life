@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * Create a ZIP of images/plan-covers for uploading to maxthailife.com (Plesk).
+ * Create a ZIP of images/plan-covers for uploading to wealthagenttl.com (Plesk).
  * Usage: php admin/tools/prepare-plan-covers-zip.php
  */
 

@@ -105,7 +105,7 @@
           activeCategory.label;
       }
       document.title =
-        activeCategory.label + " | แผนประกัน | Max Thai Life";
+        activeCategory.label + " | แผนประกัน | Wealth Agent TL";
 
       var cta = document.querySelector(".cta-band.plans-category-only");
       if (cta) {
@@ -126,7 +126,7 @@
       breadcrumb.innerHTML =
         '<a href="index.html">หน้าหลัก</a> / แผนประกัน';
     }
-    document.title = "แผนประกัน | Max Thai Life";
+    document.title = "แผนประกัน | Wealth Agent TL";
   };
 
   window.initPlanCategoryView = function () {
